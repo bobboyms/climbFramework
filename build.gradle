@@ -1,0 +1,72 @@
+plugins {
+
+    id 'java'
+
+    id 'application'
+}
+
+
+group 'br.com.climb'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+
+    implementation 'com.google.guava:guava:28.2-jre'
+    implementation 'br.com.climb:climb-orm:1.0.9'
+
+    testCompile 'org.hamcrest:hamcrest-library:2.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.26.v20200117'
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.26.v20200117'
+
+//    compile 'org.eclipse.jetty:jetty-webapp:9.4.26.v20200117'
+
+//    compile 'org.eclipse.jetty:jetty-servlet:9.4.3.v20170317'
+//    compile group: 'cglib', name: 'cglib', version: '3.3.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
+
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.1'
+
+    compile group: 'org.jboss.weld.se', name: 'weld-se-core', version: '3.1.4.Final'
+
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
+
+    compile 'io.jsonwebtoken:jjwt:0.7.0'
+
+    /**************** tomcat *****************/
+
+//    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.30'
+//    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '9.0.30'
+//    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: '9.0.30'
+//    compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.30'
+//    compile group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: '2.4.8.Final'
+
+
+}
+
+sourceSets.main.resources {
+    exclude 'META-INF/beans.xml'
+}
+classes {
+    doLast{
+        copy {
+            from('src/main/resources') { include 'META-INF/beans.xml' }
+            into "$buildDir/classes/java/main/"
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
