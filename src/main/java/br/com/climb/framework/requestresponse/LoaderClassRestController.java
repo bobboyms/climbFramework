@@ -19,16 +19,18 @@ import java.util.Set;
 
 public class LoaderClassRestController implements Storage {
 
-    public LoaderClassRestController() {}
+    public LoaderClassRestController() {
+        //Do default constructor
+    }
 
     @Override
     public void storage(final Set<Class<?>> clazzs) {
 
-        clazzs.parallelStream().forEach((clazz) -> {
+        clazzs.parallelStream().forEach(clazz -> {
 
             RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
 
-            Arrays.stream(clazz.getMethods()).forEach((method) -> {
+            Arrays.stream(clazz.getMethods()).forEach(method -> {
 
                 final GetMapping getMapping = method.getAnnotation(GetMapping.class);
                 final PostMapping postMapping = method.getAnnotation(PostMapping.class);
@@ -196,6 +198,7 @@ public class LoaderClassRestController implements Storage {
             final String word = splitedArray[(int) i];
 
             if (!isJavaType(word)) {
+//                RESERVED_WORDS.computeIfAbsent()
                 Set<Long> position = RESERVED_WORDS.get(word);
                 if (position == null) {
                     position = new HashSet<>();
