@@ -2,12 +2,12 @@ package br.com.climb.test.controller;
 
 import br.com.climb.core.interfaces.ResultIterator;
 import br.com.climb.exception.SgdbException;
-import br.com.climb.framework.JettyServer;
 import br.com.climb.framework.annotations.RequestMapping;
 import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.annotations.mapping.GetMapping;
 import br.com.climb.framework.annotations.param.PathVariable;
 import br.com.climb.framework.annotations.param.RequestBody;
+import br.com.climb.framework.utils.JwtUtil;
 import br.com.climb.test.model.Cliente;
 import br.com.climb.test.model.Response;
 import br.com.climb.test.repository.ClienteRepository;
@@ -28,11 +28,10 @@ public class TesteGetController {
 
         Response response = new Response();
 
-        String token = JettyServer.JWTUtil.create(userName);
+        String token = JwtUtil.create(userName);
 
         response.setToken(token);
         response.setUserName(userName);
-
 
         return response;
     }
@@ -49,7 +48,7 @@ public class TesteGetController {
             @PathVariable("altura") Float altura,
             @PathVariable("idade") Long idade,
             @PathVariable("casado") Boolean casado
-    ) throws SgdbException {
+    ) {
 
         Cliente cliente = new Cliente();
         cliente.setCasado(casado);

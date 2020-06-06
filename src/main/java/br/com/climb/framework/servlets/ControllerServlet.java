@@ -1,4 +1,4 @@
-package br.com.climb.framework;
+package br.com.climb.framework.servlets;
 
 import br.com.climb.framework.execptions.NotFoundException;
 import br.com.climb.framework.requestresponse.interfaces.LoaderMethod;
@@ -23,11 +23,11 @@ import static br.com.climb.framework.utils.WeldContainer.initializer;
 
 public class ControllerServlet extends HttpServlet {
 
-    public static final String TEXT_PLAIN = "text/plain";
+    private static final String TEXT_PLAIN = "text/plain";
 
     private static final Logger logger = LoggerFactory.getLogger(ControllerServlet.class);
 
-    public static synchronized void responseForClient(Capsule capsule, HttpServletResponse response) throws InvocationTargetException, IllegalAccessException {
+    private synchronized void responseForClient(Capsule capsule, HttpServletResponse response) throws InvocationTargetException, IllegalAccessException {
 
         try(SeContainer weldContainer = initializer.initialize()) {
 
@@ -50,7 +50,6 @@ public class ControllerServlet extends HttpServlet {
 
             }
 
-            System.out.println("RESPONDEU CORRETO");
         } catch (IOException e) {
             logger.error("responseForClient { }", e);
         }
@@ -79,7 +78,7 @@ public class ControllerServlet extends HttpServlet {
                     try {
                         res.setContentType(TEXT_PLAIN);
                         res.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        PrintWriter out = response.getWriter();;
+                        PrintWriter out = response.getWriter();
                         out.print(e.getMessage());
                         out.flush();
                     }catch (Exception ex) {
