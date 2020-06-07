@@ -32,6 +32,7 @@ public class TesteGetController {
         String tk = request.getHeader(JwtUtil.TOKEN_HEADER);
         System.out.println(tk);
         System.out.println(request.getRequestURL().toString());
+        System.out.println(request.getSession(true).getId());
 
         String userName = "thiago";
 

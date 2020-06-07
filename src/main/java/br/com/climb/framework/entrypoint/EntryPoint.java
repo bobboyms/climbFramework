@@ -34,6 +34,4 @@ public class EntryPoint implements ReceiveHttpRequest, ReceiveHttpResponse {
         return response;
     }
 
-
-
 }
