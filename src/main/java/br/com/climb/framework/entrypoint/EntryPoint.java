@@ -1,4 +1,4 @@
-package br.com.climb.framework.requestresponse.model;
+package br.com.climb.framework.entrypoint;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
