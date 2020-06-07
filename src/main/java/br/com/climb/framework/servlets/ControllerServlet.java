@@ -4,6 +4,9 @@ import br.com.climb.framework.execptions.NotFoundException;
 import br.com.climb.framework.requestresponse.interfaces.LoaderMethod;
 import br.com.climb.framework.requestresponse.LoaderMethodRestController;
 import br.com.climb.framework.requestresponse.model.Capsule;
+import br.com.climb.framework.requestresponse.model.EntryPoint;
+import br.com.climb.framework.requestresponse.model.ReceiveHttpRequest;
+import br.com.climb.framework.requestresponse.model.ReceiveHttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +30,13 @@ public class ControllerServlet extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(ControllerServlet.class);
 
-    private synchronized void responseForClient(Capsule capsule, HttpServletResponse response) throws InvocationTargetException, IllegalAccessException {
+    private synchronized void responseForClient(Capsule capsule, HttpServletResponse response, HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
 
         try(SeContainer weldContainer = initializer.initialize()) {
+
+            final EntryPoint entryPoint = weldContainer.select(EntryPoint.class).get();
+            ((ReceiveHttpRequest)entryPoint).setHttpRequest(request);
+            ((ReceiveHttpResponse)entryPoint).setHttpResponse(response);
 
             final Object instance = weldContainer.select(capsule.getMethod().getDeclaringClass()).get();
             final Object result = capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -71,7 +78,7 @@ public class ControllerServlet extends HttpServlet {
                     final LoaderMethod loaderMethod = new LoaderMethodRestController();
                     final Capsule capsule = loaderMethod.getMethodForCall(req);
 
-                    responseForClient(capsule, res);
+                    responseForClient(capsule, res,req);
 
                 } catch (NotFoundException e) {
 
@@ -117,7 +124,7 @@ public class ControllerServlet extends HttpServlet {
                     final LoaderMethod loaderMethod = new LoaderMethodRestController();
                     final Capsule capsule = loaderMethod.getMethodForCall(req);
 
-                    responseForClient(capsule, res);
+                    responseForClient(capsule, res, req);
 
                 } catch (NotFoundException e) {
 
@@ -163,7 +170,7 @@ public class ControllerServlet extends HttpServlet {
                     final LoaderMethod loaderMethod = new LoaderMethodRestController();
                     final Capsule capsule = loaderMethod.getMethodForCall(req);
 
-                    responseForClient(capsule, res);
+                    responseForClient(capsule, res, req);
 
                 } catch (NotFoundException e) {
 
@@ -216,7 +223,7 @@ public class ControllerServlet extends HttpServlet {
                     final LoaderMethod loaderMethod = new LoaderMethodRestController();
                     final Capsule capsule = loaderMethod.getMethodForCall(req);
 
-                    responseForClient(capsule, res);
+                    responseForClient(capsule, res, req);
 
                 } catch (NotFoundException e) {
 

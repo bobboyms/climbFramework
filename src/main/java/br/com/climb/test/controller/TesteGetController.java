@@ -1,7 +1,6 @@
 package br.com.climb.test.controller;
 
 import br.com.climb.core.interfaces.ResultIterator;
-import br.com.climb.exception.SgdbException;
 import br.com.climb.framework.annotations.RequestMapping;
 import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.annotations.mapping.GetMapping;
@@ -13,6 +12,7 @@ import br.com.climb.test.model.Response;
 import br.com.climb.test.repository.ClienteRepository;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/get")
@@ -21,8 +21,17 @@ public class TesteGetController {
     @Inject
     private ClienteRepository clienteRepository;
 
+    @Inject
+    private HttpServletRequest request;
+
     @GetMapping("/")
     public Response teste1()  {
+
+        System.out.println("request: " + request.getPathInfo());
+
+        String tk = request.getHeader(JwtUtil.TOKEN_HEADER);
+        System.out.println(tk);
+        System.out.println(request.getRequestURL().toString());
 
         String userName = "thiago";
 
