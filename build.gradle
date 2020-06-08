@@ -32,8 +32,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
 
-    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.26.v20200117'
-    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.26.v20200117'
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.12.v20180830'
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.12.v20180830'
+//    compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.4.12.v20180830'
+
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
 

@@ -35,8 +35,8 @@ public class ControllerServlet extends HttpServlet {
         try(SeContainer weldContainer = initializer.initialize()) {
 
             final EntryPoint entryPoint = weldContainer.select(EntryPoint.class).get();
-            ((ReceiveHttpRequest)entryPoint).setHttpRequest(request);
-            ((ReceiveHttpResponse)entryPoint).setHttpResponse(response);
+            entryPoint.setHttpRequest(request);
+            entryPoint.setHttpResponse(response);
 
             final Object instance = weldContainer.select(capsule.getMethod().getDeclaringClass()).get();
             final Object result = capsule.getMethod().invoke(instance, capsule.getArgs());
