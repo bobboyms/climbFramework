@@ -32,7 +32,6 @@ public class ClimbCdiContainer {
                 }
 
                 return result;
-
             }
 
             return proxy.invokeSuper(obj, args);
@@ -82,7 +81,6 @@ public class ClimbCdiContainer {
 
                         Arrays.asList(aClass.getInterfaces()).parallelStream()
                                 .forEach(iface -> {
-                                    System.out.println("iface? " + iface);
 
                                     List<Class> clazzs = concreteInterfaceClasses.get(iface);
 
@@ -90,9 +88,7 @@ public class ClimbCdiContainer {
                                         clazzs = new ArrayList<>();
                                         clazzs.add(aClass);
                                         concreteInterfaceClasses.put(iface, clazzs);
-                                        System.out.println("add: " + aClass);
                                     } else {
-                                        System.out.println("add: " + aClass);
                                         clazzs.add(aClass);
                                     }
 
