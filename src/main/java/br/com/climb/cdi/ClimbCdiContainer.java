@@ -11,7 +11,7 @@ public class ClimbCdiContainer {
 
     protected static Object generateInstance(Class field) {
 
-        Enhancer enhancer = new Enhancer();
+        final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(field);
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
 
@@ -48,14 +48,13 @@ public class ClimbCdiContainer {
             Method method = main.getClass().getMethod(methodName, field.getType());
             method.invoke(main, instance);
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public static Object generateInstanceBase(Class clazz) {
+    public synchronized static Object generateInstanceBase(Class clazz) {
 
         final Object base = generateInstance(clazz);
 
