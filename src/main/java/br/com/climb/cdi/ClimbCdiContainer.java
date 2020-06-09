@@ -1,17 +1,24 @@
 package br.com.climb.cdi;
 
+import br.com.climb.framework.utils.ReflectionUtils;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.*;
 
 public class ClimbCdiContainer {
 
     protected static Object generateInstance(Class field) {
 
         final Enhancer enhancer = new Enhancer();
+
+        if (field.isInterface()) {
+            field = concreteInterfaceClasses.get(field).get(0);
+        }
+
         enhancer.setSuperclass(field);
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
 
@@ -64,6 +71,34 @@ public class ClimbCdiContainer {
 
         return base;
 
+    }
+
+    private static final Map<Class, List<Class>> concreteInterfaceClasses = new HashMap<>();
+
+    public static void start() throws IOException {
+        Arrays.asList(ReflectionUtils.getAnnotedClass(Component.class, "br.com.")).parallelStream()
+                .forEach(classes -> {
+                    classes.stream().forEach(aClass -> {
+
+                        Arrays.asList(aClass.getInterfaces()).parallelStream()
+                                .forEach(iface -> {
+                                    System.out.println("iface? " + iface);
+
+                                    List<Class> clazzs = concreteInterfaceClasses.get(iface);
+
+                                    if (clazzs == null) {
+                                        clazzs = new ArrayList<>();
+                                        clazzs.add(aClass);
+                                        concreteInterfaceClasses.put(iface, clazzs);
+                                        System.out.println("add: " + aClass);
+                                    } else {
+                                        System.out.println("add: " + aClass);
+                                        clazzs.add(aClass);
+                                    }
+
+                                });
+                    });
+                });
     }
 
 }
