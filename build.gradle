@@ -36,6 +36,10 @@ dependencies {
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.12.v20180830'
 //    compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.4.12.v20180830'
 
+    // https://mvnrepository.com/artifact/cglib/cglib
+    compile group: 'cglib', name: 'cglib', version: '3.3.0'
+
+
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
 
