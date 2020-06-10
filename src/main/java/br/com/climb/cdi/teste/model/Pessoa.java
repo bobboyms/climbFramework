@@ -1,7 +1,7 @@
 package br.com.climb.cdi.teste.model;
 
-import br.com.climb.cdi.Component;
-import br.com.climb.cdi.Inject;
+import br.com.climb.cdi.annotations.Component;
+import br.com.climb.cdi.annotations.Inject;
 
 @Component
 public class Pessoa {

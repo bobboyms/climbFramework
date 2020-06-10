@@ -5,19 +5,21 @@ import br.com.climb.cdi.teste.model.Controller;
 
 import java.io.IOException;
 
-import static br.com.climb.cdi.ClimbCdiContainer.generateInstanceBase;
-import static br.com.climb.cdi.ClimbCdiContainer.start;
+import static br.com.climb.cdi.teste.model.factory.ClimbCdiContainer.start;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        //inicia o container
-        start();
+        ContainerInitializer containerInitializer = ContainerInitializer.newInstance();
 
-        Controller controller = (Controller) generateInstanceBase(Controller.class);
-        System.out.println(controller.getPessoa().getEndereco().getNome());
-        controller.executar();
+        try(ManagerContext context = containerInitializer.createManager()) {
+            Controller controller = (Controller) context.generateInstance(Controller.class);
+            controller.executar();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 

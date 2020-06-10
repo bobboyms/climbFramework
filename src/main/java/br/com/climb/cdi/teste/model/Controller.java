@@ -1,7 +1,8 @@
 package br.com.climb.cdi.teste.model;
 
-import br.com.climb.cdi.Component;
-import br.com.climb.cdi.Inject;
+import br.com.climb.cdi.annotations.Component;
+import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.teste.model.factory.ArquivoTexto;
 
 @Component
 public class Controller {
@@ -12,11 +13,25 @@ public class Controller {
     @Inject
     private Carro carro;
 
-    @Inject
-    private Repository repository;
+    @Inject("pessoa")
+    private Repository pessoaRepository;
 
-    public void setRepository(Repository repository) {
-        this.repository = repository;
+    @Inject("carro")
+    private Repository carroRepository;
+
+    @Inject
+    private ArquivoTexto arquivoTexto;
+
+    public void setArquivoTexto(ArquivoTexto arquivoTexto) {
+        this.arquivoTexto = arquivoTexto;
+    }
+
+    public void setCarroRepository(Repository carroRepository) {
+        this.carroRepository = carroRepository;
+    }
+
+    public void setPessoaRepository(Repository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
     }
 
     public Pessoa getPessoa() {
@@ -36,9 +51,12 @@ public class Controller {
     }
 
     public void executar() {
+        System.out.println("****** iniciou executar ********");
         System.out.println(pessoa.getNome());
         System.out.println(carro.getNome());
-        repository.salvar(pessoa);
+        carroRepository.salvar(carro);
+        pessoaRepository.salvar(pessoa);
+        arquivoTexto.gerar();
     }
 
 }

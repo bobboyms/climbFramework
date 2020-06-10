@@ -1,7 +1,7 @@
 package br.com.climb.cdi.teste.model;
 
-public interface Repository {
+public interface Repository<T> {
 
-    void salvar(Object object);
+    void salvar(T object);
 
 }

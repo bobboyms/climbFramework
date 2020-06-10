@@ -5,8 +5,6 @@ import br.com.climb.framework.requestresponse.interfaces.LoaderMethod;
 import br.com.climb.framework.requestresponse.LoaderMethodRestController;
 import br.com.climb.framework.requestresponse.model.Capsule;
 import br.com.climb.framework.entrypoint.EntryPoint;
-import br.com.climb.framework.entrypoint.ReceiveHttpRequest;
-import br.com.climb.framework.entrypoint.ReceiveHttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

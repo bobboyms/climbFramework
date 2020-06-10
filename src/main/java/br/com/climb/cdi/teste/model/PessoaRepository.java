@@ -1,11 +1,12 @@
 package br.com.climb.cdi.teste.model;
 
-import br.com.climb.cdi.Component;
+import br.com.climb.cdi.annotations.Component;
 
-@Component
-public class PessoaRepository implements Repository {
+@Component("pessoa")
+public class PessoaRepository implements Repository<Pessoa> {
+
     @Override
-    public void salvar(Object object) {
-        System.out.println("Salvou : " + object);
+    public void salvar(Pessoa object) {
+        System.out.println("Salvou pessoa : " + object);
     }
 }

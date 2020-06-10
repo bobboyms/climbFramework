@@ -1,6 +1,6 @@
 package br.com.climb.cdi.teste.model;
 
-import br.com.climb.cdi.Component;
+import br.com.climb.cdi.annotations.Component;
 
 @Component
 public class Endereco {
