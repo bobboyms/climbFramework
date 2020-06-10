@@ -18,22 +18,22 @@ import java.util.stream.Collectors;
 
 public class Manager implements AutoCloseable, ManagerContext {
 
-    private Map<Class, List<Class>> concreteInterfaceClasses;
-    private Map<Class, Capsule> factoriesClasses;
-    private Map<Class, Object> singletonsObjects = new HashMap<>();
+    private Map<Class<?>, List<Class<?>>> concreteInterfaceClasses;
+    private Map<Class<?>, Capsule> factoriesClasses;
+    private Map<Class<?>, Object> singletonsObjects = new HashMap<>();
 
-    public Manager(Map<Class, List<Class>> concreteInterfaceClasses, Map<Class, Capsule> factoriesClasses) {
+    public Manager(Map<Class<?>, List<Class<?>>> concreteInterfaceClasses, Map<Class<?>, Capsule> factoriesClasses) {
         this.concreteInterfaceClasses = concreteInterfaceClasses;
         this.factoriesClasses = factoriesClasses;
     }
 
-    protected Class getQualifierClass(Field field) {
+    protected Class<?> getQualifierClass(Field field) {
 
-        final List<Class> listConcreteClassInterface = concreteInterfaceClasses.get(field.getType());
+        final List<Class<?>> listConcreteClassInterface = concreteInterfaceClasses.get(field.getType());
 
         if (listConcreteClassInterface != null && listConcreteClassInterface.size() > 1) {
             final String qualifier  = field.getAnnotation(Inject.class).value();
-            final List<Class> listClazzTemp = listConcreteClassInterface.stream().filter(aClass -> ((Component) aClass.getAnnotation(Component.class)).value().equals(qualifier))
+            final List<Class<?>> listClazzTemp = listConcreteClassInterface.stream().filter(aClass -> ((Component) aClass.getAnnotation(Component.class)).value().equals(qualifier))
                     .collect(Collectors.toList());
             return listClazzTemp.get(0);
         }
@@ -42,7 +42,7 @@ public class Manager implements AutoCloseable, ManagerContext {
 
     }
 
-    protected Class getClassOfField(Field field) {
+    protected Class<?> getClassOfField(Field field) {
 
         if (field.getType().isInterface()) {
             return getQualifierClass(field);
@@ -120,7 +120,7 @@ public class Manager implements AutoCloseable, ManagerContext {
 
             if (method.getName().contains("get")) {
 
-                final Class returnType = method.getReturnType();
+                final Class<?> returnType = method.getReturnType();
                 final Object result = proxy.invokeSuper(obj, args);
 
                 if (result == null && returnType.getAnnotation(Component.class) != null) {
@@ -156,13 +156,13 @@ public class Manager implements AutoCloseable, ManagerContext {
 
     }
 
-    private void injectObjecstInComponentClass(Class clazz, Object instance) {
+    private void injectObjecstInComponentClass(Class<?> clazz, Object instance) {
         Arrays.asList(clazz.getDeclaredFields()).stream()
                 .filter(field -> field.getAnnotation(Inject.class) != null)
                 .forEach(field -> injectInstanceField(instance, field, generateInstance(field)));
     }
 
-    public Object generateInstanceBase(Class clazz) {
+    public Object generateInstanceBase(Class<?> clazz) {
 
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
@@ -176,7 +176,7 @@ public class Manager implements AutoCloseable, ManagerContext {
     }
 
     @Override
-    public Object generateInstance(Class aClass) {
+    public Object generateInstance(Class<?> aClass) {
         return generateInstanceBase(aClass);
     }
 

@@ -12,8 +12,8 @@ import java.util.*;
 
 public abstract class ContainerInitializer {
 
-    protected final Map<Class, List<Class>> concreteInterfaceClasses = new HashMap<>();
-    protected final Map<Class, Capsule> factoriesClasses = new HashMap<>();
+    protected final Map<Class<?>, List<Class<?>>> concreteInterfaceClasses = new HashMap<>();
+    protected final Map<Class<?>, Capsule> factoriesClasses = new HashMap<>();
 
     public static ContainerInitializer newInstance() {
         return new Container();
@@ -43,7 +43,7 @@ public abstract class ContainerInitializer {
                         Arrays.asList(aClass.getInterfaces()).parallelStream()
                                 .forEach(iface -> {
 
-                                    List<Class> clazzs = concreteInterfaceClasses.get(iface);
+                                    List<Class<?>> clazzs = concreteInterfaceClasses.get(iface);
 
                                     if (clazzs == null) {
                                         clazzs = new ArrayList<>();
