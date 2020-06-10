@@ -157,7 +157,7 @@ public class Manager implements AutoCloseable, ManagerContext {
     }
 
     private void injectObjecstInComponentClass(Class clazz, Object instance) {
-        Arrays.asList(clazz.getDeclaredFields()).parallelStream()
+        Arrays.asList(clazz.getDeclaredFields()).stream()
                 .filter(field -> field.getAnnotation(Inject.class) != null)
                 .forEach(field -> injectInstanceField(instance, field, generateInstance(field)));
     }

@@ -17,7 +17,4 @@ public class PessoaFactory {
         return pessoa;
     }
 
-    public void dispose(Pessoa pessoa) {
-
-    }
 }
