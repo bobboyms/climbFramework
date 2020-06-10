@@ -2,34 +2,33 @@ package br.com.climb.cdi;
 
 import br.com.climb.cdi.annotations.Component;
 import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.annotations.Interceptor;
 import br.com.climb.cdi.annotations.Singleton;
 import br.com.climb.cdi.model.Capsule;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+import org.apache.commons.lang.SerializationUtils;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class Manager implements AutoCloseable, ManagerContext {
+public class Manager implements ManagerContext {
 
-    private Map<Class<?>, List<Class<?>>> concreteInterfaceClasses;
-    private Map<Class<?>, Capsule> factoriesClasses;
     private Map<Class<?>, Object> singletonsObjects = new HashMap<>();
+    private Set<Object> disposesObjects = new HashSet<>();
+    private Initializer initializer;
 
-    public Manager(Map<Class<?>, List<Class<?>>> concreteInterfaceClasses, Map<Class<?>, Capsule> factoriesClasses) {
-        this.concreteInterfaceClasses = concreteInterfaceClasses;
-        this.factoriesClasses = factoriesClasses;
+    public Manager(Initializer initializer) {
+        this.initializer = initializer;
     }
 
     protected Class<?> getQualifierClass(Field field) {
 
-        final List<Class<?>> listConcreteClassInterface = concreteInterfaceClasses.get(field.getType());
+        final List<Class<?>> listConcreteClassInterface = initializer.getConcreteInterfaceClasses().get(field.getType());
 
         if (listConcreteClassInterface != null && listConcreteClassInterface.size() > 1) {
             final String qualifier  = field.getAnnotation(Inject.class).value();
@@ -38,7 +37,7 @@ public class Manager implements AutoCloseable, ManagerContext {
             return listClazzTemp.get(0);
         }
 
-        return concreteInterfaceClasses.get(field.getType()).get(0);
+        return initializer.getConcreteInterfaceClasses().get(field.getType()).get(0);
 
     }
 
@@ -65,6 +64,7 @@ public class Manager implements AutoCloseable, ManagerContext {
                 injectObjecstInComponentClass(capsule.getClassFactory(), instance);
                 final Object resultInvoke = capsule.getMethod().invoke(instance);
                 singletonsObjects.put(capsule.getMethod().getReturnType(), resultInvoke);
+                addDisposeList(capsule, resultInvoke);
                 return resultInvoke;
             }
 
@@ -73,9 +73,16 @@ public class Manager implements AutoCloseable, ManagerContext {
         return null;
     }
 
+    public void addDisposeList(Capsule capsule, Object resultInvoke) {
+
+        if (isDisposes(resultInvoke.getClass())) {
+            disposesObjects.add(resultInvoke);
+        }
+    }
+
     protected Object generateInstanceByTheFactory(Field field) {
 
-        final Capsule capsule = factoriesClasses.get(field.getType());
+        final Capsule capsule = initializer.getFactoriesClasses().get(field.getType());
 
         if (capsule == null) {
             return null;
@@ -91,7 +98,12 @@ public class Manager implements AutoCloseable, ManagerContext {
 
             final Object instance = capsule.getClassFactory().getDeclaredConstructor().newInstance();
             injectObjecstInComponentClass(capsule.getClassFactory(), instance);
-            return capsule.getMethod().invoke(instance);
+
+            final Object resultInvoke = capsule.getMethod().invoke(instance);
+
+            addDisposeList(capsule, resultInvoke);
+
+            return resultInvoke;
 
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -106,6 +118,22 @@ public class Manager implements AutoCloseable, ManagerContext {
         throw new Error("unexpected error in this operation");
     }
 
+    private Class getInterceptorClass(Method method) {
+
+        List<Class> listInterceptorClass =  Arrays.asList(method.getAnnotations()).stream()
+                .map(annotation -> annotation.annotationType())
+                .filter(aClass -> initializer.getInterceptorClasses().get(aClass) != null)
+                .map(aClass -> initializer.getInterceptorClasses().get(aClass)).collect(Collectors.toList());
+
+        if (listInterceptorClass != null && listInterceptorClass.size() > 0) {
+            return listInterceptorClass.get(0);
+        }
+
+        return null;
+
+
+    }
+
     protected Object generateInstance(Field field) {
 
         final Object localInstance = generateInstanceByTheFactory(field);
@@ -117,6 +145,15 @@ public class Manager implements AutoCloseable, ManagerContext {
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(getClassOfField(field));
         enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> {
+
+            final Class<?> interceptClass = getInterceptorClass(method);
+
+            if (interceptClass != null) {
+                final Object instanceInterceptor = interceptClass.cast(generateInstanceBase(interceptClass));
+                return ((MethodIntercept)instanceInterceptor).interceptorMethod(new InvocationContext(obj,method,args,proxy));
+
+//                proxy.invokeSuper(obj, args);
+            }
 
             if (method.getName().contains("get")) {
 
@@ -175,13 +212,46 @@ public class Manager implements AutoCloseable, ManagerContext {
 
     }
 
+    /**
+     * Verifica se é um tipo que vai ser dispensado quando chamar o method
+     * close
+     * @param clazz
+     * @return
+     */
+    private boolean isDisposes(Class clazz) {
+        return initializer.getDisposesMethods().get(clazz) != null;
+    }
+
     @Override
     public Object generateInstance(Class<?> aClass) {
         return generateInstanceBase(aClass);
     }
 
     @Override
+    public void disposeObjects() {
+
+        disposesObjects.stream().forEach(object -> {
+
+            Capsule capsule = initializer.getDisposesMethods().get(object.getClass());
+
+            try {
+                final Object instance = capsule.getClassFactory().getDeclaredConstructor().newInstance();
+                capsule.getMethod().invoke(instance,object);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+
+        });
+    }
+
+    @Override
     public void close() throws Exception {
-        System.out.println("fechou as instancias");
+        disposeObjects();
     }
 }

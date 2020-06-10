@@ -5,8 +5,6 @@ import br.com.climb.cdi.teste.model.Controller;
 
 import java.io.IOException;
 
-import static br.com.climb.cdi.teste.model.factory.ClimbCdiContainer.start;
-
 public class Main {
 
     public static void main(String[] args) throws IOException {

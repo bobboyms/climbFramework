@@ -54,8 +54,9 @@ public class Controller {
         System.out.println("****** iniciou executar ********");
         System.out.println(pessoa.getNome());
         System.out.println(carro.getNome());
-        carroRepository.salvar(carro);
-        pessoaRepository.salvar(pessoa);
+//        carroRepository.salvar(carro);
+        pessoaRepository.salvar(new Pessoa());
+        System.out.println(pessoaRepository.processar("o valor da vida"));
         arquivoTexto.gerar();
     }
 

@@ -39,6 +39,8 @@ dependencies {
     // https://mvnrepository.com/artifact/cglib/cglib
     compile group: 'cglib', name: 'cglib', version: '3.3.0'
 
+    //usado no CDI
+    compile 'commons-lang:commons-lang:2.6'
 
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'

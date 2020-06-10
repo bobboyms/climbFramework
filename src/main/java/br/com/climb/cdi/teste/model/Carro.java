@@ -1,10 +1,12 @@
 package br.com.climb.cdi.teste.model;
 
 import br.com.climb.cdi.annotations.Component;
+import br.com.climb.cdi.teste.model.interceptors.Logar;
 
 @Component
 public class Carro {
 
+    @Logar
     public String getNome() {
         return "fusca";
     }
