@@ -27,10 +27,8 @@ public class ImplementDaoMethodIntercept implements MethodIntercept {
 
     private Class<?> getTypeInterface(String className) {
 
-        String classNameTemp = className.split("\\$")[0];
-
         try {
-            return Class.forName(classNameTemp);
+            return Class.forName(className.replace("class ", "").trim());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

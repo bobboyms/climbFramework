@@ -12,7 +12,7 @@ plugins {
 }
 
 group 'br.com.climb'
-version '1.0.1'
+version '1.0.2'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -130,7 +130,7 @@ publishing {
             artifact sourceJar
             groupId 'br.com.climbframework'
             artifactId 'climb-framework'
-            version '1.0.1'
+            version '1.0.2'
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'Simple framework')
@@ -151,13 +151,13 @@ bintray {
         name = 'climb-framework'
         userOrg = user
         licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/bobboyms/climbORM'
+        vcsUrl = 'https://github.com/bobboyms/climbFramework'
         labels = ['REST', 'API','Alternative']
         publicDownloadNumbers = true
         version {
-            name = '1.0.1'
+            name = '1.0.2'
             desc = 'new speed framework for rest api'
-            vcsTag = '1.0.1'
+            vcsTag = '1.0.2'
 //            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
     }

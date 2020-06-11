@@ -2,13 +2,10 @@ package br.com.climb.cdi.clazz;
 
 import br.com.climb.cdi.ContainerInitializer;
 import br.com.climb.cdi.Initializer;
-import br.com.climb.cdi.interceptor.Context;
-import br.com.climb.cdi.teste.model.interceptors.PessoaInterceptor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Method;
 
 class TypeOfClassManagerTest {
 

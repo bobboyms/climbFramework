@@ -34,8 +34,8 @@ public class TesteGetController {
         this.climbConnection = climbConnection;
     }
 
-    @GetMapping("/")
-    public Response teste1()  {
+    @GetMapping("/{id}/")
+    public Response teste1(@PathVariable("id") Long id)  {
 
 //        System.out.println("request: " + request.getPathInfo());
 
@@ -45,14 +45,23 @@ public class TesteGetController {
 //        System.out.println(request.getSession(true).getId());
 
         Cliente cliente = new Cliente();
-        cliente.setNome("Taliba");
+        cliente.setNome("nome taliba");
 
         clienteRepository.save(cliente);
         System.out.println("ID DO CLIENTE: " + cliente.getId());
 
         clienteRepository.executarRegra();
 
-        String userName = "thiago";
+        cliente = cliente = clienteRepository.findOne(id);
+        System.out.println("Encontrou: " + cliente);
+
+        ResultIterator resultIterator = clienteRepository.find();
+//
+//        while (resultIterator.next()) {
+//            System.out.println(resultIterator.getObject());
+//        }
+
+        String userName = "cliente.getNome()";
 
         Response response = new Response();
 
@@ -85,17 +94,17 @@ public class TesteGetController {
         cliente.setAltura(altura);
         cliente.setIdade(idade);
 
-        ResultIterator resultIterator = clienteRepository.find();
-
-//        while (resultIterator.next()) {
-//            System.out.println((Cliente)resultIterator.getObject());
-//        }
+//        ResultIterator resultIterator = clienteRepository.find();
+//
+////        while (resultIterator.next()) {
+////            System.out.println((Cliente)resultIterator.getObject());
+////        }
 
         clienteRepository.save(cliente);
         System.out.println("Fora: " + cliente);
         clienteRepository.executarRegra();
 
-        return clienteRepository.findOne(30l);
+        return clienteRepository.findOne(cliente.getId());
     }
 
 }
