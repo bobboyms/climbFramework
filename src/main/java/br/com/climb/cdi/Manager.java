@@ -77,8 +77,6 @@ public class Manager implements ManagerContext {
     public void addDisposeList(Capsule capsule, Object resultInvoke) {
 
         if (isDisposes(resultInvoke.getClass())) {
-            System.out.println("Adicionou ao dispose" + resultInvoke);
-            System.out.println(resultInvoke != null);
             disposesObjects.add(resultInvoke);
         }
     }
@@ -222,8 +220,6 @@ public class Manager implements ManagerContext {
      * @return
      */
     private boolean isDisposes(Class clazz) {
-        System.out.println("*******************************");
-        System.out.println("é dispose: " + clazz);
 
         final Object result = initializer.getDisposesMethods().get(clazz);
 
@@ -242,7 +238,6 @@ public class Manager implements ManagerContext {
                 .filter(aClass -> initializer.getDisposesMethods().get(aClass) != null).collect(Collectors.toList());
 
         if (ifaces.size() > 0) {
-            System.out.println("type: " + ifaces);
             return true;
         }
 
@@ -259,8 +254,6 @@ public class Manager implements ManagerContext {
 
         disposesObjects.stream().forEach(object -> {
 
-            System.out.println("Dispose: " + object);
-
             Capsule capsule = initializer.getDisposesMethods().get(object.getClass());
 
             if (capsule == null) {
@@ -271,15 +264,11 @@ public class Manager implements ManagerContext {
                 if (ifaces.size() > 0) {
                     capsule = initializer.getDisposesMethods().get(ifaces.get(0));
                 }
-
             }
-
-
 
             try {
 
                 final Object instance = capsule.getClassFactory().getDeclaredConstructor().newInstance();
-                System.out.println("dispose: " + object);
                 capsule.getMethod().invoke(instance,object);
 
             } catch (InstantiationException e) {

@@ -65,10 +65,7 @@ public abstract class ContainerInitializer implements Initializer {
                                 capsule.setMethod(method);
 
                                 if (method.getParameters().length > 0) {
-                                    System.out.println("****** put ******");
                                     Parameter parameter = Arrays.asList(method.getParameters()).get(0);
-                                    System.out.println("Methodo dispose: " + method);
-                                    System.out.println("Type: " + parameter.getType());
                                     disposesMethods.put(parameter.getType(), capsule);
 
                                 } else {
