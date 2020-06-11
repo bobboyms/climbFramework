@@ -8,8 +8,6 @@ import net.sf.cglib.proxy.NoOp;
 
 //import javax.enterprise.inject.se.SeContainer;
 //import javax.enterprise.inject.se.SeContainerInitializer;
-import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.se.SeContainerInitializer;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import static br.com.climb.framework.utils.WeldContainer.initializer;
 
 public class ReflectionUtils {
 
@@ -120,21 +117,5 @@ public class ReflectionUtils {
         return pattern.matcher(strNum).matches();
     }
 
-    public synchronized static Object callMethod(Method method, Object... args) {
-
-        try {
-            try(SeContainer WELD_CONTAINER = initializer.initialize()) {
-                Object instance = WELD_CONTAINER.select(method.getDeclaringClass()).get();
-                return method.invoke(instance, args);
-            }
-
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
 }

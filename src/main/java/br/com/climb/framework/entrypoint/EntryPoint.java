@@ -1,12 +1,13 @@
 package br.com.climb.framework.entrypoint;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Singleton;
+import br.com.climb.cdi.annotations.Factory;
+import br.com.climb.cdi.annotations.Produces;
+import br.com.climb.cdi.annotations.Singleton;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@ApplicationScoped
+@Factory
 public class EntryPoint implements ReceiveHttpRequest, ReceiveHttpResponse {
 
     private HttpServletRequest request;

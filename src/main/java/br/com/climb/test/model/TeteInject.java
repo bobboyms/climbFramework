@@ -1,8 +1,9 @@
 package br.com.climb.test.model;
 
-import javax.inject.Named;
 
-@Named
+import br.com.climb.cdi.annotations.Component;
+
+@Component
 public class TeteInject {
 
     public String getTexto() {

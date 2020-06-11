@@ -1,27 +1,31 @@
 package br.com.climb.orm.aspect;
 
+import br.com.climb.cdi.InvocationContext;
+import br.com.climb.cdi.MethodIntercept;
+import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.annotations.Interceptor;
 import br.com.climb.core.interfaces.ClimbConnection;
 import br.com.climb.orm.annotation.ImplementDaoMethod;
 import br.com.climb.orm.annotation.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
 @ImplementDaoMethod
 @Interceptor
-public class ImplementDaoMethodIntercept {
+public class ImplementDaoMethodIntercept implements MethodIntercept {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
     private ClimbConnection climbConnection;
+
+    public void setClimbConnection(ClimbConnection climbConnection) {
+        this.climbConnection = climbConnection;
+    }
 
     private Class<?> getTypeInterface(String className) {
 
@@ -49,7 +53,7 @@ public class ImplementDaoMethodIntercept {
         return null;
     }
 
-    @AroundInvoke
+    @Override
     public Object interceptorMethod(InvocationContext ctx) throws Exception {
 
         System.out.println("****** Dao Method Intercept ******");
@@ -58,8 +62,8 @@ public class ImplementDaoMethodIntercept {
 
             Object object = null;
 
-            if (ctx.getParameters().length > 0) {
-                object = ctx.getParameters()[0];
+            if (ctx.getArgs().length > 0) {
+                object = ctx.getArgs()[0];
             }
 
             if (ctx.getMethod().getName().equals("save")) {
@@ -79,12 +83,12 @@ public class ImplementDaoMethodIntercept {
             }
 
             if (ctx.getMethod().getName().equals("findOne")) {
-                final Type type = findClassParameterType(getTypeInterface(ctx.getTarget().toString()));
+                final Type type = findClassParameterType(getTypeInterface(ctx.getaClass().toString()));
                 return findOne(type, (Long)object);
             }
 
             if (ctx.getMethod().getName().equals("find")) {
-                final Type type = findClassParameterType(getTypeInterface(ctx.getTarget().toString()));
+                final Type type = findClassParameterType(getTypeInterface(ctx.getaClass().toString()));
                 return find(type);
             }
 

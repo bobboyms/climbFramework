@@ -1,4 +1,4 @@
-package br.com.climb.orm.configuration;
+package br.com.climb.cdi.teste.model.factory;
 
 import br.com.climb.cdi.annotations.Factory;
 import br.com.climb.cdi.annotations.Produces;

@@ -1,5 +1,8 @@
 package br.com.climb.framework.servlets;
 
+import br.com.climb.cdi.ContainerInitializer;
+import br.com.climb.cdi.ManagerContext;
+import br.com.climb.cdi.teste.model.Controller;
 import br.com.climb.framework.execptions.NotFoundException;
 import br.com.climb.framework.requestresponse.interfaces.LoaderMethod;
 import br.com.climb.framework.requestresponse.LoaderMethodRestController;
@@ -9,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.inject.se.SeContainer;
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -20,7 +22,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 
-import static br.com.climb.framework.utils.WeldContainer.initializer;
 
 public class ControllerServlet extends HttpServlet {
 
@@ -28,15 +29,13 @@ public class ControllerServlet extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(ControllerServlet.class);
 
+    public static final ContainerInitializer containerInitializer = ContainerInitializer.newInstance();
+
     private synchronized void responseForClient(Capsule capsule, HttpServletResponse response, HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
 
-        try(SeContainer weldContainer = initializer.initialize()) {
+        try(ManagerContext context = containerInitializer.createManager()) {
 
-            final EntryPoint entryPoint = weldContainer.select(EntryPoint.class).get();
-            entryPoint.setHttpRequest(request);
-            entryPoint.setHttpResponse(response);
-
-            final Object instance = weldContainer.select(capsule.getMethod().getDeclaringClass()).get();
+            final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final Object result = capsule.getMethod().invoke(instance, capsule.getArgs());
 
             if (result != null) {
@@ -53,12 +52,46 @@ public class ControllerServlet extends HttpServlet {
                 out.flush();
                 out.close();
 
+                context.disposeObjects();
+
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("responseForClient { }", e);
         }
     }
+
+//    private synchronized void responseForClient2(Capsule capsule, HttpServletResponse response, HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
+//
+//        try(SeContainer weldContainer = initializer.initialize()) {
+//
+//            final EntryPoint entryPoint = weldContainer.select(EntryPoint.class).get();
+//            entryPoint.setHttpRequest(request);
+//            entryPoint.setHttpResponse(response);
+//
+//            final Object instance = weldContainer.select(capsule.getMethod().getDeclaringClass()).get();
+//            final Object result = capsule.getMethod().invoke(instance, capsule.getArgs());
+//
+//            if (result != null) {
+//
+//                ObjectMapper mapper = new ObjectMapper();
+//                final String json = mapper.writeValueAsString(result);
+//
+//                response.setContentType("application/json; charset=UTF-8;");
+//                response.setCharacterEncoding("UTF-8");
+//                response.setStatus(HttpServletResponse.SC_OK);
+//
+//                ServletOutputStream out = response.getOutputStream();
+//                out.write(json.getBytes()); // "UTF-8"
+//                out.flush();
+//                out.close();
+//
+//            }
+//
+//        } catch (IOException e) {
+//            logger.error("responseForClient { }", e);
+//        }
+//    }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

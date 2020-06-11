@@ -59,12 +59,16 @@ public abstract class ContainerInitializer implements Initializer {
                     classes.stream().forEach(factoryClass -> {
                         Arrays.asList(factoryClass.getMethods()).stream().forEach(method -> {
                             if (method.getAnnotation(Disposes.class) != null) {
+
                                 Capsule capsule = new Capsule();
                                 capsule.setClassFactory(factoryClass);
                                 capsule.setMethod(method);
 
                                 if (method.getParameters().length > 0) {
+                                    System.out.println("****** put ******");
                                     Parameter parameter = Arrays.asList(method.getParameters()).get(0);
+                                    System.out.println("Methodo dispose: " + method);
+                                    System.out.println("Type: " + parameter.getType());
                                     disposesMethods.put(parameter.getType(), capsule);
 
                                 } else {

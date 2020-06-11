@@ -1,5 +1,7 @@
 package br.com.climb.test.controller;
 
+import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.core.interfaces.ClimbConnection;
 import br.com.climb.core.interfaces.ResultIterator;
 import br.com.climb.framework.annotations.RequestMapping;
 import br.com.climb.framework.annotations.RestController;
@@ -11,7 +13,6 @@ import br.com.climb.test.model.Cliente;
 import br.com.climb.test.model.Response;
 import br.com.climb.test.repository.ClienteRepository;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
@@ -22,17 +23,34 @@ public class TesteGetController {
     private ClienteRepository clienteRepository;
 
     @Inject
-    private HttpServletRequest request;
+    private ClimbConnection climbConnection;
+
+    public void setClienteRepository(ClienteRepository clienteRepository) {
+        System.out.println("repository: " + clienteRepository);
+        this.clienteRepository = clienteRepository;
+    }
+
+    public void setClimbConnection(ClimbConnection climbConnection) {
+        this.climbConnection = climbConnection;
+    }
 
     @GetMapping("/")
     public Response teste1()  {
 
-        System.out.println("request: " + request.getPathInfo());
+//        System.out.println("request: " + request.getPathInfo());
 
-        String tk = request.getHeader(JwtUtil.TOKEN_HEADER);
-        System.out.println(tk);
-        System.out.println(request.getRequestURL().toString());
-        System.out.println(request.getSession(true).getId());
+//        String tk = request.getHeader(JwtUtil.TOKEN_HEADER);
+//        System.out.println(tk);
+//        System.out.println(request.getRequestURL().toString());
+//        System.out.println(request.getSession(true).getId());
+
+        Cliente cliente = new Cliente();
+        cliente.setNome("Taliba");
+
+        clienteRepository.save(cliente);
+        System.out.println("ID DO CLIENTE: " + cliente.getId());
+
+        clienteRepository.executarRegra();
 
         String userName = "thiago";
 

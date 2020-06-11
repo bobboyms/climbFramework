@@ -11,6 +11,10 @@ public class InvocationContext {
     private Object object;
     private MethodProxy proxy;
 
+    public Class<?> getaClass() {
+        return object.getClass().getSuperclass();
+    }
+
     public InvocationContext(Object object, Method method, Object[] args, MethodProxy proxy) {
         this.object = object;
         this.method = method;

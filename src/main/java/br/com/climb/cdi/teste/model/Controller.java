@@ -3,6 +3,7 @@ package br.com.climb.cdi.teste.model;
 import br.com.climb.cdi.annotations.Component;
 import br.com.climb.cdi.annotations.Inject;
 import br.com.climb.cdi.teste.model.factory.ArquivoTexto;
+import br.com.climb.core.interfaces.ClimbConnection;
 
 @Component
 public class Controller {
@@ -20,7 +21,14 @@ public class Controller {
     private Repository carroRepository;
 
     @Inject
+    private ClimbConnection climbConnection;
+
+    @Inject
     private ArquivoTexto arquivoTexto;
+
+    public void setClimbConnection(ClimbConnection climbConnection) {
+        this.climbConnection = climbConnection;
+    }
 
     public void setArquivoTexto(ArquivoTexto arquivoTexto) {
         this.arquivoTexto = arquivoTexto;

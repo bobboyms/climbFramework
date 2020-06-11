@@ -1,26 +1,30 @@
 package br.com.climb.orm.aspect;
 
+import br.com.climb.cdi.InvocationContext;
+import br.com.climb.cdi.MethodIntercept;
+import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.annotations.Interceptor;
 import br.com.climb.core.interfaces.ClimbConnection;
 import br.com.climb.orm.annotation.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
 import java.util.Arrays;
 
 @Transaction
 @Interceptor
-public class TransactionInterceptor {
+public class TransactionInterceptor implements MethodIntercept {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Inject
     private ClimbConnection climbConnection;
 
-    @AroundInvoke
+    public void setClimbConnection(ClimbConnection climbConnection) {
+        this.climbConnection = climbConnection;
+    }
+
+    @Override
     public Object interceptorMethod(InvocationContext ctx) throws Exception {
 
 //        Arrays.asList(ctx.getParameters()).forEach(System.out::println);
@@ -31,11 +35,13 @@ public class TransactionInterceptor {
 
         try {
             climbConnection.getTransaction().start();
-            object = ctx.proceed();
+            object = ctx.procedd();
             climbConnection.getTransaction().commit();
         } catch (Exception e) {
             climbConnection.getTransaction().rollback();
             logger.error("TransactionInterceptor ERROR: {}", e);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
 
         return object;

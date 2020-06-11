@@ -1,9 +1,6 @@
 package br.com.climb.cdi.teste.model.factory;
 
-import br.com.climb.cdi.annotations.Disposes;
-import br.com.climb.cdi.annotations.Factory;
-import br.com.climb.cdi.annotations.Inject;
-import br.com.climb.cdi.annotations.Produces;
+import br.com.climb.cdi.annotations.*;
 import br.com.climb.cdi.teste.model.Pessoa;
 
 @Factory
@@ -17,6 +14,7 @@ public class ArquivoTextoFactory {
     }
 
     @Produces
+    @Singleton
     public ArquivoTexto getArquivoTexto() {
         System.out.println("Tem pessoa? : " + pessoa);
         return new ArquivoTexto();
