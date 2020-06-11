@@ -1,5 +1,6 @@
 package br.com.climb.framework;
 
+import br.com.climb.cdi.ContainerInitializer;
 import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.requestresponse.LoaderClassRestController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
@@ -20,6 +21,8 @@ import static br.com.climb.framework.utils.ReflectionUtils.getAnnotedClass;
 public class JettyServer {
 
     private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
+
+    public static final ContainerInitializer containerInitializer = ContainerInitializer.newInstance();
 
     public void start() throws Exception {
 
