@@ -14,7 +14,7 @@ public class TypeOfClassManager implements TypeOfClass {
 
     private Initializer initializer;
 
-    private TypeOfClassManager(Initializer initializer) {
+    protected TypeOfClassManager(Initializer initializer) {
         this.initializer = initializer;
     }
 
@@ -23,14 +23,14 @@ public class TypeOfClassManager implements TypeOfClass {
     }
 
     @Override
-    public Class getInterceptorClass(Method method) {
+    public Class<?> getInterceptorClass(Method method) {
 
-        List<Class> listInterceptorClass =  Arrays.asList(method.getAnnotations()).stream()
+        List<Class<?>> listInterceptorClass =  Arrays.asList(method.getAnnotations()).stream()
                 .map(annotation -> annotation.annotationType())
                 .filter(aClass -> initializer.getInterceptorClasses().get(aClass) != null)
                 .map(aClass -> initializer.getInterceptorClasses().get(aClass)).collect(Collectors.toList());
 
-        if (listInterceptorClass != null && listInterceptorClass.size() > 0) {
+        if (!listInterceptorClass.isEmpty()) {
             return listInterceptorClass.get(0);
         }
 
