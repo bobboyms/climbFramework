@@ -2,6 +2,8 @@ package br.com.climb.framework.servlets;
 
 import br.com.climb.cdi.ManagerContext;
 import br.com.climb.framework.execptions.NotFoundException;
+import br.com.climb.framework.requestresponse.HttpRequest;
+import br.com.climb.framework.requestresponse.Request;
 import br.com.climb.framework.requestresponse.interfaces.LoaderMethod;
 import br.com.climb.framework.requestresponse.LoaderMethodRestController;
 import br.com.climb.framework.requestresponse.model.Capsule;
@@ -26,6 +28,12 @@ public class ControllerServlet extends HttpServlet {
 
     private static final String TEXT_PLAIN = "text/plain";
     private static final Logger logger = LoggerFactory.getLogger(ControllerServlet.class);
+
+    private Request getLocalRequest(HttpServletRequest request) throws IOException {
+        return new HttpRequest(request.getMethod(),
+                request.getPathInfo(),request.getContentType(),
+                request.getParameterMap(),request.getReader());
+    }
 
     private void responseForClient(Capsule capsule, HttpServletResponse response, HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
 
@@ -71,7 +79,7 @@ public class ControllerServlet extends HttpServlet {
                 try {
 
                     final LoaderMethod loaderMethod = new LoaderMethodRestController();
-                    final Capsule capsule = loaderMethod.getMethodForCall(req);
+                    final Capsule capsule = loaderMethod.getMethodForCall(getLocalRequest(req));
 
                     responseForClient(capsule, res,req);
 
@@ -117,7 +125,7 @@ public class ControllerServlet extends HttpServlet {
                 try {
 
                     final LoaderMethod loaderMethod = new LoaderMethodRestController();
-                    final Capsule capsule = loaderMethod.getMethodForCall(req);
+                    final Capsule capsule = loaderMethod.getMethodForCall(getLocalRequest(req));
 
                     responseForClient(capsule, res, req);
 
@@ -163,7 +171,7 @@ public class ControllerServlet extends HttpServlet {
                 try {
 
                     final LoaderMethod loaderMethod = new LoaderMethodRestController();
-                    final Capsule capsule = loaderMethod.getMethodForCall(req);
+                    final Capsule capsule = loaderMethod.getMethodForCall(getLocalRequest(req));
 
                     responseForClient(capsule, res, req);
 
@@ -216,7 +224,7 @@ public class ControllerServlet extends HttpServlet {
                     }
 
                     final LoaderMethod loaderMethod = new LoaderMethodRestController();
-                    final Capsule capsule = loaderMethod.getMethodForCall(req);
+                    final Capsule capsule = loaderMethod.getMethodForCall(getLocalRequest(req));
 
                     responseForClient(capsule, res, req);
 

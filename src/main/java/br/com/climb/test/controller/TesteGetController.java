@@ -8,6 +8,7 @@ import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.annotations.mapping.GetMapping;
 import br.com.climb.framework.annotations.param.PathVariable;
 import br.com.climb.framework.annotations.param.RequestBody;
+import br.com.climb.framework.annotations.param.RequestParam;
 import br.com.climb.framework.utils.JwtUtil;
 import br.com.climb.test.model.Cliente;
 import br.com.climb.test.model.Response;
@@ -37,12 +38,6 @@ public class TesteGetController {
     @GetMapping("/{id}/")
     public Response teste1(@PathVariable("id") Long id)  {
 
-//        System.out.println("request: " + request.getPathInfo());
-
-//        String tk = request.getHeader(JwtUtil.TOKEN_HEADER);
-//        System.out.println(tk);
-//        System.out.println(request.getRequestURL().toString());
-//        System.out.println(request.getSession(true).getId());
 
         Cliente cliente = new Cliente();
         cliente.setNome("nome taliba");
@@ -55,11 +50,6 @@ public class TesteGetController {
         cliente = cliente = clienteRepository.findOne(id);
         System.out.println("Encontrou: " + cliente);
 
-        ResultIterator resultIterator = clienteRepository.find();
-//
-//        while (resultIterator.next()) {
-//            System.out.println(resultIterator.getObject());
-//        }
 
         String userName = "cliente.getNome()";
 
@@ -73,13 +63,18 @@ public class TesteGetController {
         return response;
     }
 
-    @GetMapping("/{id}/")
-    public String teste1(@PathVariable("id") Long id, @RequestBody Cliente cliente)  {
+    @GetMapping("/id/{id}/")
+    public String teste2(@PathVariable("id") Long id, @RequestBody Cliente cliente)  {
         return "Olá mundo " + cliente.getNome();
     }
 
+    @GetMapping("/pesoa/peso/")
+    public String teste3(@RequestParam("id") String id, @RequestParam("peso") String peso)  {
+        return " " + id + " " + peso;
+    }
+
     @GetMapping("/nome/{nome}/peso/{peso}/altura/{altura}/idade/{idade}/casado/{casado}/")
-    public Cliente teste2(
+    public Cliente teste4(
             @PathVariable("nome") String nome,
             @PathVariable("peso") Double peso,
             @PathVariable("altura") Float altura,
@@ -93,12 +88,6 @@ public class TesteGetController {
         cliente.setPeso(peso);
         cliente.setAltura(altura);
         cliente.setIdade(idade);
-
-//        ResultIterator resultIterator = clienteRepository.find();
-//
-////        while (resultIterator.next()) {
-////            System.out.println((Cliente)resultIterator.getObject());
-////        }
 
         clienteRepository.save(cliente);
         System.out.println("Fora: " + cliente);

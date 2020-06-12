@@ -21,7 +21,7 @@ import static br.com.climb.framework.utils.ReflectionUtils.*;
 
 public class LoaderMethodRestController implements LoaderMethod {
 
-    private Object[] getCastValuesRequestMapping(Method method, List<String> values) {
+    protected Object[] getCastValuesRequestMapping(Method method, List<String> values) {
 
         final Class[] types = method.getParameterTypes();
         final Object[] params = values.toArray();
@@ -63,7 +63,7 @@ public class LoaderMethodRestController implements LoaderMethod {
 
     }
 
-    protected Object[] getBodyRequest(Method method, HttpServletRequest request, Object[] arguments) throws IOException {
+    protected Object[] getBodyRequest(Method method, Request request, Object[] arguments) throws IOException {
 
         List<Object> arg = new ArrayList<>(Arrays.asList(arguments));
 
@@ -89,7 +89,7 @@ public class LoaderMethodRestController implements LoaderMethod {
         return arg.toArray();
     }
 
-    protected String getNormalizedUrl(HttpServletRequest request) {
+    protected String getNormalizedUrl(Request request) {
 
         final String[] arr = request.getPathInfo().split("/");
 
@@ -122,12 +122,12 @@ public class LoaderMethodRestController implements LoaderMethod {
 
     }
 
-    protected Object[] extractValueUrlRequestMapping(HttpServletRequest request, Method method) {
+    protected Object[] extractValueUrlRequestMapping(Request request, Method method) {
         final List<String> values = extractValueUrl(request);
         return getCastValuesRequestMapping(method, values);
     }
 
-    protected Object[] extractValueUrlRequestParam(HttpServletRequest request, Method method) {
+    protected Object[] extractValueUrlRequestParam(Request request, Method method) {
 
         final List<Object> valuesRequestParam = new ArrayList<>();
 
@@ -173,7 +173,7 @@ public class LoaderMethodRestController implements LoaderMethod {
         return valuesRequestParam.toArray();
     }
 
-    private List<String> extractValueUrl(HttpServletRequest request) {
+    protected List<String> extractValueUrl(Request request) {
 
         final String[] arr = request.getPathInfo().split("/");
         final List<String> values = new ArrayList<>();
@@ -193,7 +193,7 @@ public class LoaderMethodRestController implements LoaderMethod {
     }
 
     @Override
-    public Capsule getMethodForCall(HttpServletRequest request) throws NotFoundException, IOException {
+    public Capsule getMethodForCall(Request request) throws NotFoundException, IOException {
 
         final String url = getNormalizedUrl(request);
 

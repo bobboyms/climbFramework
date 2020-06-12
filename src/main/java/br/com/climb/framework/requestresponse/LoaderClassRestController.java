@@ -198,7 +198,6 @@ public class LoaderClassRestController implements Storage {
             final String word = splitedArray[(int) i];
 
             if (!isJavaType(word)) {
-//                RESERVED_WORDS.computeIfAbsent()
                 Set<Long> position = RESERVED_WORDS.get(word);
                 if (position == null) {
                     position = new HashSet<>();

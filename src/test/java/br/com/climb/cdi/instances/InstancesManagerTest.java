@@ -34,10 +34,8 @@ class InstancesManagerTest {
         initializer = ContainerInitializer.newInstance();
         disposes = DisposesManager.create(initializer);
         typeOfClass = TypeOfClassManager.create(initializer);
-        instances = new InstancesManager(initializer,disposes, typeOfClass);
-        return instances;
+        return new InstancesManager(initializer,disposes, typeOfClass);
     }
-
 
     @Test
     void generateInstanceByTheFactory() throws NoSuchFieldException {
