@@ -12,7 +12,7 @@ plugins {
 }
 
 group 'br.com.climb'
-version '1.0.2'
+version '1.0.3'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -34,31 +34,16 @@ dependencies {
 
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.12.v20180830'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.12.v20180830'
-//    compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.4.12.v20180830'
 
-    // https://mvnrepository.com/artifact/cglib/cglib
     compile group: 'cglib', name: 'cglib', version: '3.3.0'
-
-    //usado no CDI
-    compile 'commons-lang:commons-lang:2.6'
-
-
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
 
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.1'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.1'
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.1'
 
-//    compile group: 'org.jboss.weld.se', name: 'weld-se-core', version: '3.1.4.Final'
-
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
-
     compile 'io.jsonwebtoken:jjwt:0.7.0'
-
-//    compile group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.1.2'
-//    implementation 'io.swagger:swagger-servlet:2.1.2'
-//    compile group: 'io.swagger', name: 'swagger-annotations', version: '1.6.1'
-
 
 
     /**************** tomcat *****************/
@@ -130,7 +115,7 @@ publishing {
             artifact sourceJar
             groupId 'br.com.climbframework'
             artifactId 'climb-framework'
-            version '1.0.2'
+            version '1.0.3'
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'Simple framework')
@@ -143,8 +128,8 @@ publishing {
 }
 
 bintray {
-    user = 'bobboyms' //project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = '98e82d72304225bd12b4501c2f9997a12f9c00b1' //project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    user = 'bobboyms'
+    key = '98e82d72304225bd12b4501c2f9997a12f9c00b1'
     publications = ['MyPublication']
     pkg {
         repo = 'climbFramework'
@@ -155,10 +140,9 @@ bintray {
         labels = ['REST', 'API','Alternative']
         publicDownloadNumbers = true
         version {
-            name = '1.0.2'
+            name = '1.0.3'
             desc = 'new speed framework for rest api'
-            vcsTag = '1.0.2'
-//            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+            vcsTag = '1.0.3'
         }
     }
 }

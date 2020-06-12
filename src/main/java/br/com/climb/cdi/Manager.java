@@ -21,7 +21,6 @@ public class Manager implements ManagerContext {
         this.instances = InstancesManager.create(initializer,disposes, typeOfClass);
     }
 
-
     @Override
     public void disposeObjects() {
         disposes.disposeObjects();
@@ -31,8 +30,6 @@ public class Manager implements ManagerContext {
     public Object generateInstance(Class<?> aClass) {
         return instances.generateInstanceBase(aClass);
     }
-
-
 
     @Override
     public void close() throws Exception {

@@ -17,7 +17,7 @@ public class DisposesManager implements Disposes {
 
     private Set<Object> disposesObjects = new HashSet<>();
 
-    private DisposesManager(Initializer initializer) {
+    protected DisposesManager(Initializer initializer) {
         this.initializer = initializer;
     }
 

@@ -8,16 +8,6 @@ public class Capsule {
 
     private Method method;
 
-    private Boolean returnSingleton;
-
-    public void setReturnSingleton(Boolean returnSingleton) {
-        this.returnSingleton = returnSingleton;
-    }
-
-    public Boolean isReturnSingleton() {
-        return returnSingleton;
-    }
-
     public void setClassFactory(Class classFactory) {
         this.classFactory = classFactory;
     }

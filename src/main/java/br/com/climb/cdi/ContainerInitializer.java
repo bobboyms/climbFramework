@@ -64,7 +64,7 @@ public abstract class ContainerInitializer implements Initializer {
                                 capsule.setClassFactory(factoryClass);
                                 capsule.setMethod(method);
 
-                                if (method.getParameters().length > 0) {
+                                if (method.getParameters().length == 1) {
                                     Parameter parameter = Arrays.asList(method.getParameters()).get(0);
                                     disposesMethods.put(parameter.getType(), capsule);
 

@@ -24,7 +24,7 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
     private Map<Class<?>, Object> singletonsObjects = new HashMap<>();
 
-    private InstancesManager(Initializer initializer,
+    protected InstancesManager(Initializer initializer,
                              Disposes disposes,
                              TypeOfClass typeOfClass) {
         this.initializer = initializer;
@@ -138,6 +138,8 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
     public Object getSingletonObject(Capsule capsule) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
 
         if (capsule.getMethod().getAnnotation(br.com.climb.cdi.annotations.Singleton.class) != null) {
+
+            System.out.println("Retorno: " + capsule.getMethod().getReturnType());
 
             final Object singleton = singletonsObjects.get(capsule.getMethod().getReturnType());
 
