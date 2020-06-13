@@ -19,7 +19,7 @@ class TypeOfClassManagerTest {
     @Order(1)
     void create() {
         typeOfClassManager = new TypeOfClassManager(ContainerInitializer.newInstance());
-        Assertions.assertSame(true, Objects.isNull(typeOfClassManager));
+        Assertions.assertSame(false, Objects.isNull(typeOfClassManager));
     }
 
     @Test

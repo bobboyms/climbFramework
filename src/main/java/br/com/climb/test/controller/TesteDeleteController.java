@@ -13,13 +13,12 @@ public class TesteDeleteController {
 
     @DeleteMapping("/pessoa/")
     public Cliente teste1(@RequestBody Cliente cliente) {
-        cliente.setNome("passou aqui");
         return cliente;
     }
 
     @DeleteMapping("/pessoa/{id}/")
     public Cliente teste2(@PathVariable("id") Long id, @RequestBody Cliente cliente) {
-        cliente.setNome("Pessou por aki " + id);
+        cliente.setId(id);
         return cliente;
     }
 
