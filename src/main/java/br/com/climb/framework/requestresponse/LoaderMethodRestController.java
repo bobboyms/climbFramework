@@ -131,11 +131,11 @@ public class LoaderMethodRestController implements LoaderMethod {
 
         final List<Object> valuesRequestParam = new ArrayList<>();
 
-        request.getParameterMap().forEach((k, v) -> {
+        Arrays.asList(method.getParameters()).forEach((param)->{
 
-            Arrays.asList(method.getParameters()).forEach((param)->{
+            RequestParam requestParam = param.getAnnotation(RequestParam.class);
 
-                RequestParam requestParam = param.getAnnotation(RequestParam.class);
+            request.getParameterMap().forEach((k, v) -> {
 
                 if (requestParam != null && requestParam.value().equals(k)) {
 
@@ -168,7 +168,10 @@ public class LoaderMethodRestController implements LoaderMethod {
                 }
 
             });
+
         });
+
+
 
         return valuesRequestParam.toArray();
     }
