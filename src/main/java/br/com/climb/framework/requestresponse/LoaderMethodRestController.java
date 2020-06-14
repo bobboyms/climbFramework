@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static br.com.climb.framework.requestresponse.Methods.*;
 import static br.com.climb.framework.utils.ReflectionUtils.*;
@@ -91,32 +93,25 @@ public class LoaderMethodRestController implements LoaderMethod {
 
     protected String getNormalizedUrl(Request request) {
 
-        final String[] arr = request.getPathInfo().split("/");
+        final String[] arrUrl = request.getPathInfo().split("/");
 
         final StringBuilder builder = new StringBuilder();
         builder.append("/");
 
-        for (int position = 1; position < arr.length; position++) {
-
-            final String word = arr[position].trim();
-
-            if (isReservedWord(word, (long) position)) {
+        LongStream.range(1, arrUrl.length).forEach(index -> {
+            final String word = arrUrl[(int) index].trim();
+            if (isReservedWord(word, index)) {
                 builder.append(word+"/");
-                continue;
-            }
-
+            } else
             if (isNumeric(word)) {
                 builder.append(CLIMB_TYPE_NUMBER + "/");
-                continue;
-            }
-
+            } else
             if (word.equals("true") || word.equals("false")) {
                 builder.append(JAVA_TYPE_BOOLEAN+"/");
-                continue;
+            } else {
+                builder.append(JAVA_TYPE_STRING+"/");
             }
-
-            builder.append(JAVA_TYPE_STRING+"/");
-        }
+        });
 
         return builder.toString();
 
@@ -178,19 +173,17 @@ public class LoaderMethodRestController implements LoaderMethod {
 
     protected List<String> extractValueUrl(Request request) {
 
-        final String[] arr = request.getPathInfo().split("/");
+        final String[] splitUrl = request.getPathInfo().split("/");
         final List<String> values = new ArrayList<>();
 
-        for (int position = 1; position < arr.length; position++) {
+        IntStream.range(1, splitUrl.length).forEach(index ->{
+            final String word = splitUrl[index].trim();
 
-            final String word = arr[position].trim();
-
-            if (isReservedWord(word, (long) position)) {
-                continue;
+            if (!isReservedWord(word, (long) index)) {
+                values.add(word);
             }
 
-            values.add(word);
-        }
+        });
 
         return values;
     }
