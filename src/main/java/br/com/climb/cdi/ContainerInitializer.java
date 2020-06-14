@@ -15,6 +15,7 @@ public abstract class ContainerInitializer implements Initializer {
     protected final Map<Class<?>, Capsule> factoriesClasses = new HashMap<>();
     protected final Map<Class<?>, Class<?>> interceptorClasses = new HashMap<>();
     protected final Map<Class<?>, Capsule> disposesMethods = new HashMap<>();
+    protected final Map<String, Map<Class<?>, Object>> sessionObjects = new HashMap<>();
 
     @Override
     public Map<Class<?>, Capsule> getDisposesMethods() {
@@ -34,6 +35,11 @@ public abstract class ContainerInitializer implements Initializer {
     @Override
     public Map<Class<?>, Class<?>> getInterceptorClasses(){
         return interceptorClasses;
+    }
+
+    @Override
+    public Map<String, Map<Class<?>, Object>> getSessionObjects() {
+        return sessionObjects;
     }
 
     public static ContainerInitializer newInstance() {

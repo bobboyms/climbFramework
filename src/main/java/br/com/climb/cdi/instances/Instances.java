@@ -7,5 +7,6 @@ public interface Instances {
     Object generateInstance(Field field);
     Object generateInstanceByTheFactory(Field field);
     Object generateInstanceBase(Class<?> clazz);
+    Object generateInstanceBase(Class<?> clazz, String sessionid);
 
 }

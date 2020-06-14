@@ -12,5 +12,6 @@ public interface Initializer {
     Map<Class<?>, Capsule> getFactoriesClasses();
     Map<Class<?>, List<Class<?>>> getConcreteInterfaceClasses();
     Map<Class<?>, Class<?>> getInterceptorClasses();
+    Map<String, Map<Class<?>, Object>> getSessionObjects();
 
 }

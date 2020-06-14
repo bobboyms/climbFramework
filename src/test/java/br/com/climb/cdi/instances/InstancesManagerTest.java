@@ -7,10 +7,7 @@ import br.com.climb.cdi.clazz.TypeOfClassManager;
 import br.com.climb.cdi.disposes.Disposes;
 import br.com.climb.cdi.disposes.DisposesManager;
 import br.com.climb.cdi.model.Capsule;
-import br.com.climb.cdi.teste.model.Carro;
-import br.com.climb.cdi.teste.model.Controller;
-import br.com.climb.cdi.teste.model.Endereco;
-import br.com.climb.cdi.teste.model.Pessoa;
+import br.com.climb.cdi.teste.model.*;
 import br.com.climb.cdi.teste.model.factory.ArquivoTextoFactory;
 import br.com.climb.cdi.teste.model.factory.PessoaFactory;
 import org.junit.jupiter.api.Assertions;
@@ -69,6 +66,45 @@ class InstancesManagerTest {
         Controller result =  (Controller) getInstance().generateInstanceBase(Controller.class);
         Assertions.assertSame(false, Objects.isNull(result));
         Assertions.assertSame(Controller.class, result.getClass().getSuperclass());
+    }
+
+    @Test
+    void generateInstanceBaseSession() {
+
+        Instances instances = getInstance();
+
+        CadastroClienteController instance1 =  (CadastroClienteController) instances.generateInstanceBase(CadastroClienteController.class,"1234");
+        Assertions.assertSame(false, Objects.isNull(instance1));
+        Assertions.assertSame(CadastroClienteController.class, instance1.getClass().getSuperclass());
+        PessoaRepository pessoaRepository1 = (PessoaRepository) instance1.getPessoaRepository();
+
+        CadastroClienteController instance2 =  (CadastroClienteController) instances.generateInstanceBase(CadastroClienteController.class,"1234");
+        Assertions.assertSame(false, Objects.isNull(instance2));
+        PessoaRepository pessoaRepository2 = (PessoaRepository) instance1.getPessoaRepository();
+
+        Assertions.assertSame(instance1, instance2);
+        Assertions.assertSame(false, pessoaRepository1.equals(pessoaRepository2));
+
+        Assertions.assertSame(0l, instance1.getValor());
+        Assertions.assertSame(1l, instance2.getValor());
+        Assertions.assertSame(2l, instance1.getValor());
+        Assertions.assertSame(3l, instance2.getValor());
+        Assertions.assertSame(4l, instance1.getValor());
+        Assertions.assertSame(5l, instance2.getValor());
+
+        CadastroCarroController instance3 =  (CadastroCarroController) instances.generateInstanceBase(CadastroCarroController.class,"1234");
+        Assertions.assertSame(false, Objects.isNull(instance2));
+
+        Assertions.assertSame(0l, instance3.getValor());
+        Assertions.assertSame(1l, instance3.getValor());
+
+        instance1 =  (CadastroClienteController) instances.generateInstanceBase(CadastroClienteController.class,"1234");
+        Assertions.assertSame(6l, instance1.getValor());
+
+        instance3 =  (CadastroCarroController) instances.generateInstanceBase(CadastroCarroController.class,"1234");
+        Assertions.assertSame(2l, instance3.getValor());
+
+
     }
 
     @Test

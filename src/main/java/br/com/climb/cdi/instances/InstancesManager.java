@@ -1,7 +1,9 @@
 package br.com.climb.cdi.instances;
 
 import br.com.climb.cdi.Initializer;
+import br.com.climb.cdi.annotations.Component;
 import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.annotations.ReCreate;
 import br.com.climb.cdi.clazz.TypeOfClass;
 import br.com.climb.cdi.disposes.Disposes;
 import br.com.climb.cdi.interceptor.InterceptorMethod;
@@ -87,25 +89,10 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
         }
 
         final Enhancer enhancer = new Enhancer();
-        System.out.println(typeOfClass);
         enhancer.setSuperclass(typeOfClass.getClassOfField(field));
         enhancer.setCallback(new InterceptorMethod(typeOfClass, this));
 
         return enhancer.create();
-
-    }
-
-    @Override
-    public Object generateInstanceBase(Class<?> clazz) {
-
-        final Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(clazz);
-        enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> proxy.invokeSuper(obj, args));
-
-        final Object base = enhancer.create();
-        injectObjecstInComponentClass(clazz, base);
-
-        return base;
 
     }
 
@@ -139,8 +126,6 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
         if (capsule.getMethod().getAnnotation(br.com.climb.cdi.annotations.Singleton.class) != null) {
 
-            System.out.println("Retorno: " + capsule.getMethod().getReturnType());
-
             final Object singleton = singletonsObjects.get(capsule.getMethod().getReturnType());
 
             if (singleton != null) {
@@ -158,4 +143,69 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
         return null;
     }
+
+    private void validaComponent(Class clazz) {
+        if (clazz.getDeclaredAnnotation(Component.class) == null) {
+            new Error("Não é um componente valido. Classe: " + clazz);
+        }
+    }
+
+    @Override
+    public Object generateInstanceBase(Class<?> clazz, String sessionid) {
+
+        validaComponent(clazz);
+
+        Map<String, Map<Class<?>, Object>> sessionMap = initializer.getSessionObjects();
+        Map<Class<?>, Object> sesseionInstance = sessionMap.get(sessionid);
+
+        Object instance = null;
+
+        if (sesseionInstance != null) {
+
+            Object base = sesseionInstance.get(clazz);
+
+            if (base != null) {
+                final Object finalBase = base;
+                Arrays.asList(clazz.getDeclaredFields()).stream()
+                        .filter(field -> field.getAnnotation(ReCreate.class) != null)
+                        .forEach(field -> injectInstanceField(finalBase, field, generateInstance(field)));
+            }
+
+            if (base == null) {
+                base = generateInstanceBase(clazz);
+                sesseionInstance.put(clazz, base);
+                sessionMap.put(sessionid, sesseionInstance);
+            }
+
+            return base;
+
+        } else {
+
+            final Object base = generateInstanceBase(clazz);
+
+            sesseionInstance = new HashMap<>();
+            sesseionInstance.put(clazz, base);
+            sessionMap.put(sessionid, sesseionInstance);
+
+            return base;
+
+        }
+    }
+
+    @Override
+    public Object generateInstanceBase(Class<?> clazz) {
+
+        validaComponent(clazz);
+
+        final Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(clazz);
+        enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> proxy.invokeSuper(obj, args));
+
+        final Object base = enhancer.create();
+        injectObjecstInComponentClass(clazz, base);
+
+        return base;
+
+    }
+
 }

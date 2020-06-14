@@ -7,7 +7,6 @@ import br.com.climb.framework.requestresponse.interfaces.LoaderMethod;
 import br.com.climb.framework.requestresponse.model.Capsule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -126,7 +125,7 @@ public class LoaderMethodRestController implements LoaderMethod {
 
         final List<Object> valuesRequestParam = new ArrayList<>();
 
-        Arrays.asList(method.getParameters()).forEach((param)->{
+        Arrays.asList(method.getParameters()).forEach(param -> {
 
             RequestParam requestParam = param.getAnnotation(RequestParam.class);
 
@@ -145,7 +144,6 @@ public class LoaderMethodRestController implements LoaderMethod {
                     }
 
                     if (param.getType() == Long.class || param.getType() == long.class) {
-                        System.out.println(value);
                         valuesRequestParam.add(new Long(value));
                     }
 
