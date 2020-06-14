@@ -12,7 +12,7 @@ plugins {
 }
 
 group 'br.com.climb'
-version '1.0.3'
+version '1.0.4'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -115,7 +115,7 @@ publishing {
             artifact sourceJar
             groupId 'br.com.climbframework'
             artifactId 'climb-framework'
-            version '1.0.3'
+            version '1.0.4'
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'Simple framework')
@@ -140,9 +140,9 @@ bintray {
         labels = ['REST', 'API','Alternative']
         publicDownloadNumbers = true
         version {
-            name = '1.0.3'
+            name = '1.0.4'
             desc = 'new speed framework for rest api'
-            vcsTag = '1.0.3'
+            vcsTag = '1.0.4'
         }
     }
 }
