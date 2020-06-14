@@ -16,7 +16,8 @@ public class ArquivoTextoFactory {
     @Produces
     @Singleton
     public ArquivoTexto getArquivoTexto() {
-        System.out.println("Tem pessoa? : " + pessoa);
+        System.out.println("Criou arquivo de texto via factory");
+        System.out.println("Injetou pessoa na fabrica: " + pessoa);
         return new ArquivoTexto();
     }
 

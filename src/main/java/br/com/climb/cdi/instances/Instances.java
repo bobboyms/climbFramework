@@ -1,5 +1,7 @@
 package br.com.climb.cdi.instances;
 
+import br.com.climb.cdi.exception.ValidationException;
+
 import java.lang.reflect.Field;
 
 public interface Instances {

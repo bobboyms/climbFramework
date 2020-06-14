@@ -1,7 +1,6 @@
 package br.com.climb.cdi.instances;
 
 import br.com.climb.cdi.Initializer;
-import br.com.climb.cdi.annotations.Component;
 import br.com.climb.cdi.annotations.Inject;
 import br.com.climb.cdi.annotations.ReCreate;
 import br.com.climb.cdi.clazz.TypeOfClass;
@@ -10,6 +9,8 @@ import br.com.climb.cdi.interceptor.InterceptorMethod;
 import br.com.climb.cdi.model.Capsule;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InstancesManager implements Instances, InjectInstance, Singleton {
+
+    private static Logger logger = LoggerFactory.getLogger(InstancesManager.class);
 
     private Initializer initializer;
     private Disposes disposes;
@@ -66,17 +69,12 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
             return resultInvoke;
 
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException  e) {
+            logger.error("{}", e);
         }
 
-        throw new Error("unexpected error in this operation");
+        return null;
+
     }
 
     @Override
@@ -116,7 +114,7 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
             method.invoke(main, instance);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("{}", e);
         }
 
     }
@@ -144,21 +142,13 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
         return null;
     }
 
-    private void validaComponent(Class clazz) {
-        if (clazz.getDeclaredAnnotation(Component.class) == null) {
-            new Error("Não é um componente valido. Classe: " + clazz);
-        }
-    }
+
 
     @Override
     public Object generateInstanceBase(Class<?> clazz, String sessionid) {
 
-        validaComponent(clazz);
-
-        Map<String, Map<Class<?>, Object>> sessionMap = initializer.getSessionObjects();
+        final Map<String, Map<Class<?>, Object>> sessionMap = initializer.getSessionObjects();
         Map<Class<?>, Object> sesseionInstance = sessionMap.get(sessionid);
-
-        Object instance = null;
 
         if (sesseionInstance != null) {
 
@@ -169,9 +159,7 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
                 Arrays.asList(clazz.getDeclaredFields()).stream()
                         .filter(field -> field.getAnnotation(ReCreate.class) != null)
                         .forEach(field -> injectInstanceField(finalBase, field, generateInstance(field)));
-            }
-
-            if (base == null) {
+            } else {
                 base = generateInstanceBase(clazz);
                 sesseionInstance.put(clazz, base);
                 sessionMap.put(sessionid, sesseionInstance);
@@ -194,8 +182,6 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
     @Override
     public Object generateInstanceBase(Class<?> clazz) {
-
-        validaComponent(clazz);
 
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);

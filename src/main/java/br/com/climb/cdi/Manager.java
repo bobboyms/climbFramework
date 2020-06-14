@@ -4,6 +4,7 @@ import br.com.climb.cdi.clazz.TypeOfClass;
 import br.com.climb.cdi.clazz.TypeOfClassManager;
 import br.com.climb.cdi.disposes.Disposes;
 import br.com.climb.cdi.disposes.DisposesManager;
+import br.com.climb.cdi.exception.ValidationException;
 import br.com.climb.cdi.instances.Instances;
 import br.com.climb.cdi.instances.InstancesManager;
 
@@ -29,6 +30,11 @@ public class Manager implements ManagerContext {
     @Override
     public Object generateInstance(Class<?> aClass) {
         return instances.generateInstanceBase(aClass);
+    }
+
+    @Override
+    public Object generateInstance(Class<?> aClass, String sessionid) {
+        return instances.generateInstanceBase(aClass, sessionid);
     }
 
     @Override

@@ -6,12 +6,12 @@ import br.com.climb.cdi.clazz.TypeOfClass;
 import br.com.climb.cdi.clazz.TypeOfClassManager;
 import br.com.climb.cdi.disposes.Disposes;
 import br.com.climb.cdi.disposes.DisposesManager;
+import br.com.climb.cdi.exception.ValidationException;
 import br.com.climb.cdi.model.Capsule;
 import br.com.climb.cdi.teste.model.*;
 import br.com.climb.cdi.teste.model.factory.ArquivoTextoFactory;
 import br.com.climb.cdi.teste.model.factory.PessoaFactory;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -69,7 +69,7 @@ class InstancesManagerTest {
     }
 
     @Test
-    void generateInstanceBaseSession() {
+    void generateInstanceBaseSession() throws ValidationException {
 
         Instances instances = getInstance();
 

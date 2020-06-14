@@ -4,10 +4,7 @@ import br.com.climb.cdi.ManagerContext;
 import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.execptions.NotFoundException;
 import br.com.climb.framework.requestresponse.model.Capsule;
-import br.com.climb.test.controller.TesteDeleteController;
-import br.com.climb.test.controller.TesteGetController;
-import br.com.climb.test.controller.TestePostController;
-import br.com.climb.test.controller.TestePutController;
+import br.com.climb.test.controller.*;
 import br.com.climb.test.model.Cliente;
 import br.com.climb.test.model.Pessoa;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,6 +42,63 @@ class LoaderMethodRestControllerTest {
 
     @Test
     void extractValueUrlRequestParam() {
+
+    }
+
+    @Test
+    void getMethodForCall_GET_SESSION() throws Exception {
+
+        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+
+        LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
+
+        Request request = new HttpRequest(
+                "GET","/get/session/",
+                "",new HashMap<>(),
+                new BufferedReader(new StringReader("")));
+
+
+        Capsule capsule = loaderMethodRestController.getMethodForCall(request);
+        Assertions.assertSame(TesteGetControllerSession.class, capsule.getMethod().getDeclaringClass());
+
+        Assertions.assertSame(0, capsule.getArgs().length);
+
+        try(final ManagerContext context = containerInitializer.createManager()) {
+
+            final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), "1234");
+            final Long result = (Long) capsule.getMethod().invoke(instance, capsule.getArgs());
+
+            Assertions.assertSame(0l, result.longValue());
+
+        }
+
+        try(final ManagerContext context = containerInitializer.createManager()) {
+
+            final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), "1234");
+            final Long result = (Long) capsule.getMethod().invoke(instance, capsule.getArgs());
+
+            Assertions.assertSame(1l, result.longValue());
+
+        }
+
+        try(final ManagerContext context = containerInitializer.createManager()) {
+
+            final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), "1234");
+            final Long result = (Long) capsule.getMethod().invoke(instance, capsule.getArgs());
+
+            Assertions.assertSame(2l, result.longValue());
+
+        }
+
+        try(final ManagerContext context = containerInitializer.createManager()) {
+
+            final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), "1234");
+            final Long result = (Long) capsule.getMethod().invoke(instance, capsule.getArgs());
+
+            Assertions.assertSame(3l, result.longValue());
+
+        }
+
 
     }
 
