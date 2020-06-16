@@ -1,4 +1,4 @@
-package br.com.climb.test.controller;
+package br.com.climb.test.controller.java;
 
 import br.com.climb.cdi.annotations.Inject;
 import br.com.climb.cdi.annotations.Session;

@@ -34,30 +34,31 @@ public class LoaderMethodRestController implements LoaderMethod {
                 continue;
             }
 
-            if (JAVA_TYPE_INTEGER.equals(types[i].toString())) {
+            if (JAVA_TYPE_INTEGER.equals(types[i].toString()) || PRIMITIVE_TYPE_INT.equals(types[i].toString())) {
                 params[i] = new Integer(values.get(i));
                 continue;
             }
 
-            if (JAVA_TYPE_LONG.equals(types[i].toString())) {
+            if (JAVA_TYPE_LONG.equals(types[i].toString()) || PRIMITIVE_TYPE_LONG.equals(types[i].toString())) {
                 params[i] = new Long(values.get(i));
                 continue;
             }
 
-            if (JAVA_TYPE_FLOAT.equals(types[i].toString())) {
+            if (JAVA_TYPE_FLOAT.equals(types[i].toString()) || PRIMITIVE_TYPE_FLOAT.equals(types[i].toString())) {
                 params[i] = new Float(values.get(i));
                 continue;
             }
 
-            if (JAVA_TYPE_DOUBLE.equals(types[i].toString())) {
+            if (JAVA_TYPE_DOUBLE.equals(types[i].toString()) || PRIMITIVE_TYPE_DOUBLE.equals(types[i].toString())) {
                 params[i] = new Double(values.get(i));
                 continue;
             }
 
-            if (JAVA_TYPE_BOOLEAN.equals(types[i].toString())) {
+            if (JAVA_TYPE_BOOLEAN.equals(types[i].toString()) || PRIMITIVE_TYPE_BOOLEAN.equals(types[i].toString())) {
                 params[i] = new Boolean(values.get(i));
                 continue;
             }
+
         }
 
         return params;

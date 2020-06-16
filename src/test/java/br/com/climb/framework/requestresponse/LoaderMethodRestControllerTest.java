@@ -4,27 +4,20 @@ import br.com.climb.cdi.ManagerContext;
 import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.execptions.NotFoundException;
 import br.com.climb.framework.requestresponse.model.Capsule;
-import br.com.climb.test.controller.*;
+import br.com.climb.test.controller.java.*;
 import br.com.climb.test.model.Cliente;
-import br.com.climb.test.model.Pessoa;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import static br.com.climb.framework.JettyServer.containerInitializer;
 import static br.com.climb.framework.utils.ReflectionUtils.getAnnotedClass;
-import static org.junit.jupiter.api.Assertions.*;
 
 class LoaderMethodRestControllerTest {
 

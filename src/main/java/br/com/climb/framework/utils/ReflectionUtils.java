@@ -26,6 +26,13 @@ public class ReflectionUtils {
     public static final String JAVA_TYPE_FLOAT = "class java.lang.Float";
     public static final String JAVA_TYPE_BOOLEAN = "class java.lang.Boolean";
 
+    public static final String PRIMITIVE_TYPE_LONG = "long";
+    public static final String PRIMITIVE_TYPE_INTEGER = "integer";
+    public static final String PRIMITIVE_TYPE_INT = "int";
+    public static final String PRIMITIVE_TYPE_DOUBLE = "double";
+    public static final String PRIMITIVE_TYPE_FLOAT = "float";
+    public static final String PRIMITIVE_TYPE_BOOLEAN = "boolean";
+
     public static final String CLIMB_TYPE_NUMBER = "class java.lang.Number";
 
     public synchronized static Set<Class<?>> getAnnotedClass(Class annotation, String packag) throws IOException {
@@ -50,6 +57,10 @@ public class ReflectionUtils {
     public synchronized static boolean isJavaType(String value) {
 
         if (JAVA_TYPE_LONG.equals(value)) {
+            return true;
+        }
+
+        if (JAVA_TYPE_INTEGER.equals(value)) {
             return true;
         }
 
@@ -103,7 +114,31 @@ public class ReflectionUtils {
             return CLIMB_TYPE_NUMBER;
         }
 
-        throw new Error("Tipo não suportado");
+        if (PRIMITIVE_TYPE_BOOLEAN.equals(clazz.toString())) {
+            return JAVA_TYPE_BOOLEAN;
+        }
+
+        if (PRIMITIVE_TYPE_LONG.equals(clazz.toString())) {
+            return CLIMB_TYPE_NUMBER;
+        }
+
+        if (PRIMITIVE_TYPE_INT.equals(clazz.toString())) {
+            return CLIMB_TYPE_NUMBER;
+        }
+
+        if (PRIMITIVE_TYPE_INTEGER.equals(clazz.toString())) {
+            return CLIMB_TYPE_NUMBER;
+        }
+
+        if (PRIMITIVE_TYPE_DOUBLE.equals(clazz.toString())) {
+            return CLIMB_TYPE_NUMBER;
+        }
+
+        if (PRIMITIVE_TYPE_FLOAT.equals(clazz.toString())) {
+            return CLIMB_TYPE_NUMBER;
+        }
+
+        throw new Error("Tipo não suportado: " + clazz.toString());
     }
 
     public synchronized static boolean isNumeric(String strNum) {
