@@ -21,8 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 
-import static br.com.climb.framework.JettyServer.containerInitializer;
-
+import static br.com.climb.webserver.ClimbApplication.containerInitializer;
 
 public class ControllerServlet extends HttpServlet {
 
@@ -31,8 +30,10 @@ public class ControllerServlet extends HttpServlet {
 
     private Request getLocalRequest(HttpServletRequest request) throws IOException {
         return new HttpRequest(request.getMethod(),
-                request.getPathInfo(),request.getContentType(),
-                request.getParameterMap(),request.getReader());
+                request.getPathInfo(),
+                request.getContentType(),
+                request.getParameterMap(),
+                request.getReader());
     }
 
     private void responseForClient(Capsule capsule, HttpServletResponse response, HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
@@ -55,9 +56,6 @@ public class ControllerServlet extends HttpServlet {
                 out.write(json.getBytes()); // "UTF-8"
                 out.flush();
                 out.close();
-
-                context.disposeObjects();
-
             }
 
         } catch (Exception e) {
@@ -152,7 +150,6 @@ public class ControllerServlet extends HttpServlet {
         } catch (Exception e) {
             logger.error("THREAD doDelete { }", e);
         }
-
 
     }
 

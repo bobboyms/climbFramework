@@ -1,7 +1,7 @@
-package br.com.climb.framework;
+package br.com.climb.webserver;
 
-import br.com.climb.cdi.ContainerInitializer;
 import br.com.climb.framework.annotations.RestController;
+import br.com.climb.framework.configuration.ConfigFile;
 import br.com.climb.framework.requestresponse.LoaderClassRestController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 import br.com.climb.framework.servlets.ControllerServlet;
@@ -14,15 +14,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.Set;
 
 import static br.com.climb.framework.utils.ReflectionUtils.getAnnotedClass;
 
-public class JettyServer {
+public class JettyServer implements WebServer {
+
+    private ConfigFile configFile;
+
+    public JettyServer(ConfigFile configFile) {
+        this.configFile = configFile;
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(JettyServer.class);
-
-    public static final ContainerInitializer containerInitializer = ContainerInitializer.newInstance();
 
     public void start() throws Exception {
 
@@ -32,7 +37,7 @@ public class JettyServer {
         servletContextHandler.setContextPath("/");
 
         servletContextHandler.addServlet(ControllerServlet.class, "/*");
-        servletContextHandler.addEventListener(new MyContextListener());
+        servletContextHandler.addEventListener(new JettyServer.MyContextListener());
 
         servletContextHandler.addFilter(JwtFilter.class,"/api/*",
                 EnumSet.of(DispatcherType.REQUEST));
@@ -42,9 +47,8 @@ public class JettyServer {
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(servletContextHandler);
-//        handlers.addHandler(servletHandler);
 
-        Set<Class<?>> clazzs = getAnnotedClass(RestController.class, "br.com.");
+        Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
         Storage storage = new LoaderClassRestController();
         storage.storage(clazzs);
 
@@ -61,7 +65,7 @@ public class JettyServer {
         public void contextInitialized(ServletContextEvent sce)
         {
             System.err.printf("MyContextListener.contextInitialized(%s)%n", sce);
-            sce.getServletContext().addListener(new MyRequestListener());
+            sce.getServletContext().addListener(new JettyServer.MyRequestListener());
         }
 
         @Override
@@ -84,11 +88,6 @@ public class JettyServer {
         {
             System.err.printf("MyRequestListener.requestInitialized(%s)%n", sre);
         }
-    }
-
-
-    public static void main(String[] args) throws Exception {
-        new JettyServer().start();
     }
 
 }

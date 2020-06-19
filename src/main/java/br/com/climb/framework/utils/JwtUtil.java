@@ -1,5 +1,6 @@
 package br.com.climb.framework.utils;
 
+import br.com.climb.test.model.Response;
 import io.jsonwebtoken.*;
 
 import java.util.HashMap;
@@ -7,23 +8,19 @@ import java.util.Map;
 
 public class JwtUtil {
 
-    private static String key = "1VLruSCiWJ1oOrfipnnrQDoL7MTtCcW9wGqJsypnvMYjQbWK0nc6p1T37j7s";
+    private static final String key = "1VLruSCiWJ1oOrfipnnrQDoL7MTtCcW9wGqJsypnvMYjQbWK0nc6p1T37j7s";
 
     public static final String TOKEN_HEADER = "Authentication";
 
-    public static String create(String subject) {
-
-        Map<String, Object> teste = new HashMap<>();
-        teste.put("Nome", "Thiago Luiz Rodrigues");
+    public synchronized static String create(Response response) {
 
         return Jwts.builder()
-                .setSubject(subject)
-//                .setHeader(teste)
+                .setSubject(response.getSubject())
                 .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
     }
 
-    public static Jws<Claims> decode(String token) {
+    public synchronized static Jws<Claims> decode(String token) {
         return Jwts.parser().setSigningKey(key).parseClaimsJws(token);
     }
 }

@@ -14,14 +14,6 @@ class ControllerServletTest {
     @Test
     void doGet() throws IOException {
 
-        Set<Class<?>> clazzs = getAnnotedClass(RestController.class, "br.com.");
-        LoaderClassRestController loaderClassRestController = new LoaderClassRestController();
-        loaderClassRestController.storage(clazzs);
-
-//        final LoaderMethod loaderMethod = new LoaderMethodRestController();
-//        final Capsule capsule = loaderMethod.getMethodForCall(req);
-//        final Object result = callMethod(capsule.getMethod(), capsule.getArgs());
-
     }
 
     @Test

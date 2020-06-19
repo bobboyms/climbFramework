@@ -1,7 +1,11 @@
 package br.com.climb.framework.requestresponse;
 
+import br.com.climb.cdi.ContainerInitializer;
 import br.com.climb.cdi.ManagerContext;
 import br.com.climb.framework.annotations.RestController;
+import br.com.climb.framework.configuration.ConfigFile;
+import br.com.climb.framework.configuration.FactoryConfigFile;
+import br.com.climb.framework.execptions.ConfigFileException;
 import br.com.climb.framework.execptions.NotFoundException;
 import br.com.climb.framework.requestresponse.model.Capsule;
 import br.com.climb.test.controller.java.*;
@@ -16,10 +20,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static br.com.climb.framework.JettyServer.containerInitializer;
 import static br.com.climb.framework.utils.ReflectionUtils.getAnnotedClass;
 
 class LoaderMethodRestControllerTest {
+    private ContainerInitializer containerInitializer;
+
+    public ContainerInitializer getContainerInitializer() throws IOException, ConfigFileException {
+
+        if (containerInitializer == null) {
+            ConfigFile configFile = new FactoryConfigFile().getConfigFile("framework.properties");
+            containerInitializer = ContainerInitializer.newInstance(configFile);
+        }
+
+        return containerInitializer;
+
+    }
 
     @Test
     void getBodyRequest() {
@@ -56,7 +71,7 @@ class LoaderMethodRestControllerTest {
 
         Assertions.assertSame(0, capsule.getArgs().length);
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), "1234");
             final Long result = (Long) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -68,7 +83,7 @@ class LoaderMethodRestControllerTest {
             e.printStackTrace();
         }
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), "1234");
             final Long result = (Long) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -80,7 +95,7 @@ class LoaderMethodRestControllerTest {
             e.printStackTrace();
         }
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), "1234");
             final Long result = (Long) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -92,7 +107,7 @@ class LoaderMethodRestControllerTest {
             e.printStackTrace();
         }
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), "1234");
             final Long result = (Long) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -103,7 +118,6 @@ class LoaderMethodRestControllerTest {
             Assertions.assertSame(true, false);
             e.printStackTrace();
         }
-
 
     }
 
@@ -130,7 +144,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(true, capsule.getArgs()[3].equals(33l));
         Assertions.assertSame(true, capsule.getArgs()[4].equals(true));
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -176,7 +190,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(true, capsule.getArgs()[0].equals(30l));
         Assertions.assertSame(Cliente.class, capsule.getArgs()[1].getClass());
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final String result = (String) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -246,7 +260,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(true, capsule.getArgs()[1].equals(150d));
         Assertions.assertSame(Cliente.class, capsule.getArgs()[2].getClass());
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final String result = (String) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -289,7 +303,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(true, capsule.getArgs()[0].equals(20l));
         Assertions.assertSame(Cliente.class, capsule.getArgs()[1].getClass());
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -334,7 +348,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(1, capsule.getArgs().length);
         Assertions.assertSame(Cliente.class, capsule.getArgs()[0].getClass());
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -380,7 +394,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(true, capsule.getArgs()[0].equals(34l));
         Assertions.assertSame(Cliente.class, capsule.getArgs()[1].getClass());
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -425,7 +439,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(1, capsule.getArgs().length);
         Assertions.assertSame(Cliente.class, capsule.getArgs()[0].getClass());
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -471,7 +485,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(true, capsule.getArgs()[0].equals(34l));
         Assertions.assertSame(Cliente.class, capsule.getArgs()[1].getClass());
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());
@@ -516,7 +530,7 @@ class LoaderMethodRestControllerTest {
         Assertions.assertSame(1, capsule.getArgs().length);
         Assertions.assertSame(Cliente.class, capsule.getArgs()[0].getClass());
 
-        try(final ManagerContext context = containerInitializer.createManager()) {
+        try(final ManagerContext context = getContainerInitializer().createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
             final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());

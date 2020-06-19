@@ -2,6 +2,7 @@ package br.com.climb.cdi;
 
 import br.com.climb.cdi.annotations.*;
 import br.com.climb.cdi.model.Capsule;
+import br.com.climb.framework.configuration.ConfigFile;
 import br.com.climb.framework.utils.ReflectionUtils;
 
 import java.io.IOException;
@@ -16,6 +17,11 @@ public abstract class ContainerInitializer implements Initializer {
     protected final Map<Class<?>, Class<?>> interceptorClasses = new HashMap<>();
     protected final Map<Class<?>, Capsule> disposesMethods = new HashMap<>();
     protected final Map<String, Map<Class<?>, Object>> sessionObjects = new HashMap<>();
+    protected ConfigFile configFile;
+
+    public void setConfigFile(ConfigFile configFile) {
+        this.configFile = configFile;
+    }
 
     @Override
     public Map<Class<?>, Capsule> getDisposesMethods() {
@@ -42,12 +48,12 @@ public abstract class ContainerInitializer implements Initializer {
         return sessionObjects;
     }
 
-    public static ContainerInitializer newInstance() {
-        return new Container();
+    public static ContainerInitializer newInstance(ConfigFile configFile) {
+        return new Container(configFile);
     }
 
     protected void startInterceptors() throws IOException {
-        Arrays.asList(ReflectionUtils.getAnnotedClass(Interceptor.class, "br.com.")).parallelStream()
+        Arrays.asList(ReflectionUtils.getAnnotedClass(Interceptor.class, configFile.getPackage())).parallelStream()
                 .forEach(classes -> {
                     classes.stream().forEach(interceptorClass -> {
                         List<Class> annotationType =  Arrays.asList(interceptorClass.getAnnotations()).stream().filter(annotation -> annotation.annotationType() != Interceptor.class)
@@ -60,7 +66,7 @@ public abstract class ContainerInitializer implements Initializer {
     }
 
     protected void startDisposesClass() throws IOException {
-        Arrays.asList(ReflectionUtils.getAnnotedClass(Factory.class, "br.com.")).parallelStream()
+        Arrays.asList(ReflectionUtils.getAnnotedClass(Factory.class, configFile.getPackage())).parallelStream()
                 .forEach(classes -> {
                     classes.stream().forEach(factoryClass -> {
                         Arrays.asList(factoryClass.getMethods()).stream().forEach(method -> {
@@ -89,7 +95,7 @@ public abstract class ContainerInitializer implements Initializer {
     }
 
     protected void startFactories() throws IOException {
-        Arrays.asList(ReflectionUtils.getAnnotedClass(Factory.class, "br.com.")).parallelStream()
+        Arrays.asList(ReflectionUtils.getAnnotedClass(Factory.class, configFile.getPackage())).parallelStream()
                 .forEach(classes -> {
                     classes.stream().forEach(factoryClass -> {
                         Arrays.asList(factoryClass.getMethods()).stream().forEach(method -> {
@@ -106,7 +112,7 @@ public abstract class ContainerInitializer implements Initializer {
 
     protected void initialiseConcreteInterfaceClasses() throws IOException {
 
-        Arrays.asList(ReflectionUtils.getAnnotedClass(Component.class, "br.com.")).parallelStream()
+        Arrays.asList(ReflectionUtils.getAnnotedClass(Component.class, configFile.getPackage())).parallelStream()
                 .forEach(classes -> {
                     classes.stream().forEach(aClass -> {
                         Arrays.asList(aClass.getInterfaces()).parallelStream()

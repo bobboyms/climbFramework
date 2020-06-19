@@ -1,12 +1,13 @@
 package br.com.climb.cdi;
 
 
-import java.util.Set;
+import br.com.climb.framework.configuration.ConfigFile;
 
 public class Container extends ContainerInitializer {
 
-    public Container() {
+    public Container(ConfigFile configFile) {
         try {
+            super.setConfigFile(configFile);
             startFactories();
             startInterceptors();
             startDisposesClass();

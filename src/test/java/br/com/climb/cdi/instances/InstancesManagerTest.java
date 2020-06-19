@@ -11,9 +11,13 @@ import br.com.climb.cdi.model.Capsule;
 import br.com.climb.cdi.teste.model.*;
 import br.com.climb.cdi.teste.model.factory.ArquivoTextoFactory;
 import br.com.climb.cdi.teste.model.factory.PessoaFactory;
+import br.com.climb.framework.configuration.ConfigFile;
+import br.com.climb.framework.configuration.FactoryConfigFile;
+import br.com.climb.framework.execptions.ConfigFileException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
@@ -27,15 +31,16 @@ class InstancesManagerTest {
     private TypeOfClass typeOfClass;
     private InstancesManager instances;
 
-    public InstancesManager getInstance() {
-        initializer = ContainerInitializer.newInstance();
+    public InstancesManager getInstance() throws IOException, ConfigFileException {
+        ConfigFile configFile = new FactoryConfigFile().getConfigFile("framework.properties");
+        initializer = ContainerInitializer.newInstance(configFile);
         disposes = DisposesManager.create(initializer);
         typeOfClass = TypeOfClassManager.create(initializer);
         return new InstancesManager(initializer,disposes, typeOfClass);
     }
 
     @Test
-    void generateInstanceByTheFactory() throws NoSuchFieldException {
+    void generateInstanceByTheFactory() throws NoSuchFieldException, IOException, ConfigFileException {
         Field pessoa = ArquivoTextoFactory.class.getDeclaredField("pessoa");
         Field carro = Controller.class.getDeclaredField("carro");
 
@@ -48,7 +53,7 @@ class InstancesManagerTest {
     }
 
     @Test
-    void generateInstance() throws NoSuchFieldException {
+    void generateInstance() throws NoSuchFieldException, IOException, ConfigFileException {
         Field pessoa = ArquivoTextoFactory.class.getDeclaredField("pessoa");
         Field carro = Controller.class.getDeclaredField("carro");
 
@@ -62,14 +67,14 @@ class InstancesManagerTest {
     }
 
     @Test
-    void generateInstanceBase() {
+    void generateInstanceBase() throws IOException, ConfigFileException {
         Controller result =  (Controller) getInstance().generateInstanceBase(Controller.class);
         Assertions.assertSame(false, Objects.isNull(result));
         Assertions.assertSame(Controller.class, result.getClass().getSuperclass());
     }
 
     @Test
-    void generateInstanceBaseSession() throws ValidationException {
+    void generateInstanceBaseSession() throws ValidationException, IOException, ConfigFileException {
 
         Instances instances = getInstance();
 
@@ -108,7 +113,7 @@ class InstancesManagerTest {
     }
 
     @Test
-    void injectObjecstInComponentClass() throws NoSuchFieldException {
+    void injectObjecstInComponentClass() throws NoSuchFieldException, IOException, ConfigFileException {
 
         Field pessoaField = ArquivoTextoFactory.class.getDeclaredField("pessoa");
         Field enderecoField = Pessoa.class.getDeclaredField("endereco");
@@ -122,7 +127,7 @@ class InstancesManagerTest {
     }
 
     @Test
-    void injectInstanceField() throws NoSuchFieldException {
+    void injectInstanceField() throws NoSuchFieldException, IOException, ConfigFileException {
 
         Field pessoaField = ArquivoTextoFactory.class.getDeclaredField("pessoa");
         Field enderecoField = Pessoa.class.getDeclaredField("endereco");
@@ -136,7 +141,7 @@ class InstancesManagerTest {
     }
 
     @Test
-    void getSingletonObject() throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+    void getSingletonObject() throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException, IOException, ConfigFileException {
 
         Capsule capsule = new Capsule();
         capsule.setClassFactory(PessoaFactory.class);

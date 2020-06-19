@@ -2,14 +2,19 @@ package br.com.climb.cdi;
 
 
 import br.com.climb.cdi.teste.model.Controller;
+import br.com.climb.framework.configuration.ConfigFile;
+import br.com.climb.framework.configuration.FactoryConfigFile;
+import br.com.climb.framework.execptions.ConfigFileException;
 
 import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ConfigFileException {
 
-        ContainerInitializer containerInitializer = ContainerInitializer.newInstance();
+        ConfigFile configFile = new FactoryConfigFile().getConfigFile("framework.properties");
+
+        ContainerInitializer containerInitializer = ContainerInitializer.newInstance(configFile);
 
         try(ManagerContext context = containerInitializer.createManager()) {
             Controller controller = (Controller) context.generateInstance(Controller.class);

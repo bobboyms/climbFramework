@@ -8,6 +8,7 @@ import br.com.climb.framework.annotations.mapping.GetMapping;
 import br.com.climb.framework.annotations.param.PathVariable;
 import br.com.climb.framework.annotations.param.RequestBody;
 import br.com.climb.framework.annotations.param.RequestParam;
+import br.com.climb.framework.security.Security;
 import br.com.climb.framework.utils.JwtUtil;
 import br.com.climb.test.model.Cliente;
 import br.com.climb.test.model.Response;
@@ -19,16 +20,16 @@ import br.com.climb.test.repository.ClienteRepository;
 public class TesteGetController {
 
 //    @GetMapping("/{id}/")
-//    public Response teste1(@PathVariable("id") Long id)  {
-//
-//        Response response = new Response();
+    public Response teste1(@PathVariable("id") Long id)  {
+
+        Response response = new Response();
 //        String token = JwtUtil.create(id.toString());
-//
+
 //        response.setToken(token);
 //        response.setUserName(id.toString());
-//
-//        return response;
-//    }
+
+        return Security.create().OK().build();
+    }
 
     @GetMapping("/id/{id}/")
     public String teste2(@PathVariable("id") Long id, @RequestBody Cliente cliente)  {
@@ -42,7 +43,6 @@ public class TesteGetController {
 
     @GetMapping("/pesoa/id/peso/pessoa/")
     public String teste3(@RequestParam("id") String id, @RequestParam("peso") Double peso, @RequestBody Cliente cliente)  {
-        System.out.println(cliente);
         return id + " " + peso;
     }
 
