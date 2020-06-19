@@ -17,6 +17,4 @@ public class TesteJWT {
         System.out.println("url jwt");
     }
 
-
-
 }

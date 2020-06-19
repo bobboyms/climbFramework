@@ -3,6 +3,7 @@ package br.com.climb.framework.servlets.filters;
 import br.com.climb.framework.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,10 @@ public class JwtFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (SignatureException e) {
             res.setStatus(401);
+        } catch (MalformedJwtException e) {
+            res.setStatus(401);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

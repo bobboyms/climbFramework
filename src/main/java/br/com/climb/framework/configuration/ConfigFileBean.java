@@ -3,6 +3,7 @@ package br.com.climb.framework.configuration;
 public abstract class ConfigFileBean {
 
     private String packge;
+    private String securityUrl;
 
     public String getPackage(){
         return packge;
@@ -10,5 +11,13 @@ public abstract class ConfigFileBean {
 
     public void setPackge(String packge) {
         this.packge = packge;
+    }
+
+    public String getSecurityUrl() {
+        return securityUrl;
+    }
+
+    public void setSecurityUrl(String securityUrl) {
+        this.securityUrl = securityUrl;
     }
 }

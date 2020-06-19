@@ -39,7 +39,7 @@ public class JettyServer implements WebServer {
         servletContextHandler.addServlet(ControllerServlet.class, "/*");
         servletContextHandler.addEventListener(new JettyServer.MyContextListener());
 
-        servletContextHandler.addFilter(JwtFilter.class,"/api/*",
+        servletContextHandler.addFilter(JwtFilter.class,configFile.getSecurityUrl(),
                 EnumSet.of(DispatcherType.REQUEST));
 
         servletContextHandler.addFilter(CorsFilter.class,"/*",
@@ -48,7 +48,7 @@ public class JettyServer implements WebServer {
         HandlerList handlers = new HandlerList();
         handlers.addHandler(servletContextHandler);
 
-        Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
+        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
         Storage storage = new LoaderClassRestController();
         storage.storage(clazzs);
 

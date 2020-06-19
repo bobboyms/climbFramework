@@ -27,6 +27,7 @@ public class PropertiesFile extends ConfigFileBean implements ConfigFile {
 
     protected void generateConfigData(Properties properties) {
         super.setPackge(properties.getProperty("framework.package.url"));
+        super.setSecurityUrl(properties.getProperty("framework.security.url"));
     }
 
     public PropertiesFile(String fileName) throws ConfigFileException, IOException {
