@@ -32,7 +32,7 @@ public class TesteGetController {
 
     @GetMapping("/id/{id}/")
     public String teste2(@PathVariable("id") Long id, @RequestBody Cliente cliente)  {
-        return "Olá mundo " + cliente.getNome();
+        return id + " " + cliente.getNome();
     }
 
     @GetMapping("/pesoa/id/peso/")

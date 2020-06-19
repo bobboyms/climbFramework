@@ -39,7 +39,7 @@ class LoaderMethodRestControllerTest {
     }
 
     @Test
-    void getMethodForCall_GET_SESSION() throws Exception {
+    void getMethodForCall_GET_SESSION() throws IOException, NotFoundException {
 
         new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
 
@@ -63,6 +63,9 @@ class LoaderMethodRestControllerTest {
 
             Assertions.assertSame(0l, result.longValue());
 
+        } catch (Exception e) {
+            Assertions.assertSame(true, false);
+            e.printStackTrace();
         }
 
         try(final ManagerContext context = containerInitializer.createManager()) {
@@ -72,6 +75,9 @@ class LoaderMethodRestControllerTest {
 
             Assertions.assertSame(1l, result.longValue());
 
+        } catch (Exception e) {
+            Assertions.assertSame(true, false);
+            e.printStackTrace();
         }
 
         try(final ManagerContext context = containerInitializer.createManager()) {
@@ -81,6 +87,9 @@ class LoaderMethodRestControllerTest {
 
             Assertions.assertSame(2l, result.longValue());
 
+        } catch (Exception e) {
+            Assertions.assertSame(true, false);
+            e.printStackTrace();
         }
 
         try(final ManagerContext context = containerInitializer.createManager()) {
@@ -90,13 +99,16 @@ class LoaderMethodRestControllerTest {
 
             Assertions.assertSame(3l, result.longValue());
 
+        } catch (Exception e) {
+            Assertions.assertSame(true, false);
+            e.printStackTrace();
         }
 
 
     }
 
     @Test
-    void getMethodForCall_GET_1() throws Exception {
+    void getMethodForCall_GET_1() throws NotFoundException, IOException {
 
         new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
 
@@ -130,6 +142,9 @@ class LoaderMethodRestControllerTest {
             Assertions.assertSame(true, result.getIdade().equals(33l));
             Assertions.assertSame(true, result.getCasado().booleanValue());
 
+        } catch (Exception e) {
+            Assertions.assertSame(true, false);
+            e.printStackTrace();
         }
 
 
@@ -164,16 +179,12 @@ class LoaderMethodRestControllerTest {
         try(final ManagerContext context = containerInitializer.createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
-            final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());
+            final String result = (String) capsule.getMethod().invoke(instance, capsule.getArgs());
 
-            Assertions.assertSame(false, Objects.isNull(result));
-            Assertions.assertSame(true, result.getNome().equals("thiago"));
-            Assertions.assertSame(true, result.getPeso().equals(36d));
-            Assertions.assertSame(true, result.getAltura().equals(177f));
-            Assertions.assertSame(true, result.getIdade().equals(33l));
-            Assertions.assertSame(true, result.getCasado().booleanValue());
+            Assertions.assertSame(true, result.equals("30 thiago"));
 
         } catch (Exception e) {
+            Assertions.assertSame(true, false);
             e.printStackTrace();
         }
 
@@ -238,16 +249,14 @@ class LoaderMethodRestControllerTest {
         try(final ManagerContext context = containerInitializer.createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass());
-            final Cliente result = (Cliente) capsule.getMethod().invoke(instance, capsule.getArgs());
+            final String result = (String) capsule.getMethod().invoke(instance, capsule.getArgs());
 
             Assertions.assertSame(false, Objects.isNull(result));
-            Assertions.assertSame(true, result.getNome().equals("thiago"));
-            Assertions.assertSame(true, result.getPeso().equals(36d));
-            Assertions.assertSame(true, result.getAltura().equals(177f));
-            Assertions.assertSame(true, result.getIdade().equals(33l));
-            Assertions.assertSame(true, result.getCasado().booleanValue());
+            Assertions.assertSame(true, result.equals("30 150.0"));
+
 
         } catch (Exception e) {
+            Assertions.assertSame(true, false);
             e.printStackTrace();
         }
 
@@ -293,6 +302,7 @@ class LoaderMethodRestControllerTest {
             Assertions.assertSame(true, result.getCasado().booleanValue());
 
         } catch (Exception e) {
+            Assertions.assertSame(true, false);
             e.printStackTrace();
         }
 
@@ -337,6 +347,7 @@ class LoaderMethodRestControllerTest {
             Assertions.assertSame(true, result.getCasado().booleanValue());
 
         } catch (Exception e) {
+            Assertions.assertSame(true, false);
             e.printStackTrace();
         }
 
@@ -382,6 +393,7 @@ class LoaderMethodRestControllerTest {
             Assertions.assertSame(true, result.getCasado().booleanValue());
 
         } catch (Exception e) {
+            Assertions.assertSame(true, false);
             e.printStackTrace();
         }
 
@@ -426,6 +438,7 @@ class LoaderMethodRestControllerTest {
             Assertions.assertSame(true, result.getCasado().booleanValue());
 
         } catch (Exception e) {
+            Assertions.assertSame(true, false);
             e.printStackTrace();
         }
 
@@ -471,6 +484,7 @@ class LoaderMethodRestControllerTest {
             Assertions.assertSame(true, result.getCasado().booleanValue());
 
         } catch (Exception e) {
+            Assertions.assertSame(true, false);
             e.printStackTrace();
         }
 
@@ -515,6 +529,7 @@ class LoaderMethodRestControllerTest {
             Assertions.assertSame(true, result.getCasado().booleanValue());
 
         } catch (Exception e) {
+            Assertions.assertSame(true, false);
             e.printStackTrace();
         }
 
