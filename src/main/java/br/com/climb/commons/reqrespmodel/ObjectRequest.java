@@ -1,20 +1,20 @@
-package br.com.climb.framework.requestresponse;
+package br.com.climb.commons.reqrespmodel;
 
-import java.io.BufferedReader;
+import java.util.Arrays;
 import java.util.Map;
 
-public class HttpRequest implements Request {
+public class ObjectRequest implements Request {
 
     private final String method;
     private final String pathInfo;
     private final Map<String, String[]> parameterMap;
-    private final BufferedReader reader;
+    private final byte[] reader;
     private final String contentType;
 
-    public HttpRequest(String method, String pathInfo,
-                       String contentType,
-                       Map<String, String[]> parameterMap,
-                       BufferedReader reader) {
+    public ObjectRequest(String method, String pathInfo,
+                         String contentType,
+                         Map<String, String[]> parameterMap,
+                         byte[] reader) {
         this.method = method;
         this.pathInfo = pathInfo;
         this.parameterMap = parameterMap;
@@ -38,12 +38,23 @@ public class HttpRequest implements Request {
     }
 
     @Override
-    public BufferedReader getReader() {
+    public byte[] getReader() {
         return reader;
     }
 
     @Override
     public String getContentType() {
         return contentType;
+    }
+
+    @Override
+    public String toString() {
+        return "ObjectRequest{" +
+                "method='" + method + '\'' +
+                ", pathInfo='" + pathInfo + '\'' +
+                ", parameterMap=" + parameterMap +
+                ", reader=" + Arrays.toString(reader) +
+                ", contentType='" + contentType + '\'' +
+                '}';
     }
 }

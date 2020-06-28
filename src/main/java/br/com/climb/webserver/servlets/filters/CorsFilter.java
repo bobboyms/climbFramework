@@ -1,4 +1,4 @@
-package br.com.climb.framework.servlets.filters;
+package br.com.climb.webserver.servlets.filters;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;

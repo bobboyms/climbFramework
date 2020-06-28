@@ -4,9 +4,9 @@ import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.configuration.ConfigFile;
 import br.com.climb.framework.requestresponse.LoaderClassRestController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
-import br.com.climb.framework.servlets.ControllerServlet;
-import br.com.climb.framework.servlets.filters.CorsFilter;
-import br.com.climb.framework.servlets.filters.JwtFilter;
+import br.com.climb.webserver.servlets.ControllerServlet;
+import br.com.climb.webserver.servlets.filters.CorsFilter;
+import br.com.climb.webserver.servlets.filters.JwtFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -48,9 +48,9 @@ public class JettyServer implements WebServer {
         HandlerList handlers = new HandlerList();
         handlers.addHandler(servletContextHandler);
 
-        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
-        Storage storage = new LoaderClassRestController();
-        storage.storage(clazzs);
+//        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
+//        Storage storage = new LoaderClassRestController();
+//        storage.storage(clazzs);
 
         System.out.println("***** INICIOU O SERVIDOR *****");
 

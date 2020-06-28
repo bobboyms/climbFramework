@@ -1,14 +1,15 @@
-package br.com.climb.framework.requestresponse;
+package br.com.climb.commons.reqrespmodel;
 
 import java.io.BufferedReader;
+import java.io.Serializable;
 import java.util.Map;
 
-public interface Request {
+public interface Request extends Serializable {
 
     String getMethod();
     String getPathInfo();
     Map<String, String[]> getParameterMap();
-    BufferedReader getReader();
+    byte[] getReader();
     String getContentType();
 
 }

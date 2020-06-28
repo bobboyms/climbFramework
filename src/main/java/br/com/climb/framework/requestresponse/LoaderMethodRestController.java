@@ -1,5 +1,6 @@
 package br.com.climb.framework.requestresponse;
 
+import br.com.climb.commons.reqrespmodel.Request;
 import br.com.climb.framework.annotations.param.RequestBody;
 import br.com.climb.framework.annotations.param.RequestParam;
 import br.com.climb.framework.execptions.NotFoundException;
@@ -13,7 +14,6 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
@@ -62,7 +62,7 @@ public class LoaderMethodRestController implements LoaderMethod {
 
         List<Object> arg = new ArrayList<>(Arrays.asList(arguments));
 
-        String body = request.getReader().lines().collect(Collectors.joining());
+        String body = new String(request.getReader(), "UTF-8"); //;
 
         if (body != null && body.trim().length() > 0 ) {
 

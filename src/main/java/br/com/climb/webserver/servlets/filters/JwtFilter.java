@@ -1,4 +1,4 @@
-package br.com.climb.framework.servlets.filters;
+package br.com.climb.webserver.servlets.filters;
 
 import br.com.climb.framework.utils.JwtUtil;
 import io.jsonwebtoken.Claims;

@@ -2,6 +2,8 @@ package br.com.climb.framework.requestresponse;
 
 import br.com.climb.cdi.ContainerInitializer;
 import br.com.climb.cdi.ManagerContext;
+import br.com.climb.commons.reqrespmodel.ObjectRequest;
+import br.com.climb.commons.reqrespmodel.Request;
 import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.configuration.ConfigFile;
 import br.com.climb.framework.configuration.FactoryConfigFile;
@@ -13,9 +15,7 @@ import br.com.climb.test.model.Cliente;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -60,10 +60,10 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        Request request = new ObjectRequest(
                 "GET","/get/session/",
                 "",new HashMap<>(),
-                new BufferedReader(new StringReader("")));
+                "".getBytes());
 
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
@@ -128,10 +128,10 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        Request request = new ObjectRequest(
                 "GET","/get/nome/thiago/peso/36/altura/177/idade/33/casado/true/",
                 "",new HashMap<>(),
-                new BufferedReader(new StringReader("")));
+                "".getBytes());
 
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
@@ -171,17 +171,19 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        String data = "{\n" +
+                "    \"id\": 13065,\n" +
+                "    \"nome\": \"thiago\",\n" +
+                "    \"idade\": 33,\n" +
+                "    \"altura\": 177.0,\n" +
+                "    \"peso\": 36.0,\n" +
+                "    \"casado\": true\n" +
+                "}";
+
+        Request request = new ObjectRequest(
                 "GET","/get/id/30/",
                 "application/json",new HashMap<>(),
-                new BufferedReader(new StringReader("{\n" +
-                        "    \"id\": 13065,\n" +
-                        "    \"nome\": \"thiago\",\n" +
-                        "    \"idade\": 33,\n" +
-                        "    \"altura\": 177.0,\n" +
-                        "    \"peso\": 36.0,\n" +
-                        "    \"casado\": true\n" +
-                        "}")));
+                data.getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteGetController.class, capsule.getMethod().getDeclaringClass());
@@ -215,10 +217,10 @@ class LoaderMethodRestControllerTest {
         parameterMap.put("id", new String[]{"30"});
         parameterMap.put("peso", new String[]{"150"});
 
-        Request request = new HttpRequest(
+        Request request = new ObjectRequest(
                 "GET","/get/pesoa/id/peso/",
                 "",parameterMap,
-                new BufferedReader(new StringReader("")));
+                "".getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteGetController.class, capsule.getMethod().getDeclaringClass());
@@ -240,17 +242,19 @@ class LoaderMethodRestControllerTest {
         parameterMap.put("id", new String[]{"30"});
         parameterMap.put("peso", new String[]{"150"});
 
-        Request request = new HttpRequest(
+        String data = "{\n" +
+                "    \"id\": 13065,\n" +
+                "    \"nome\": \"thiago\",\n" +
+                "    \"idade\": 33,\n" +
+                "    \"altura\": 177.0,\n" +
+                "    \"peso\": 36.0,\n" +
+                "    \"casado\": true\n" +
+                "}";
+
+        Request request = new ObjectRequest(
                 "GET","/get/pesoa/id/peso/pessoa/",
                 "application/json",parameterMap,
-                new BufferedReader(new StringReader("{\n" +
-                        "    \"id\": 13065,\n" +
-                        "    \"nome\": \"thiago\",\n" +
-                        "    \"idade\": 33,\n" +
-                        "    \"altura\": 177.0,\n" +
-                        "    \"peso\": 36.0,\n" +
-                        "    \"casado\": true\n" +
-                        "}")));
+               data.getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteGetController.class, capsule.getMethod().getDeclaringClass());
@@ -284,17 +288,19 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        String data = "{\n" +
+                "    \"id\": 13065,\n" +
+                "    \"nome\": \"thiago\",\n" +
+                "    \"idade\": 33,\n" +
+                "    \"altura\": 177.0,\n" +
+                "    \"peso\": 36.0,\n" +
+                "    \"casado\": true\n" +
+                "}";
+
+        Request request = new ObjectRequest(
                 "POST","/post/pessoa/20/",
                 "application/json",new HashMap<>(),
-                new BufferedReader(new StringReader("{\n" +
-                        "    \"id\": 13065,\n" +
-                        "    \"nome\": \"thiago\",\n" +
-                        "    \"idade\": 33,\n" +
-                        "    \"altura\": 177.0,\n" +
-                        "    \"peso\": 36.0,\n" +
-                        "    \"casado\": true\n" +
-                        "}")));
+                data.getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TestePostController.class, capsule.getMethod().getDeclaringClass());
@@ -330,17 +336,19 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        String data = "{\n" +
+                "    \"id\": 13065,\n" +
+                "    \"nome\": \"thiago\",\n" +
+                "    \"idade\": 33,\n" +
+                "    \"altura\": 177.0,\n" +
+                "    \"peso\": 36.0,\n" +
+                "    \"casado\": true\n" +
+                "}";
+
+        Request request = new ObjectRequest(
                 "POST","/post/pessoa/",
                 "application/json",new HashMap<>(),
-                new BufferedReader(new StringReader("{\n" +
-                        "    \"id\": 13065,\n" +
-                        "    \"nome\": \"thiago\",\n" +
-                        "    \"idade\": 33,\n" +
-                        "    \"altura\": 177.0,\n" +
-                        "    \"peso\": 36.0,\n" +
-                        "    \"casado\": true\n" +
-                        "}")));
+                data.getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TestePostController.class, capsule.getMethod().getDeclaringClass());
@@ -375,17 +383,19 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        String data = "{\n" +
+                "    \"id\": 13065,\n" +
+                "    \"nome\": \"thiago\",\n" +
+                "    \"idade\": 33,\n" +
+                "    \"altura\": 177.0,\n" +
+                "    \"peso\": 36.0,\n" +
+                "    \"casado\": true\n" +
+                "}";
+
+        Request request = new ObjectRequest(
                 "PUT","/put/pessoa/34/",
                 "application/json",new HashMap<>(),
-                new BufferedReader(new StringReader("{\n" +
-                        "    \"id\": 13065,\n" +
-                        "    \"nome\": \"thiago\",\n" +
-                        "    \"idade\": 33,\n" +
-                        "    \"altura\": 177.0,\n" +
-                        "    \"peso\": 36.0,\n" +
-                        "    \"casado\": true\n" +
-                        "}")));
+                data.getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TestePutController.class, capsule.getMethod().getDeclaringClass());
@@ -421,17 +431,19 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        String data = "{\n" +
+                "    \"id\": 13065,\n" +
+                "    \"nome\": \"thiago\",\n" +
+                "    \"idade\": 33,\n" +
+                "    \"altura\": 177.0,\n" +
+                "    \"peso\": 36.0,\n" +
+                "    \"casado\": true\n" +
+                "}";
+
+        Request request = new ObjectRequest(
                 "PUT","/put/pessoa/",
                 "application/json",new HashMap<>(),
-                new BufferedReader(new StringReader("{\n" +
-                        "    \"id\": 13065,\n" +
-                        "    \"nome\": \"thiago\",\n" +
-                        "    \"idade\": 33,\n" +
-                        "    \"altura\": 177.0,\n" +
-                        "    \"peso\": 36.0,\n" +
-                        "    \"casado\": true\n" +
-                        "}")));
+                data.getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TestePutController.class, capsule.getMethod().getDeclaringClass());
@@ -466,17 +478,20 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        String data = "{\n" +
+                "    \"id\": 13065,\n" +
+                "    \"nome\": \"thiago\",\n" +
+                "    \"idade\": 33,\n" +
+                "    \"altura\": 177.0,\n" +
+                "    \"peso\": 36.0,\n" +
+                "    \"casado\": true\n" +
+                "}";
+
+
+        Request request = new ObjectRequest(
                 "DELETE","/delete/pessoa/34/",
                 "application/json",new HashMap<>(),
-                new BufferedReader(new StringReader("{\n" +
-                        "    \"id\": 13065,\n" +
-                        "    \"nome\": \"thiago\",\n" +
-                        "    \"idade\": 33,\n" +
-                        "    \"altura\": 177.0,\n" +
-                        "    \"peso\": 36.0,\n" +
-                        "    \"casado\": true\n" +
-                        "}")));
+                data.getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteDeleteController.class, capsule.getMethod().getDeclaringClass());
@@ -512,17 +527,19 @@ class LoaderMethodRestControllerTest {
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
-        Request request = new HttpRequest(
+        String data = "{\n" +
+                "    \"id\": 13065,\n" +
+                "    \"nome\": \"thiago\",\n" +
+                "    \"idade\": 33,\n" +
+                "    \"altura\": 177.0,\n" +
+                "    \"peso\": 36.0,\n" +
+                "    \"casado\": true\n" +
+                "}";
+
+        Request request = new ObjectRequest(
                 "DELETE","/delete/pessoa/",
                 "application/json",new HashMap<>(),
-                new BufferedReader(new StringReader("{\n" +
-                        "    \"id\": 13065,\n" +
-                        "    \"nome\": \"thiago\",\n" +
-                        "    \"idade\": 33,\n" +
-                        "    \"altura\": 177.0,\n" +
-                        "    \"peso\": 36.0,\n" +
-                        "    \"casado\": true\n" +
-                        "}")));
+                data.getBytes());
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteDeleteController.class, capsule.getMethod().getDeclaringClass());
