@@ -44,14 +44,6 @@ public class TCPClient {
 
     public Response getResponse() {
 
-        while (!ClientHandler.received) {
-            try {
-                Thread.sleep(0,50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
         return clientHandler.getResponse();
 
     }

@@ -7,8 +7,7 @@ import org.apache.mina.core.session.IoSession;
 
 public class ClientHandler extends IoHandlerAdapter {
 
-    public static boolean received = false;
-
+    private boolean received = false;
     private Response response;
 
     @Override
@@ -21,7 +20,16 @@ public class ClientHandler extends IoHandlerAdapter {
     }
 
     public Response getResponse() {
-        received = false;
+
+        while (!received) {
+            try {
+                Thread.sleep(0,50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        received = false;
         return response;
     }
 
