@@ -73,6 +73,7 @@ dependencies {
 sourceSets.main.resources {
     exclude 'META-INF/beans.xml'
 }
+
 classes {
     doLast{
         copy {
@@ -161,7 +162,7 @@ bintray {
 }
 
 application {
-    mainClassName = 'br.com.climb.framework.JettyServer'
+    mainClassName = 'br.com.climb.Main'
 }
 
 test {
@@ -174,7 +175,7 @@ configurations {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'br.com.climb.framework.JettyServer'
+        attributes 'Main-Class': 'br.com.climb.Main'
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
