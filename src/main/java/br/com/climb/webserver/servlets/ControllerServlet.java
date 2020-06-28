@@ -122,8 +122,21 @@ public class ControllerServlet extends HttpServlet {
                     TCPClient client = new TCPClient();
                     client.run();
                     Response objectResponse = client.getResponse();
+                    client.close();
+
+                    res.setContentType(objectResponse.getContentType());
+                    res.setCharacterEncoding(objectResponse.getCharacterEncoding());
+                    res.setStatus(objectResponse.getStatus());
+
+                    ServletOutputStream out = res.getOutputStream();
+                    out.write(objectResponse.getBody());
+                    out.flush();
+                    out.close();
+
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    asyncContext.complete();
                 }
 
             }).start();

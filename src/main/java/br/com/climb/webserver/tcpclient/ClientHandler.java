@@ -21,6 +21,7 @@ public class ClientHandler extends IoHandlerAdapter {
     }
 
     public Response getResponse() {
+        received = false;
         return response;
     }
 
