@@ -1,18 +1,14 @@
 package br.com.climb.test.controller.java;
 
-import br.com.climb.cdi.annotations.Inject;
-import br.com.climb.core.interfaces.ClimbConnection;
 import br.com.climb.framework.annotations.RequestMapping;
 import br.com.climb.framework.annotations.RestController;
 import br.com.climb.framework.annotations.mapping.GetMapping;
 import br.com.climb.framework.annotations.param.PathVariable;
 import br.com.climb.framework.annotations.param.RequestBody;
 import br.com.climb.framework.annotations.param.RequestParam;
-import br.com.climb.framework.security.Security;
-import br.com.climb.framework.utils.JwtUtil;
+import br.com.climb.commons.security.Security;
 import br.com.climb.test.model.Cliente;
 import br.com.climb.test.model.Response;
-import br.com.climb.test.repository.ClienteRepository;
 
 
 @RestController

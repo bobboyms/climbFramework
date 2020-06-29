@@ -51,7 +51,7 @@ public class ServerHandler extends IoHandlerAdapter {
 
         } catch (Exception e) {
             logger.error("responseForClient {}", e);
-            response.setStatus(200);
+            response.setStatus(500);
             response.setBody(e.getMessage().getBytes());
             session.write(response);
         }

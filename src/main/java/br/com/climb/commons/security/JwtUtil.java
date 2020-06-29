@@ -1,10 +1,7 @@
-package br.com.climb.framework.utils;
+package br.com.climb.commons.security;
 
 import br.com.climb.test.model.Response;
 import io.jsonwebtoken.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class JwtUtil {
 

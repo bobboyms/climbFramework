@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
-import static br.com.climb.framework.utils.ReflectionUtils.getAnnotedClass;
+import static br.com.climb.commons.utils.ReflectionUtils.getAnnotedClass;
 
 public class Server {
 

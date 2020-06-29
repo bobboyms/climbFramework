@@ -1,6 +1,8 @@
 package br.com.climb.framework.requestresponse;
 
 import br.com.climb.commons.reqrespmodel.Request;
+import br.com.climb.commons.url.NormalizedUrl;
+import br.com.climb.commons.url.NormalizedUrlManager;
 import br.com.climb.framework.annotations.param.RequestBody;
 import br.com.climb.framework.annotations.param.RequestParam;
 import br.com.climb.framework.execptions.NotFoundException;
@@ -15,12 +17,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
-import static br.com.climb.framework.requestresponse.Methods.*;
-import static br.com.climb.framework.utils.ReflectionUtils.*;
+import static br.com.climb.commons.url.Methods.*;
+import static br.com.climb.commons.utils.ReflectionUtils.*;
 
 public class LoaderMethodRestController implements LoaderMethod {
+
+    private NormalizedUrl normalizedUrl;
+
+    public LoaderMethodRestController() {
+        this.normalizedUrl = new NormalizedUrlManager();
+    }
 
     protected Object[] getCastValuesRequestMapping(Method method, List<String> values) {
 
@@ -84,31 +91,7 @@ public class LoaderMethodRestController implements LoaderMethod {
         return arg.toArray();
     }
 
-    protected String getNormalizedUrl(Request request) {
 
-        final String[] arrUrl = request.getPathInfo().split("/");
-
-        final StringBuilder builder = new StringBuilder();
-        builder.append("/");
-
-        LongStream.range(1, arrUrl.length).forEach(index -> {
-            final String word = arrUrl[(int) index].trim();
-            if (isReservedWord(word, index)) {
-                builder.append(word+"/");
-            } else
-            if (isNumeric(word)) {
-                builder.append(CLIMB_TYPE_NUMBER + "/");
-            } else
-            if (word.equals("true") || word.equals("false")) {
-                builder.append(JAVA_TYPE_BOOLEAN+"/");
-            } else {
-                builder.append(JAVA_TYPE_STRING+"/");
-            }
-        });
-
-        return builder.toString();
-
-    }
 
     protected Object[] extractValueUrlRequestMapping(Request request, Method method) {
         final List<String> values = extractValueUrl(request);
@@ -158,8 +141,6 @@ public class LoaderMethodRestController implements LoaderMethod {
 
         });
 
-
-
         return valuesRequestParam.toArray();
     }
 
@@ -183,7 +164,7 @@ public class LoaderMethodRestController implements LoaderMethod {
     @Override
     public Capsule getMethodForCall(Request request) throws NotFoundException, IOException {
 
-        final String url = getNormalizedUrl(request);
+        final String url = normalizedUrl.getNormalizedUrl(request);
 
         Method method = null;
 

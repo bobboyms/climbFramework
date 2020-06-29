@@ -1,6 +1,6 @@
 package br.com.climb.webserver.servlets.filters;
 
-import br.com.climb.framework.utils.JwtUtil;
+import br.com.climb.commons.security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.MalformedJwtException;

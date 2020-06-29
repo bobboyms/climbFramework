@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static br.com.climb.framework.utils.ReflectionUtils.getAnnotedClass;
+import static br.com.climb.commons.utils.ReflectionUtils.getAnnotedClass;
 
 class LoaderMethodRestControllerTest {
     private ContainerInitializer containerInitializer;

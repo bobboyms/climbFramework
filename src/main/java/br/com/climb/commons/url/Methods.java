@@ -1,4 +1,4 @@
-package br.com.climb.framework.requestresponse;
+package br.com.climb.commons.url;
 
 import java.lang.reflect.Method;
 import java.util.Map;

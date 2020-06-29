@@ -1,17 +1,10 @@
-package br.com.climb.framework.utils;
+package br.com.climb.commons.utils;
 
-import br.com.climb.framework.annotations.Repository;
-import br.com.climb.framework.annotations.RestController;
 import com.google.common.reflect.ClassPath;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.NoOp;
 
 //import javax.enterprise.inject.se.SeContainer;
 //import javax.enterprise.inject.se.SeContainerInitializer;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;

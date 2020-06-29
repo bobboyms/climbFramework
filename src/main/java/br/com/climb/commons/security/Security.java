@@ -1,10 +1,6 @@
-package br.com.climb.framework.security;
+package br.com.climb.commons.security;
 
-import br.com.climb.framework.utils.JwtUtil;
 import br.com.climb.test.model.Response;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Security {
 

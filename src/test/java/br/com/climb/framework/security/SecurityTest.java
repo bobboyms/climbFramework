@@ -1,12 +1,11 @@
 package br.com.climb.framework.security;
 
-import br.com.climb.framework.utils.JwtUtil;
+import br.com.climb.commons.security.JwtUtil;
+import br.com.climb.commons.security.Security;
 import br.com.climb.test.model.Response;
 import io.jsonwebtoken.MalformedJwtException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SecurityTest {
 
