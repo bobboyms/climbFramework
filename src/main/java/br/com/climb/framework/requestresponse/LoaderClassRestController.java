@@ -2,11 +2,11 @@ package br.com.climb.framework.requestresponse;
 
 import br.com.climb.commons.url.NormalizedUrl;
 import br.com.climb.commons.url.NormalizedUrlManager;
-import br.com.climb.framework.annotations.mapping.DeleteMapping;
-import br.com.climb.framework.annotations.mapping.GetMapping;
-import br.com.climb.framework.annotations.mapping.PutMapping;
-import br.com.climb.framework.annotations.mapping.PostMapping;
-import br.com.climb.framework.annotations.RequestMapping;
+import br.com.climb.commons.annotations.mapping.DeleteMapping;
+import br.com.climb.commons.annotations.mapping.GetMapping;
+import br.com.climb.commons.annotations.mapping.PutMapping;
+import br.com.climb.commons.annotations.mapping.PostMapping;
+import br.com.climb.commons.annotations.RequestMapping;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 
 import static br.com.climb.commons.url.Methods.*;

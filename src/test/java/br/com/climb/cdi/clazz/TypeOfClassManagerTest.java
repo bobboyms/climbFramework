@@ -5,7 +5,7 @@ import br.com.climb.cdi.teste.model.*;
 import br.com.climb.cdi.teste.model.interceptors.PessoaInterceptor;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.configuration.FactoryConfigFile;
-import br.com.climb.framework.execptions.ConfigFileException;
+import br.com.climb.commons.execptions.ConfigFileException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

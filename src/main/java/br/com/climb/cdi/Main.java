@@ -4,7 +4,7 @@ package br.com.climb.cdi;
 import br.com.climb.cdi.teste.model.Controller;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.configuration.FactoryConfigFile;
-import br.com.climb.framework.execptions.ConfigFileException;
+import br.com.climb.commons.execptions.ConfigFileException;
 
 import java.io.IOException;
 

@@ -1,12 +1,8 @@
 package br.com.climb.test.controller.java;
 
-import br.com.climb.framework.annotations.RequestMapping;
-import br.com.climb.framework.annotations.RestController;
-import br.com.climb.framework.annotations.mapping.GetMapping;
-import br.com.climb.framework.annotations.mapping.PutMapping;
-import br.com.climb.framework.annotations.param.PathVariable;
-import br.com.climb.framework.annotations.param.RequestBody;
-import br.com.climb.test.model.Cliente;
+import br.com.climb.commons.annotations.RequestMapping;
+import br.com.climb.commons.annotations.RestController;
+import br.com.climb.commons.annotations.mapping.GetMapping;
 
 @RestController
 @RequestMapping("/api")

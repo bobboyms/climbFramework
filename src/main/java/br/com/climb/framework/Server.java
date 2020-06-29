@@ -1,12 +1,13 @@
-package br.com.climb.framework.tcpserver;
+package br.com.climb.framework;
 
 import br.com.climb.cdi.ContainerInitializer;
-import br.com.climb.framework.annotations.RestController;
+import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.configuration.FactoryConfigFile;
-import br.com.climb.framework.execptions.ConfigFileException;
+import br.com.climb.commons.execptions.ConfigFileException;
 import br.com.climb.framework.requestresponse.LoaderClassRestController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
+import br.com.climb.framework.tcpserver.ServerHandler;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;

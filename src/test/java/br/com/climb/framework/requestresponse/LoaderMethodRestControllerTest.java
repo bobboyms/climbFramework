@@ -4,11 +4,11 @@ import br.com.climb.cdi.ContainerInitializer;
 import br.com.climb.cdi.ManagerContext;
 import br.com.climb.commons.reqrespmodel.ObjectRequest;
 import br.com.climb.commons.reqrespmodel.Request;
-import br.com.climb.framework.annotations.RestController;
+import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.configuration.FactoryConfigFile;
-import br.com.climb.framework.execptions.ConfigFileException;
-import br.com.climb.framework.execptions.NotFoundException;
+import br.com.climb.commons.execptions.ConfigFileException;
+import br.com.climb.commons.execptions.NotFoundException;
 import br.com.climb.framework.requestresponse.model.Capsule;
 import br.com.climb.test.controller.java.*;
 import br.com.climb.test.model.Cliente;
@@ -63,7 +63,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "GET","/get/session/",
                 "",new HashMap<>(),
-                "".getBytes(), sessionId);
+                "".getBytes(), "1234");
 
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
@@ -131,7 +131,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "GET","/get/nome/thiago/peso/36/altura/177/idade/33/casado/true/",
                 "",new HashMap<>(),
-                "".getBytes(), sessionId);
+                "".getBytes(), "1234");
 
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
@@ -183,7 +183,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "GET","/get/id/30/",
                 "application/json",new HashMap<>(),
-                data.getBytes(), sessionId);
+                data.getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteGetController.class, capsule.getMethod().getDeclaringClass());
@@ -220,7 +220,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "GET","/get/pesoa/id/peso/",
                 "",parameterMap,
-                "".getBytes(), sessionId);
+                "".getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteGetController.class, capsule.getMethod().getDeclaringClass());
@@ -254,7 +254,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "GET","/get/pesoa/id/peso/pessoa/",
                 "application/json",parameterMap,
-               data.getBytes(), sessionId);
+               data.getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteGetController.class, capsule.getMethod().getDeclaringClass());
@@ -300,7 +300,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "POST","/post/pessoa/20/",
                 "application/json",new HashMap<>(),
-                data.getBytes(), sessionId);
+                data.getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TestePostController.class, capsule.getMethod().getDeclaringClass());
@@ -348,7 +348,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "POST","/post/pessoa/",
                 "application/json",new HashMap<>(),
-                data.getBytes(), sessionId);
+                data.getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TestePostController.class, capsule.getMethod().getDeclaringClass());
@@ -395,7 +395,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "PUT","/put/pessoa/34/",
                 "application/json",new HashMap<>(),
-                data.getBytes(), sessionId);
+                data.getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TestePutController.class, capsule.getMethod().getDeclaringClass());
@@ -443,7 +443,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "PUT","/put/pessoa/",
                 "application/json",new HashMap<>(),
-                data.getBytes(), sessionId);
+                data.getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TestePutController.class, capsule.getMethod().getDeclaringClass());
@@ -491,7 +491,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "DELETE","/delete/pessoa/34/",
                 "application/json",new HashMap<>(),
-                data.getBytes(), sessionId);
+                data.getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteDeleteController.class, capsule.getMethod().getDeclaringClass());
@@ -539,7 +539,7 @@ class LoaderMethodRestControllerTest {
         Request request = new ObjectRequest(
                 "DELETE","/delete/pessoa/",
                 "application/json",new HashMap<>(),
-                data.getBytes(), sessionId);
+                data.getBytes(), "1234");
 
         Capsule capsule = loaderMethodRestController.getMethodForCall(request);
         Assertions.assertSame(TesteDeleteController.class, capsule.getMethod().getDeclaringClass());
