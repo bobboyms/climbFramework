@@ -39,6 +39,8 @@ public class LoaderClassRestController implements Storage {
 
                 if (getMapping != null) {
 
+                    System.out.println("GET: " + requestMapping.value() + getMapping.value());
+
                     if (requestMapping != null) {
                         storageGetMethod(requestMapping, method);
                     } else {

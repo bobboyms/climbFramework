@@ -1,9 +1,9 @@
 package br.com.climb.webserver;
 
 import br.com.climb.cdi.ContainerInitializer;
-import br.com.climb.framework.configuration.ConfigFile;
-import br.com.climb.framework.configuration.ConfigFileBean;
-import br.com.climb.framework.configuration.FactoryConfigFile;
+import br.com.climb.commons.configuration.ConfigFile;
+import br.com.climb.commons.configuration.ConfigFileBean;
+import br.com.climb.commons.configuration.FactoryConfigFile;
 import br.com.climb.framework.execptions.ConfigFileException;
 import com.google.common.base.Strings;
 

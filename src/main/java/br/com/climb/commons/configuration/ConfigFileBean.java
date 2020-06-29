@@ -1,4 +1,4 @@
-package br.com.climb.framework.configuration;
+package br.com.climb.commons.configuration;
 
 public abstract class ConfigFileBean {
 

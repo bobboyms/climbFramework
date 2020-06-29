@@ -11,8 +11,8 @@ import br.com.climb.cdi.model.Capsule;
 import br.com.climb.cdi.teste.model.*;
 import br.com.climb.cdi.teste.model.factory.ArquivoTextoFactory;
 import br.com.climb.cdi.teste.model.factory.PessoaFactory;
-import br.com.climb.framework.configuration.ConfigFile;
-import br.com.climb.framework.configuration.FactoryConfigFile;
+import br.com.climb.commons.configuration.ConfigFile;
+import br.com.climb.commons.configuration.FactoryConfigFile;
 import br.com.climb.framework.execptions.ConfigFileException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class InstancesManagerTest {
 

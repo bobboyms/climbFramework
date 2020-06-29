@@ -1,6 +1,6 @@
 package br.com.climb.webserver;
 
-import br.com.climb.framework.configuration.ConfigFile;
+import br.com.climb.commons.configuration.ConfigFile;
 
 public class ServerFactory {
 

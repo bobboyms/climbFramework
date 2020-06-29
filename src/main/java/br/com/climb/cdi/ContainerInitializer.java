@@ -2,7 +2,7 @@ package br.com.climb.cdi;
 
 import br.com.climb.cdi.annotations.*;
 import br.com.climb.cdi.model.Capsule;
-import br.com.climb.framework.configuration.ConfigFile;
+import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.framework.utils.ReflectionUtils;
 
 import java.io.IOException;

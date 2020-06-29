@@ -10,16 +10,18 @@ public class ObjectRequest implements Request {
     private final Map<String, String[]> parameterMap;
     private final byte[] reader;
     private final String contentType;
+    private final String sessionId;
 
     public ObjectRequest(String method, String pathInfo,
                          String contentType,
                          Map<String, String[]> parameterMap,
-                         byte[] reader) {
+                         byte[] reader, String sessionId) {
         this.method = method;
         this.pathInfo = pathInfo;
         this.parameterMap = parameterMap;
         this.reader = reader;
         this.contentType = contentType;
+        this.sessionId = sessionId;
     }
 
     @Override
@@ -48,6 +50,11 @@ public class ObjectRequest implements Request {
     }
 
     @Override
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    @Override
     public String toString() {
         return "ObjectRequest{" +
                 "method='" + method + '\'' +
@@ -55,6 +62,7 @@ public class ObjectRequest implements Request {
                 ", parameterMap=" + parameterMap +
                 ", reader=" + Arrays.toString(reader) +
                 ", contentType='" + contentType + '\'' +
+                ", sessionId='" + sessionId + '\'' +
                 '}';
     }
 }

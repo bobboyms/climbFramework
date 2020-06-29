@@ -36,7 +36,9 @@ public class ClientHandler extends IoHandlerAdapter {
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
 
-        System.out.println("deu erro");
+        System.out.println("---- deu erro ----");
+        System.out.println(cause.getClass());
+        System.out.println(cause.getCause());
         System.out.println(cause);
 
 //        super.exceptionCaught(session, cause);

@@ -11,5 +11,6 @@ public interface Request extends Serializable {
     Map<String, String[]> getParameterMap();
     byte[] getReader();
     String getContentType();
+    String getSessionId();
 
 }

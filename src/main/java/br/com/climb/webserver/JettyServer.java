@@ -1,9 +1,6 @@
 package br.com.climb.webserver;
 
-import br.com.climb.framework.annotations.RestController;
-import br.com.climb.framework.configuration.ConfigFile;
-import br.com.climb.framework.requestresponse.LoaderClassRestController;
-import br.com.climb.framework.requestresponse.interfaces.Storage;
+import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.webserver.servlets.ControllerServlet;
 import br.com.climb.webserver.servlets.filters.CorsFilter;
 import br.com.climb.webserver.servlets.filters.JwtFilter;
@@ -15,9 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import java.util.EnumSet;
-import java.util.Set;
-
-import static br.com.climb.framework.utils.ReflectionUtils.getAnnotedClass;
 
 public class JettyServer implements WebServer {
 
@@ -33,7 +27,8 @@ public class JettyServer implements WebServer {
 
         final Server server = new Server(8080);
 
-        ServletContextHandler servletContextHandler = new ServletContextHandler ();
+
+        ServletContextHandler servletContextHandler = new ServletContextHandler (ServletContextHandler.SESSIONS);
         servletContextHandler.setContextPath("/");
 
         servletContextHandler.addServlet(ControllerServlet.class, "/*");
@@ -47,12 +42,6 @@ public class JettyServer implements WebServer {
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(servletContextHandler);
-
-//        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
-//        Storage storage = new LoaderClassRestController();
-//        storage.storage(clazzs);
-
-        System.out.println("***** INICIOU O SERVIDOR *****");
 
         server.setHandler(handlers);
         server.start();
