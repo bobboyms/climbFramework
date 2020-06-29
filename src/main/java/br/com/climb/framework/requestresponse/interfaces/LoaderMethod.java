@@ -1,10 +1,9 @@
 package br.com.climb.framework.requestresponse.interfaces;
 
-import br.com.climb.framework.execptions.NotFoundException;
-import br.com.climb.framework.requestresponse.Request;
+import br.com.climb.commons.execptions.NotFoundException;
+import br.com.climb.commons.reqrespmodel.Request;
 import br.com.climb.framework.requestresponse.model.Capsule;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public interface LoaderMethod {

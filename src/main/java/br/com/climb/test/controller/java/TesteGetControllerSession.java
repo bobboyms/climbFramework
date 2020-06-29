@@ -3,9 +3,9 @@ package br.com.climb.test.controller.java;
 import br.com.climb.cdi.annotations.Inject;
 import br.com.climb.cdi.annotations.Session;
 import br.com.climb.cdi.teste.model.factory.ArquivoTexto;
-import br.com.climb.framework.annotations.RequestMapping;
-import br.com.climb.framework.annotations.RestController;
-import br.com.climb.framework.annotations.mapping.GetMapping;
+import br.com.climb.commons.annotations.RequestMapping;
+import br.com.climb.commons.annotations.RestController;
+import br.com.climb.commons.annotations.mapping.GetMapping;
 
 @Session
 @RestController

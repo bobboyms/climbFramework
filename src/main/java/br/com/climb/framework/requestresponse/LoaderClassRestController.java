@@ -1,26 +1,28 @@
 package br.com.climb.framework.requestresponse;
 
-import br.com.climb.framework.annotations.mapping.DeleteMapping;
-import br.com.climb.framework.annotations.mapping.GetMapping;
-import br.com.climb.framework.annotations.mapping.PutMapping;
-import br.com.climb.framework.annotations.param.PathVariable;
-import br.com.climb.framework.annotations.mapping.PostMapping;
-import br.com.climb.framework.annotations.RequestMapping;
+import br.com.climb.commons.url.NormalizedUrl;
+import br.com.climb.commons.url.NormalizedUrlManager;
+import br.com.climb.commons.annotations.mapping.DeleteMapping;
+import br.com.climb.commons.annotations.mapping.GetMapping;
+import br.com.climb.commons.annotations.mapping.PutMapping;
+import br.com.climb.commons.annotations.mapping.PostMapping;
+import br.com.climb.commons.annotations.RequestMapping;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 
-import static br.com.climb.framework.requestresponse.Methods.*;
-import static br.com.climb.framework.utils.ReflectionUtils.*;
+import static br.com.climb.commons.url.Methods.*;
+import static br.com.climb.commons.utils.ReflectionUtils.*;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class LoaderClassRestController implements Storage {
 
+    private NormalizedUrl normalizedUrl;
+
     public LoaderClassRestController() {
-        //Do default constructor
+        this.normalizedUrl = new NormalizedUrlManager();
     }
 
     @Override
@@ -38,6 +40,8 @@ public class LoaderClassRestController implements Storage {
                 final DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
 
                 if (getMapping != null) {
+
+                    System.out.println("GET: " + requestMapping.value() + getMapping.value());
 
                     if (requestMapping != null) {
                         storageGetMethod(requestMapping, method);
@@ -146,46 +150,30 @@ public class LoaderClassRestController implements Storage {
     }
 
     private void storageGet(String value, Method method) {
-        value = getNormalizedUrl(value, method);
+        value = normalizedUrl.getNormalizedUrl(value, method);
         GET.put(value, method);
         generateReservedWords(value);
     }
 
     private void storagePost(String value, Method method) {
-        value = getNormalizedUrl(value, method);
+        value = normalizedUrl.getNormalizedUrl(value, method);
         POST.put(value, method);
         generateReservedWords(value);
     }
 
     private void storagePut(String value, Method method) {
-        value = getNormalizedUrl(value, method);
+        value = normalizedUrl.getNormalizedUrl(value, method);
         PUT.put(value, method);
         generateReservedWords(value);
     }
 
     private void storageDelete(String value, Method method) {
-        value = getNormalizedUrl(value, method);
+        value = normalizedUrl.getNormalizedUrl(value, method);
         DELETE.put(value, method);
         generateReservedWords(value);
     }
 
-    private String getNormalizedUrl(String value, Method method) {
 
-        final Parameter[] parameters = method.getParameters();
-
-        for (Parameter parameter : parameters) {
-
-            PathVariable pathVariable = parameter.getAnnotation(PathVariable.class);
-
-            if (pathVariable == null) {
-                continue;
-            }
-
-            value = value.replace( "{" +pathVariable.value() + "}", getTypeClimbString(parameter.getType()));
-        }
-
-        return value;
-    }
 
     private void generateReservedWords(String value) {
 

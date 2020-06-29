@@ -1,7 +1,7 @@
 package br.com.climb.cdi;
 
 
-import br.com.climb.framework.configuration.ConfigFile;
+import br.com.climb.commons.configuration.ConfigFile;
 
 public class Container extends ContainerInitializer {
 

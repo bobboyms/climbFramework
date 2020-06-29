@@ -2,17 +2,14 @@ package br.com.climb.cdi.disposes;
 
 import br.com.climb.cdi.ContainerInitializer;
 import br.com.climb.cdi.teste.model.factory.ArquivoTexto;
-import br.com.climb.cdi.teste.model.factory.ArquivoTextoFactory;
-import br.com.climb.framework.configuration.ConfigFile;
-import br.com.climb.framework.configuration.FactoryConfigFile;
-import br.com.climb.framework.execptions.ConfigFileException;
+import br.com.climb.commons.configuration.ConfigFile;
+import br.com.climb.commons.configuration.FactoryConfigFile;
+import br.com.climb.commons.execptions.ConfigFileException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DisposesManagerTest {
 
