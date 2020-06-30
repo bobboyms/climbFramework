@@ -21,7 +21,7 @@ dependencies {
 
     compile 'com.google.guava:guava:28.2-jre'
     compile 'br.com.climb:climb-orm:1.0.9'
-    compile 'br.com.climbcommons:climb-commons:1.0.0'
+    compile 'br.com.climbcommons:climb-commons:1.0.1'
 
     testCompile 'org.hamcrest:hamcrest-library:2.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'

@@ -1,13 +1,13 @@
 package br.com.climb.framework;
 
 import br.com.climb.cdi.ContainerInitializer;
-import br.com.climb.commons.discovery.model.DiscoveryRequestObject;
 import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.configuration.FactoryConfigFile;
-import br.com.climb.commons.discovery.model.DiscoveryResponse;
 import br.com.climb.commons.execptions.ConfigFileException;
 import br.com.climb.commons.generictcpclient.TcpClient;
+import br.com.climb.commons.model.DiscoveryRequestObject;
+import br.com.climb.commons.model.DiscoveryResponse;
 import br.com.climb.commons.url.Methods;
 import br.com.climb.framework.clientdiscovery.ClientHandler;
 import br.com.climb.framework.clientdiscovery.DiscoveryClient;
