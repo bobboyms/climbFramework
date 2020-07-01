@@ -6,6 +6,7 @@ import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.configuration.FactoryConfigFile;
 import br.com.climb.commons.execptions.ConfigFileException;
 import br.com.climb.commons.generictcpclient.TcpClient;
+import br.com.climb.commons.model.DiscoveryRequest;
 import br.com.climb.commons.model.DiscoveryRequestObject;
 import br.com.climb.commons.model.DiscoveryResponse;
 import br.com.climb.commons.url.Methods;
@@ -14,6 +15,7 @@ import br.com.climb.framework.clientdiscovery.DiscoveryClient;
 import br.com.climb.framework.requestresponse.LoaderClassRestController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 import br.com.climb.framework.tcpserver.ServerHandler;
+import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
@@ -21,76 +23,61 @@ import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static br.com.climb.commons.utils.ReflectionUtils.getAnnotedClass;
 
 public class Server {
 
-    private static final int PORT = 1234;
-
     public static ContainerInitializer containerInitializer;
     public static ConfigFile configFile;
 
-    private static void loadConfigurations() throws IOException, ConfigFileException {
+    private void loadConfigurations() throws IOException, ConfigFileException {
 
         configFile = new FactoryConfigFile().getConfigFile("framework.properties");
 
     }
 
-    private static void loadContainerInitializer() {
+    private void loadContainerInitializer() {
         containerInitializer = ContainerInitializer.newInstance(configFile);
     }
 
-    public static void main( String[] args ) throws Exception {
+    public void run() throws IOException, ConfigFileException {
 
         loadConfigurations();
         loadContainerInitializer();
 
-        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, "br.com.");
+        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
         final Storage storage = new LoaderClassRestController();
-        storage.storage(clazzs);
 
-        //************
+        final DiscoveryRequest discoveryRequest = storage.storage(clazzs)
+                .generateDiscoveryRequest(configFile.getLocalIp(),configFile.getLocalPort());
 
-        final DiscoveryRequestObject discoveryObject = new DiscoveryRequestObject();
-        discoveryObject.setUrls(new HashMap<>());
+        new Thread(()->{
 
-        final Set<String> urlsGet = new HashSet<>();
-        Methods.GET.forEach((url, method) -> {
-            urlsGet.add(url);
-        });
-        discoveryObject.getUrls().put("GET", urlsGet);
+            while (true) {
 
-        final Set<String> urlsPost = new HashSet<>();
-        Methods.POST.forEach((url, method) -> {
-            urlsPost.add(url);
-        });
-        discoveryObject.getUrls().put("POST", urlsPost);
+                try {
+                    final TcpClient discoveryClient = new DiscoveryClient(new ClientHandler(), configFile.getGatewayIp(), new Integer(configFile.getGatewayPort()));
+                    discoveryClient.sendRequest(discoveryRequest);
+                    DiscoveryResponse discoveryResponse = (DiscoveryResponse) discoveryClient.getResponse();
+                    discoveryClient.closeConnection();
+                } catch (RuntimeIoException e) {
+                    System.out.println("Tentando se conectar ao servidor: " + configFile.getGatewayIp() + "/" + configFile.getGatewayPort());
+                }
 
-        final Set<String> urlsPut = new HashSet<>();
-        Methods.PUT.forEach((url, method) -> {
-            urlsPut.add(url);
-        });
-        discoveryObject.getUrls().put("PUT", urlsPut);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-        final Set<String> urlsDelete = new HashSet<>();
-        Methods.DELETE.forEach((url, method) -> {
-            urlsDelete.add(url);
-        });
-        discoveryObject.getUrls().put("DELETE", urlsDelete);
+            }
 
-        TcpClient discoveryClient = new DiscoveryClient(new ClientHandler(), "127.0.0.1",3030);
-        discoveryClient.sendRequest(discoveryObject);
-        DiscoveryResponse discoveryResponse = (DiscoveryResponse) discoveryClient.getResponse();
-        discoveryClient.closeConnection();
-
-        System.out.println("Resposta:" + discoveryResponse);
-
-        //************
+        }).start();
 
         IoAcceptor acceptor = new NioSocketAcceptor();
         acceptor.getFilterChain().addLast( "logger1", new LoggingFilter() );
@@ -98,7 +85,11 @@ public class Server {
                 new ObjectSerializationCodecFactory()));
         acceptor.setHandler( new ServerHandler() );
         acceptor.getSessionConfig().setReadBufferSize( 2048 );
-        acceptor.bind(new InetSocketAddress(PORT));
+        acceptor.bind(new InetSocketAddress(new Integer(configFile.getLocalPort())));
+    }
+
+    public static void main( String[] args ) throws Exception {
+        new Server().run();
     }
 
 }

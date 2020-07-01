@@ -1,5 +1,9 @@
 package br.com.climb.framework.requestresponse;
 
+import br.com.climb.commons.model.DiscoveryRequest;
+import br.com.climb.commons.model.DiscoveryRequestObject;
+import br.com.climb.commons.model.DiscoveryResponseObject;
+import br.com.climb.commons.url.Methods;
 import br.com.climb.commons.url.NormalizedUrl;
 import br.com.climb.commons.url.NormalizedUrlManager;
 import br.com.climb.commons.annotations.mapping.DeleteMapping;
@@ -14,6 +18,7 @@ import static br.com.climb.commons.utils.ReflectionUtils.*;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +31,7 @@ public class LoaderClassRestController implements Storage {
     }
 
     @Override
-    public void storage(final Set<Class<?>> clazzs) {
+    public Storage storage(final Set<Class<?>> clazzs) {
 
         clazzs.parallelStream().forEach(clazz -> {
 
@@ -86,6 +91,44 @@ public class LoaderClassRestController implements Storage {
             });
         });
 
+        return this;
+    }
+
+    @Override
+    public DiscoveryRequest generateDiscoveryRequest(String ipAddress, String port) {
+
+        final DiscoveryRequestObject discoveryObject = new DiscoveryRequestObject();
+        discoveryObject.setUrls(new HashMap<>());
+
+        discoveryObject.setIpAddress(ipAddress);
+        discoveryObject.setPort(port);
+
+        final Set<String> urlsGet = new HashSet<>();
+        Methods.GET.forEach((url, method) -> {
+            urlsGet.add(url);
+        });
+        discoveryObject.getUrls().put("GET", urlsGet);
+
+        final Set<String> urlsPost = new HashSet<>();
+        Methods.POST.forEach((url, method) -> {
+            urlsPost.add(url);
+        });
+        discoveryObject.getUrls().put("POST", urlsPost);
+
+        final Set<String> urlsPut = new HashSet<>();
+        Methods.PUT.forEach((url, method) -> {
+            urlsPut.add(url);
+        });
+        discoveryObject.getUrls().put("PUT", urlsPut);
+
+        final Set<String> urlsDelete = new HashSet<>();
+        Methods.DELETE.forEach((url, method) -> {
+            urlsDelete.add(url);
+        });
+        discoveryObject.getUrls().put("DELETE", urlsDelete);
+        discoveryObject.setReservedWords(Methods.RESERVED_WORDS);
+
+        return discoveryObject;
     }
 
     protected void storageGetMethod(RequestMapping requestMapping, Method method) {
@@ -172,8 +215,6 @@ public class LoaderClassRestController implements Storage {
         DELETE.put(value, method);
         generateReservedWords(value);
     }
-
-
 
     private void generateReservedWords(String value) {
 
