@@ -1,20 +1,14 @@
-package br.com.climb.framework;
+package br.com.climb.framework.tcpserver;
 
-import br.com.climb.cdi.ContainerInitializer;
 import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
-import br.com.climb.commons.configuration.FactoryConfigFile;
-import br.com.climb.commons.execptions.ConfigFileException;
 import br.com.climb.commons.generictcpclient.TcpClient;
 import br.com.climb.commons.model.DiscoveryRequest;
-import br.com.climb.commons.model.DiscoveryRequestObject;
 import br.com.climb.commons.model.DiscoveryResponse;
-import br.com.climb.commons.url.Methods;
 import br.com.climb.framework.clientdiscovery.ClientHandler;
 import br.com.climb.framework.clientdiscovery.DiscoveryClient;
 import br.com.climb.framework.requestresponse.LoaderClassRestController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
-import br.com.climb.framework.tcpserver.ServerHandler;
 import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -22,40 +16,20 @@ import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactor
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
-import java.io.IOException;
-import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static br.com.climb.commons.utils.ReflectionUtils.getAnnotedClass;
 
-public class Server {
+public class Server implements TcpServer {
 
-    public static ContainerInitializer containerInitializer;
-    public static ConfigFile configFile;
+    public final ConfigFile configFile;
 
-    private void loadConfigurations() throws IOException, ConfigFileException {
-
-        configFile = new FactoryConfigFile().getConfigFile("framework.properties");
-
+    public Server(ConfigFile configFile) {
+        this.configFile = configFile;
     }
 
-    private void loadContainerInitializer() {
-        containerInitializer = ContainerInitializer.newInstance(configFile);
-    }
-
-    public void run() throws IOException, ConfigFileException {
-
-        loadConfigurations();
-        loadContainerInitializer();
-
-        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
-        final Storage storage = new LoaderClassRestController();
-
-        final DiscoveryRequest discoveryRequest = storage.storage(clazzs)
-                .generateDiscoveryRequest(configFile.getLocalIp(),configFile.getLocalPort());
-
+    private void initDiscoveryThread(DiscoveryRequest discoveryRequest) {
         new Thread(()->{
 
             while (true) {
@@ -78,6 +52,17 @@ public class Server {
             }
 
         }).start();
+    }
+
+    @Override
+    public void start() throws Exception {
+        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
+        final Storage storage = new LoaderClassRestController();
+
+        final DiscoveryRequest discoveryRequest = storage.storage(clazzs)
+                .generateDiscoveryRequest(configFile.getLocalIp(),configFile.getLocalPort());
+
+        initDiscoveryThread(discoveryRequest);
 
         IoAcceptor acceptor = new NioSocketAcceptor();
         acceptor.getFilterChain().addLast( "logger1", new LoggingFilter() );
@@ -87,9 +72,4 @@ public class Server {
         acceptor.getSessionConfig().setReadBufferSize( 2048 );
         acceptor.bind(new InetSocketAddress(new Integer(configFile.getLocalPort())));
     }
-
-    public static void main( String[] args ) throws Exception {
-        new Server().run();
-    }
-
 }

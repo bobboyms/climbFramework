@@ -4,7 +4,7 @@ import br.com.climb.cdi.ManagerContext;
 import br.com.climb.commons.reqrespmodel.ObjectRequest;
 import br.com.climb.commons.reqrespmodel.ObjectResponse;
 import br.com.climb.commons.execptions.NotFoundException;
-import br.com.climb.framework.Server;
+import br.com.climb.framework.ClimbApplication;
 import br.com.climb.framework.requestresponse.LoaderMethodRestController;
 import br.com.climb.commons.reqrespmodel.Request;
 import br.com.climb.framework.requestresponse.interfaces.LoaderMethod;
@@ -29,7 +29,7 @@ public class ServerHandler extends IoHandlerAdapter {
         final LoaderMethod loaderMethod = new LoaderMethodRestController();
         final Capsule capsule = loaderMethod.getMethodForCall(request);
 
-        try(final ManagerContext context = Server.containerInitializer.createManager()) {
+        try(final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
 
             final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), request.getSessionId());
             final Object result = capsule.getMethod().invoke(instance, capsule.getArgs());
