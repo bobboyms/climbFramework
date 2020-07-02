@@ -11,10 +11,12 @@ import br.com.climb.commons.annotations.mapping.GetMapping;
 import br.com.climb.commons.annotations.mapping.PutMapping;
 import br.com.climb.commons.annotations.mapping.PostMapping;
 import br.com.climb.commons.annotations.RequestMapping;
+import br.com.climb.framework.messagesclient.annotations.MessageController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 
 import static br.com.climb.commons.url.Methods.*;
 import static br.com.climb.commons.utils.ReflectionUtils.*;
+import static br.com.climb.framework.messagesclient.Methods.MESSAGE_CONTROLLERS;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -31,7 +33,7 @@ public class LoaderClassRestController implements Storage {
     }
 
     @Override
-    public Storage storage(final Set<Class<?>> clazzs) {
+    public Storage storageRestControllers(final Set<Class<?>> clazzs) {
 
         clazzs.parallelStream().forEach(clazz -> {
 
@@ -93,6 +95,18 @@ public class LoaderClassRestController implements Storage {
 
         return this;
     }
+
+    @Override
+    public void storageMessageControllers(Set<Class<?>> clazzs) {
+        clazzs.stream().forEach(aClass -> {
+
+            MessageController messageController = aClass.getDeclaredAnnotation(MessageController.class);
+            MESSAGE_CONTROLLERS.put(messageController.topicName(), aClass);
+            System.out.println("Message Controller: " + aClass);
+
+        });
+    }
+
 
     @Override
     public DiscoveryRequest generateDiscoveryRequest(String ipAddress, String port) {

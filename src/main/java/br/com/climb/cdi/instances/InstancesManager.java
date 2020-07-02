@@ -2,11 +2,14 @@ package br.com.climb.cdi.instances;
 
 import br.com.climb.cdi.Initializer;
 import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.annotations.Message;
 import br.com.climb.cdi.annotations.ReCreate;
 import br.com.climb.cdi.clazz.TypeOfClass;
 import br.com.climb.cdi.disposes.Disposes;
 import br.com.climb.cdi.interceptor.InterceptorMethod;
 import br.com.climb.cdi.model.Capsule;
+import br.com.climb.framework.messagesclient.MessageClient;
+import br.com.climb.framework.messagesclient.MessageClientManager;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import org.slf4j.Logger;
@@ -94,11 +97,34 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
     }
 
+    /**
+     * Cria instancia para tipos especiais.
+     * Nesse caso, para o tipo menssageria
+     * @param field
+     * @return
+     */
+    @Override
+    public Object generateInstanceMessage(Field field) {
+
+        System.out.println("Criu instancia message: " + field);
+
+        final Message message = field.getDeclaredAnnotation(Message.class);
+        final MessageClient messageClient = new MessageClientManager(message.topicName());
+
+        return messageClient;
+
+    }
+
     @Override
     public void injectObjecstInComponentClass(Class<?> clazz, Object instance) {
         Arrays.asList(clazz.getDeclaredFields()).stream()
                 .filter(field -> field.getAnnotation(Inject.class) != null)
                 .forEach(field -> injectInstanceField(instance, field, generateInstance(field)));
+
+        Arrays.asList(clazz.getDeclaredFields()).stream()
+                .filter(field -> field.getAnnotation(Message.class) != null)
+                .forEach(field -> injectInstanceField(instance, field, generateInstanceMessage(field)));
+
     }
 
     @Override

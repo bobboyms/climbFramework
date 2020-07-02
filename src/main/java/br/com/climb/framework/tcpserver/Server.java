@@ -1,12 +1,18 @@
 package br.com.climb.framework.tcpserver;
 
+import br.com.climb.cdi.ManagerContext;
 import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.generictcpclient.TcpClient;
 import br.com.climb.commons.model.DiscoveryRequest;
 import br.com.climb.commons.model.DiscoveryResponse;
+import br.com.climb.commons.model.ReceiveMessage;
+import br.com.climb.framework.ClimbApplication;
 import br.com.climb.framework.clientdiscovery.ClientHandler;
 import br.com.climb.framework.clientdiscovery.DiscoveryClient;
+import br.com.climb.framework.messagesclient.HandlerMessage;
+import br.com.climb.framework.messagesclient.annotations.MessageController;
+import br.com.climb.framework.messagesclient.tcpclient.receive.ReceiveMessageClient;
 import br.com.climb.framework.requestresponse.LoaderClassRestController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 import org.apache.mina.core.RuntimeIoException;
@@ -17,9 +23,9 @@ import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
 import java.net.InetSocketAddress;
-import java.util.*;
 
 import static br.com.climb.commons.utils.ReflectionUtils.getAnnotedClass;
+import static br.com.climb.framework.messagesclient.Methods.MESSAGE_CONTROLLERS;
 
 public class Server implements TcpServer {
 
@@ -27,6 +33,53 @@ public class Server implements TcpServer {
 
     public Server(ConfigFile configFile) {
         this.configFile = configFile;
+    }
+
+    private void initMessageThread() {
+
+        new Thread(()->{
+
+            while (true) {
+
+                try {
+
+                    MESSAGE_CONTROLLERS.entrySet().forEach(entry -> {
+
+                        final TcpClient discoveryClient = new ReceiveMessageClient(new ClientHandler(), "127.0.0.1",3254);
+                        discoveryClient.sendRequest(entry.getKey());
+                        ReceiveMessage response = (ReceiveMessage) discoveryClient.getResponse();
+
+                        try(final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
+
+                            final Object instance = context.generateInstance(entry.getValue());
+
+                            if (response.getMessages().size() > 0) {
+                                response.getMessages().forEach(sendMessage -> {
+                                    ((HandlerMessage)instance).messageReceived(sendMessage.getMessage());
+                                });
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        discoveryClient.closeConnection();
+
+                    });
+
+                } catch (RuntimeIoException e) {
+                    System.out.println("Tentando se conectar ao servidor de message: " + configFile.getGatewayIp() + "/" + configFile.getGatewayPort());
+                }
+
+                try {
+                    Thread.sleep(0, 100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }).start();
+
     }
 
     private void initDiscoveryThread(DiscoveryRequest discoveryRequest) {
@@ -40,7 +93,7 @@ public class Server implements TcpServer {
                     DiscoveryResponse discoveryResponse = (DiscoveryResponse) discoveryClient.getResponse();
                     discoveryClient.closeConnection();
                 } catch (RuntimeIoException e) {
-                    System.out.println("Tentando se conectar ao servidor: " + configFile.getGatewayIp() + "/" + configFile.getGatewayPort());
+                    System.out.println("Tentando se conectar ao servidor de api gateway: " + configFile.getGatewayIp() + "/" + configFile.getGatewayPort());
                 }
 
                 try {
@@ -56,12 +109,15 @@ public class Server implements TcpServer {
 
     @Override
     public void start() throws Exception {
-        final Set<Class<?>> clazzs = getAnnotedClass(RestController.class, configFile.getPackage());
-        final Storage storage = new LoaderClassRestController();
 
-        final DiscoveryRequest discoveryRequest = storage.storage(clazzs)
+        final Storage storage = new LoaderClassRestController();
+        storage.storageMessageControllers(getAnnotedClass(MessageController.class, configFile.getPackage()));
+
+        final DiscoveryRequest discoveryRequest = storage
+                .storageRestControllers(getAnnotedClass(RestController.class, configFile.getPackage()))
                 .generateDiscoveryRequest(configFile.getLocalIp(),configFile.getLocalPort());
 
+        initMessageThread();
         initDiscoveryThread(discoveryRequest);
 
         IoAcceptor acceptor = new NioSocketAcceptor();

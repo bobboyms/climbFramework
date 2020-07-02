@@ -2,8 +2,10 @@ package br.com.climb.cdi.teste.model;
 
 import br.com.climb.cdi.annotations.Component;
 import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.annotations.Message;
 import br.com.climb.cdi.teste.model.factory.ArquivoTexto;
 import br.com.climb.core.interfaces.ClimbConnection;
+import br.com.climb.framework.messagesclient.MessageClient;
 
 @Component
 public class Controller {
@@ -25,6 +27,13 @@ public class Controller {
 
     @Inject
     private ArquivoTexto arquivoTexto;
+
+    @Message(topicName = "cliente")
+    private MessageClient messageClient;
+
+    public void setMessageClient(MessageClient messageClient) {
+        this.messageClient = messageClient;
+    }
 
     public void setClimbConnection(ClimbConnection climbConnection) {
         this.climbConnection = climbConnection;
@@ -59,7 +68,12 @@ public class Controller {
     }
 
     public void executar() {
+
         System.out.println("****** iniciou executar ********");
+
+        System.out.println("Enviando mensagem");
+        messageClient.sendMessage("Enviado via injeção");
+
         System.out.println(pessoa.getNome());
         System.out.println(carro.getNome());
 //        carroRepository.salvar(carro);

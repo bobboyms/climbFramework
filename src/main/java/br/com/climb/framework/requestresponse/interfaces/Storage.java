@@ -5,6 +5,7 @@ import br.com.climb.commons.model.DiscoveryRequest;
 import java.util.Set;
 
 public interface Storage {
-    Storage storage(final Set<Class<?>> clazzs);
+    Storage storageRestControllers(final Set<Class<?>> clazzs);
+    void storageMessageControllers(final Set<Class<?>> clazzs);
     DiscoveryRequest generateDiscoveryRequest(String ipAddress, String port);
 }
