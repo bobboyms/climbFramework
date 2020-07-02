@@ -4,6 +4,7 @@ import br.com.climb.cdi.annotations.Component;
 import br.com.climb.cdi.annotations.Inject;
 import br.com.climb.cdi.annotations.Message;
 import br.com.climb.cdi.teste.model.factory.ArquivoTexto;
+import br.com.climb.commons.execptions.NotConnectionException;
 import br.com.climb.core.interfaces.ClimbConnection;
 import br.com.climb.framework.messagesclient.MessageClient;
 
@@ -67,7 +68,7 @@ public class Controller {
         return carro;
     }
 
-    public void executar() {
+    public void executar() throws NotConnectionException {
 
         System.out.println("****** iniciou executar ********");
 

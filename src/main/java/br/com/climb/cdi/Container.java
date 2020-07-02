@@ -23,4 +23,8 @@ public class Container extends ContainerInitializer {
     }
 
 
+    @Override
+    public ConfigFile getConfigFile() {
+        return super.configFile;
+    }
 }

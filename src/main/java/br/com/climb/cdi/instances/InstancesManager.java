@@ -8,6 +8,8 @@ import br.com.climb.cdi.clazz.TypeOfClass;
 import br.com.climb.cdi.disposes.Disposes;
 import br.com.climb.cdi.interceptor.InterceptorMethod;
 import br.com.climb.cdi.model.Capsule;
+import br.com.climb.configfile.interfaces.ConfigFile;
+import br.com.climb.framework.ClimbApplication;
 import br.com.climb.framework.messagesclient.MessageClient;
 import br.com.climb.framework.messagesclient.MessageClientManager;
 import net.sf.cglib.proxy.Enhancer;
@@ -106,10 +108,8 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
     @Override
     public Object generateInstanceMessage(Field field) {
 
-        System.out.println("Criu instancia message: " + field);
-
         final Message message = field.getDeclaredAnnotation(Message.class);
-        final MessageClient messageClient = new MessageClientManager(message.topicName());
+        final MessageClient messageClient = new MessageClientManager(message.topicName(), initializer.getConfigFile());
 
         return messageClient;
 

@@ -1,6 +1,7 @@
 package br.com.climb.framework.tcpserver;
 
 import br.com.climb.cdi.ManagerContext;
+import br.com.climb.cdi.instances.InstancesManager;
 import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.generictcpclient.TcpClient;
@@ -21,6 +22,8 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
@@ -28,6 +31,8 @@ import static br.com.climb.commons.utils.ReflectionUtils.getAnnotedClass;
 import static br.com.climb.framework.messagesclient.Methods.MESSAGE_CONTROLLERS;
 
 public class Server implements TcpServer {
+
+    private static Logger logger = LoggerFactory.getLogger(Server.class);
 
     public final ConfigFile configFile;
 
@@ -45,37 +50,48 @@ public class Server implements TcpServer {
 
                     MESSAGE_CONTROLLERS.entrySet().forEach(entry -> {
 
-                        final TcpClient discoveryClient = new ReceiveMessageClient(new ClientHandler(), "127.0.0.1",3254);
+                        final TcpClient discoveryClient = new ReceiveMessageClient(new ClientHandler(), "127.0.0.1", 3254);
                         discoveryClient.sendRequest(entry.getKey());
                         ReceiveMessage response = (ReceiveMessage) discoveryClient.getResponse();
 
-                        try(final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
+                        if (response.getMessages().size() > 0) {
 
-                            final Object instance = context.generateInstance(entry.getValue());
+                            try (final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
 
-                            if (response.getMessages().size() > 0) {
+                                final Object instance = context.generateInstance(entry.getValue());
+
                                 response.getMessages().forEach(sendMessage -> {
-                                    ((HandlerMessage)instance).messageReceived(sendMessage.getMessage());
+                                    ((HandlerMessage) instance).messageReceived(sendMessage.getMessage());
                                 });
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
 
                         discoveryClient.closeConnection();
 
                     });
-
                 } catch (RuntimeIoException e) {
-                    System.out.println("Tentando se conectar ao servidor de message: " + configFile.getGatewayIp() + "/" + configFile.getGatewayPort());
+                    System.out.println("It was not possible to connect to the messaging server: " + configFile.getMessageIp() + "/" + configFile.getMessagePort());
+
+                    try {
+                        Thread.sleep(6000);
+                    } catch (InterruptedException ex) {
+                        e.printStackTrace();
+                    }
+
+                } catch (Exception e) {
+                    logger.error("Error: {}", e);
                 }
 
                 try {
-                    Thread.sleep(0, 100);
+                    Thread.sleep(0, 500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
             }
 
         }).start();
@@ -93,7 +109,9 @@ public class Server implements TcpServer {
                     DiscoveryResponse discoveryResponse = (DiscoveryResponse) discoveryClient.getResponse();
                     discoveryClient.closeConnection();
                 } catch (RuntimeIoException e) {
-                    System.out.println("Tentando se conectar ao servidor de api gateway: " + configFile.getGatewayIp() + "/" + configFile.getGatewayPort());
+                    System.out.println("It was not possible to connect to the api gateway: " + configFile.getGatewayIp() + "/" + configFile.getGatewayPort());
+                } catch (Exception e) {
+                    logger.error("Error: {}", e);
                 }
 
                 try {

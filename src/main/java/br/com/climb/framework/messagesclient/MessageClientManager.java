@@ -1,27 +1,41 @@
 package br.com.climb.framework.messagesclient;
 
+import br.com.climb.commons.configuration.ConfigFile;
+import br.com.climb.commons.execptions.NotConnectionException;
 import br.com.climb.commons.generictcpclient.TcpClient;
 import br.com.climb.commons.model.SendMessage;
 import br.com.climb.framework.messagesclient.tcpclient.send.ClientHandler;
 import br.com.climb.framework.messagesclient.tcpclient.send.SendMessageClient;
+import org.apache.mina.core.RuntimeIoException;
 
 public class MessageClientManager implements MessageClient {
 
     private final String topic;
+    private final ConfigFile configFile;
 
-    public MessageClientManager(String topic) {
+    public MessageClientManager(String topic, ConfigFile configFile) {
         this.topic = topic;
+        this.configFile = configFile;
     }
 
     @Override
-    public void sendMessage(Object message) {
-        TcpClient discoveryClient = new SendMessageClient(new ClientHandler(), "127.0.0.1",3254);
-        discoveryClient.sendRequest(new SendMessage(topic, message));
-        Integer response = (Integer) discoveryClient.getResponse();
+    public void sendMessage(Object message) throws NotConnectionException {
 
-        if (response.longValue() != 200) {
-            throw new Error("Erro no servidor, mensagem não registrada");
+        try {
+
+            TcpClient discoveryClient = new SendMessageClient(new ClientHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
+            discoveryClient.sendRequest(new SendMessage(topic, message));
+            Integer response = (Integer) discoveryClient.getResponse();
+
+            if (response.longValue() != 200) {
+                throw new Error("Erro no servidor, mensagem não registrada");
+            }
+
+        } catch (RuntimeIoException e) {
+            throw new NotConnectionException("It was not possible to connect to the messaging server: " + configFile.getMessageIp() + "/" + configFile.getMessagePort());
         }
+
+
 
 //        discoveryClient.closeConnection();
 //        System.out.println("Resposta:" + response);
