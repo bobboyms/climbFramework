@@ -32,6 +32,7 @@ public class MessageClientManager implements MessageClient {
             }
 
         } catch (RuntimeIoException e) {
+            e.printStackTrace();
             throw new NotConnectionException("It was not possible to connect to the messaging server: " + configFile.getMessageIp() + "/" + configFile.getMessagePort());
         }
 

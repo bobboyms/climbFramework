@@ -91,7 +91,7 @@ public class ImplementDaoMethodIntercept implements MethodIntercept {
             return object;
 
         } catch (Exception e) {
-            logger.error("ImplementDaoMethodIntercept ERROR: {}", e);
+            logger.error("ImplementRestIntercept ERROR: {}", e);
         }
 
         return null;

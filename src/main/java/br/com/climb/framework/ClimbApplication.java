@@ -6,6 +6,8 @@ import br.com.climb.commons.configuration.FactoryConfigFile;
 import br.com.climb.commons.execptions.ConfigFileException;
 import br.com.climb.framework.tcpserver.ServerFactory;
 import br.com.climb.framework.tcpserver.TcpServer;
+import br.com.climb.rpc.RpcListener;
+import br.com.climb.rpc.RpcReceiveCall;
 
 import java.io.IOException;
 
@@ -34,9 +36,15 @@ public class ClimbApplication {
         System.out.println("-------------------------------------------------------");
     }
 
+    private static void startRpcListener() {
+        final RpcListener listener = new RpcReceiveCall(configFile);
+        listener.startListenerCallMethod();
+    }
+
     public static void run(Class<?> mainclass) throws Exception {
         loadConfigurations(mainclass);
         loadContainerInitializer();
+        startRpcListener();
         startTcpServer();
     }
 
