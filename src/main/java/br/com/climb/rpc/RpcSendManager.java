@@ -11,15 +11,18 @@ import br.com.climb.rpc.send.GetRequestRpc;
 import br.com.climb.rpc.send.SendRequestRpc;
 import br.com.climb.rpc.send.SendtHandler;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class RpcSendManager implements RpcMethod {
 
     private final String methodName;
+    private final String controllerName;
     private final ConfigFile configFile;
 
-    public RpcSendManager(String methodName, ConfigFile configFile) {
+    public RpcSendManager(String controllerName, String methodName, ConfigFile configFile) {
         this.methodName = methodName;
+        this.controllerName = controllerName;
         this.configFile = configFile;
     }
 
@@ -28,7 +31,8 @@ public class RpcSendManager implements RpcMethod {
         final String uuid = UUID.randomUUID().toString();
 
         final TcpClient sendRequestRpc = new SendRequestRpc(new SendtHandler(), "127.0.0.1",3254);
-        sendRequestRpc.sendRequest(new RpcRequest(uuid, methodName, args));
+        final String finalName = controllerName+"$$"+methodName;
+        sendRequestRpc.sendRequest(new RpcRequest(uuid, finalName, args));
 
         final Integer response = (Integer) sendRequestRpc.getResponse();
         sendRequestRpc.closeConnection();
@@ -59,7 +63,7 @@ public class RpcSendManager implements RpcMethod {
             }
 
             final TcpClient getRequestRpc = new GetRequestRpc(new GetHandler(), "127.0.0.1",3254);
-            getRequestRpc.sendRequest(new KeyRpc(uuid, KeyRpc.TYPE_GET_RESPONSE_ONE));
+            getRequestRpc.sendRequest(new KeyRpc(uuid, KeyRpc.TYPE_GET_RESPONSE_ONE, new ArrayList<>()));
             final Object obj = getRequestRpc.getResponse();
             getRequestRpc.closeConnection();
 

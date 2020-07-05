@@ -4,8 +4,7 @@ import java.lang.annotation.*;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.TYPE })
-public @interface RpcClient {
-    String controllerName() default "";
+@Target({ ElementType.METHOD })
+public @interface RpcMethod {
     String methodName() default "";
 }

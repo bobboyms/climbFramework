@@ -7,5 +7,8 @@ import java.util.Set;
 public interface Storage {
     Storage storageRestControllers(final Set<Class<?>> clazzs);
     void storageMessageControllers(final Set<Class<?>> clazzs);
+
+    void storageRpcControllers(Set<Class<?>> clazzs);
+
     DiscoveryRequest generateDiscoveryRequest(String ipAddress, String port);
 }

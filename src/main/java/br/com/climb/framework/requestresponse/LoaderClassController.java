@@ -13,10 +13,13 @@ import br.com.climb.commons.annotations.mapping.PostMapping;
 import br.com.climb.commons.annotations.RequestMapping;
 import br.com.climb.framework.messagesclient.annotations.MessageController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
+import br.com.climb.rpc.annotation.RpcController;
+import br.com.climb.rpc.annotation.RpcMethod;
 
 import static br.com.climb.commons.url.Methods.*;
 import static br.com.climb.commons.utils.ReflectionUtils.*;
 import static br.com.climb.framework.messagesclient.Methods.MESSAGE_CONTROLLERS;
+import static br.com.climb.framework.messagesclient.Methods.RPC_CONTROLLERS;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -24,11 +27,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LoaderClassRestController implements Storage {
+public class LoaderClassController implements Storage {
 
     private NormalizedUrl normalizedUrl;
 
-    public LoaderClassRestController() {
+    public LoaderClassController() {
         this.normalizedUrl = new NormalizedUrlManager();
     }
 
@@ -103,6 +106,26 @@ public class LoaderClassRestController implements Storage {
             MessageController messageController = aClass.getDeclaredAnnotation(MessageController.class);
             MESSAGE_CONTROLLERS.put(messageController.topicName(), aClass);
             System.out.println("Message Controller: " + aClass);
+
+        });
+    }
+
+    @Override
+    public void storageRpcControllers(Set<Class<?>> clazzs) {
+
+        clazzs.stream().forEach(aClass -> {
+
+            Arrays.asList(aClass.getDeclaredMethods()).forEach(method -> {
+
+                final RpcMethod rpcMethod = method.getDeclaredAnnotation(RpcMethod.class);
+
+                if (rpcMethod != null) {
+                    final RpcController rpcController = aClass.getDeclaredAnnotation(RpcController.class);
+                    RPC_CONTROLLERS.put(rpcController.value() +"$$"+rpcMethod.methodName(), method);
+                    System.out.println("RPC Controller: " + aClass);
+                }
+
+            });
 
         });
     }

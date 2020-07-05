@@ -5,13 +5,8 @@ import br.com.climb.commons.annotations.RequestMapping;
 import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.annotations.mapping.GetMapping;
 import br.com.climb.commons.annotations.param.PathVariable;
-import br.com.climb.commons.annotations.param.RequestBody;
-import br.com.climb.commons.annotations.param.RequestParam;
-import br.com.climb.commons.security.Response;
-import br.com.climb.commons.security.Security;
-import br.com.climb.test.model.Cliente;
-import br.com.climb.test.restclient.RestClient;
-import br.com.climb.test.rpc.GenericRpcClient;
+import br.com.climb.test.rpc.RpcClientController;
+import br.com.climb.test.rpc.RpcClientTeste;
 
 
 @RestController
@@ -19,15 +14,21 @@ import br.com.climb.test.rpc.GenericRpcClient;
 public class TesteGetControllerRest {
 
     @Inject
-    private GenericRpcClient rpcClient;
+    private RpcClientTeste rpcClient;
 
-    public void setRpcClient(GenericRpcClient rpcClient) {
+    public void setRpcClient(RpcClientTeste rpcClient) {
         this.rpcClient = rpcClient;
     }
 
     @GetMapping("/soma/valora/{valora}/valorb/{valorb}/")
-    public String getSoma(@PathVariable("valora") Integer valora, @PathVariable("valorb") Integer valorb)  {
+    public String somar(@PathVariable("valora") Integer valora, @PathVariable("valorb") Integer valorb)  {
         Integer result = rpcClient.somar(valora,valorb);
+        return result.toString();
+    }
+
+    @GetMapping("/subtrair/valora/{valora}/valorb/{valorb}/")
+    public String subtrair(@PathVariable("valora") Integer valora, @PathVariable("valorb") Integer valorb)  {
+        Integer result = rpcClient.subtrair(valora,valorb);
         return result.toString();
     }
 

@@ -56,7 +56,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_SESSION() throws IOException, NotFoundException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -124,7 +124,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_1() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -167,7 +167,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_2() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -209,7 +209,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_3() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -234,7 +234,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_4() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -284,7 +284,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_POST_1() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -332,7 +332,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_POST_2() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -379,7 +379,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_PUT_1() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -427,7 +427,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_PUT_2() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -474,7 +474,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_DELETE_1() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -523,7 +523,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_DELETE_2() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController().storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 

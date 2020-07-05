@@ -1,7 +1,6 @@
 package br.com.climb.framework.tcpserver;
 
 import br.com.climb.cdi.ManagerContext;
-import br.com.climb.cdi.instances.InstancesManager;
 import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.generictcpclient.TcpClient;
@@ -14,8 +13,9 @@ import br.com.climb.framework.clientdiscovery.DiscoveryClient;
 import br.com.climb.framework.messagesclient.HandlerMessage;
 import br.com.climb.framework.messagesclient.annotations.MessageController;
 import br.com.climb.framework.messagesclient.tcpclient.receive.ReceiveMessageClient;
-import br.com.climb.framework.requestresponse.LoaderClassRestController;
+import br.com.climb.framework.requestresponse.LoaderClassController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
+import br.com.climb.rpc.annotation.RpcController;
 import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -87,7 +87,7 @@ public class Server implements TcpServer {
                 }
 
                 try {
-                    Thread.sleep(0, 500);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -99,6 +99,7 @@ public class Server implements TcpServer {
     }
 
     private void initDiscoveryThread(DiscoveryRequest discoveryRequest) {
+
         new Thread(()->{
 
             while (true) {
@@ -128,7 +129,9 @@ public class Server implements TcpServer {
     @Override
     public void start() throws Exception {
 
-        final Storage storage = new LoaderClassRestController();
+        final Storage storage = new LoaderClassController();
+
+        storage.storageRpcControllers(getAnnotedClass(RpcController.class, configFile.getPackage()));
         storage.storageMessageControllers(getAnnotedClass(MessageController.class, configFile.getPackage()));
 
         final DiscoveryRequest discoveryRequest = storage
