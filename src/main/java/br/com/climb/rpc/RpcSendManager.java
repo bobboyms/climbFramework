@@ -30,7 +30,7 @@ public class RpcSendManager implements RpcMethod {
 
         final String uuid = UUID.randomUUID().toString();
 
-        final TcpClient sendRequestRpc = new SendRequestRpc(new SendtHandler(), "127.0.0.1",3254);
+        final TcpClient sendRequestRpc = new SendRequestRpc(new SendtHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
         final String finalName = controllerName+"$$"+methodName;
         sendRequestRpc.sendRequest(new RpcRequest(uuid, finalName, args));
 
@@ -58,8 +58,10 @@ public class RpcSendManager implements RpcMethod {
                 e.printStackTrace();
             }
 
-            if (count == 30000) {
-                throw new MethodCallException("answer exceeded the time limit. Time limit = " + 30000);
+//            System.out.println("contador: " + count);
+
+            if (count == 3700) {
+                throw new MethodCallException("answer exceeded the time limit. Time miles limit = " + 30000);
             }
 
             final TcpClient getRequestRpc = new GetRequestRpc(new GetHandler(), "127.0.0.1",3254);
@@ -83,6 +85,7 @@ public class RpcSendManager implements RpcMethod {
                 }
             }
         }
+
         return rpcResponse;
     }
 

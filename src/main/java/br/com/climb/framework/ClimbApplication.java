@@ -8,6 +8,8 @@ import br.com.climb.framework.tcpserver.ServerFactory;
 import br.com.climb.framework.tcpserver.TcpServer;
 import br.com.climb.rpc.RpcListener;
 import br.com.climb.rpc.RpcReceiveCall;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -15,6 +17,7 @@ public class ClimbApplication {
 
     public static ConfigFile configFile;
     public static ContainerInitializer containerInitializer;
+    public static final Logger logger = LoggerFactory.getLogger(RpcReceiveCall.class);
 
     private static void loadConfigurations(Class<?> mainclass) throws IOException, ConfigFileException {
 
@@ -37,8 +40,12 @@ public class ClimbApplication {
     }
 
     private static void startRpcListener() {
-        final RpcListener listener = new RpcReceiveCall(configFile);
-        listener.startListenerCallMethod();
+        try {
+            final RpcListener listener = new RpcReceiveCall(configFile);
+            listener.startListenerCallMethod();
+        } catch (Exception e) {
+            logger.error("{}", e);
+        }
     }
 
     public static void run(Class<?> mainclass) throws Exception {

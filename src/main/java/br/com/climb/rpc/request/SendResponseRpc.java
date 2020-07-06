@@ -13,12 +13,12 @@ public class SendResponseRpc extends GenericTcpClient<RpcResponse> {
 
     public static void main(String[] args) {
 
-        TcpClient discoveryClient = new SendResponseRpc(new SendtHandler(), "127.0.0.1",3254);
-        discoveryClient.sendRequest(null);
-        Integer response = (Integer) discoveryClient.getResponse();
-
-        discoveryClient.closeConnection();
-        System.out.println("Resposta:" + response);
+//        TcpClient discoveryClient = new SendResponseRpc(new SendHandler(), "127.0.0.1",3254);
+//        discoveryClient.sendRequest(null);
+//        Integer response = (Integer) discoveryClient.getResponse();
+//
+//        discoveryClient.closeConnection();
+//        System.out.println("Resposta:" + response);
 
 
     }

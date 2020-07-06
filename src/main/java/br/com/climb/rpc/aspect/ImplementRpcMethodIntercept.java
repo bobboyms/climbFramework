@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 @Interceptor
 public class ImplementRpcMethodIntercept implements MethodIntercept {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(ImplementRpcMethodIntercept.class);
 
     @Override
     public Object interceptorMethod(Context ctx) throws Exception {

@@ -14,11 +14,11 @@ public class DiscoveryClient extends GenericTcpClient<DiscoveryRequest> {
 
     public static void main(String[] args) {
 
-        TcpClient discoveryClient = new DiscoveryClient(new ClientHandler(), "127.0.0.1",3030);
-        discoveryClient.sendRequest(null);
-        DiscoveryResponse discoveryResponse = (DiscoveryResponse) discoveryClient.getResponse();
-
-        System.out.println("Resposta:" + discoveryResponse);
+//        TcpClient discoveryClient = new DiscoveryClient(new ClientHandler(), "127.0.0.1",3030);
+//        discoveryClient.sendRequest(null);
+//        DiscoveryResponse discoveryResponse = (DiscoveryResponse) discoveryClient.getResponse();
+//
+//        System.out.println("Resposta:" + discoveryResponse);
 
 
     }

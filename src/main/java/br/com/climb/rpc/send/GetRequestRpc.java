@@ -14,13 +14,13 @@ public class GetRequestRpc extends GenericTcpClient<KeyRpc> {
     }
 
     public static void main(String[] args) {
-
-        TcpClient discoveryClient = new GetRequestRpc(new SendtHandler(), "127.0.0.1",3254);
-        discoveryClient.sendRequest(new SendMessage("cliente", "Olá mundo"));
-        RpcResponse response = (RpcResponse) discoveryClient.getResponse();
-
-        discoveryClient.closeConnection();
-        System.out.println("Resposta:" + response);
+//
+//        TcpClient discoveryClient = new GetRequestRpc(new SendtHandler(), "127.0.0.1",3254);
+//        discoveryClient.sendRequest(new SendMessage("cliente", "Olá mundo"));
+//        RpcResponse response = (RpcResponse) discoveryClient.getResponse();
+//
+//        discoveryClient.closeConnection();
+//        System.out.println("Resposta:" + response);
 
 
     }

@@ -21,42 +21,50 @@ public class ServerHandler extends IoHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(ServerHandler.class);
 
     @Override
-    public void messageReceived(IoSession session, Object message) throws Exception {
+    public void messageReceived(IoSession session, Object message) {
 
         final Request request = (ObjectRequest)message;
-
         final ObjectResponse response = new ObjectResponse();
-        final LoaderMethod loaderMethod = new LoaderMethodRestController();
-        final Capsule capsule = loaderMethod.getMethodForCall(request);
 
-        try(final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
+        try {
 
-            final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), request.getSessionId());
-            final Object result = capsule.getMethod().invoke(instance, capsule.getArgs());
+            final LoaderMethod loaderMethod = new LoaderMethodRestController();
+            final Capsule capsule = loaderMethod.getMethodForCall(request);
 
-            if (result != null) {
+            try(final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
 
-                final ObjectMapper mapper = new ObjectMapper();
-                final String json = mapper.writeValueAsString(result);
+                final Object instance = context.generateInstance(capsule.getMethod().getDeclaringClass(), request.getSessionId());
+                final Object result = capsule.getMethod().invoke(instance, capsule.getArgs());
 
-                response.setContentType("application/json; charset=UTF-8;");
-                response.setCharacterEncoding("UTF-8");
-                response.setStatus(200);
-                response.setBody(json.getBytes());
+                if (result != null) {
 
-            } else {
-                response.setStatus(200);
+                    final ObjectMapper mapper = new ObjectMapper();
+                    final String json = mapper.writeValueAsString(result);
+
+                    response.setContentType("application/json; charset=UTF-8;");
+                    response.setCharacterEncoding("UTF-8");
+                    response.setStatus(200);
+                    response.setBody(json.getBytes());
+
+                } else {
+                    response.setStatus(200);
+                }
+
+                session.write(response);
+
+            } catch (Exception e) {
+                logger.error("responseForClient {}", e);
+                response.setStatus(500);
+                response.setBody(e.getMessage().getBytes());
+                session.write(response);
             }
 
-            session.write(response);
-
         } catch (Exception e) {
-            logger.error("responseForClient {}", e);
+            logger.error("messageReceived {}", e);
             response.setStatus(500);
             response.setBody(e.getMessage().getBytes());
             session.write(response);
         }
-
     }
 
     @Override

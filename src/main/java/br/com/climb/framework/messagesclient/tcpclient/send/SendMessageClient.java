@@ -13,13 +13,13 @@ public class SendMessageClient extends GenericTcpClient<SendMessage> {
     }
 
     public static void main(String[] args) {
-
-        TcpClient discoveryClient = new SendMessageClient(new ClientHandler(), "127.0.0.1",3254);
-        discoveryClient.sendRequest(new SendMessage("cliente", "Olá mundo"));
-        Integer response = (Integer) discoveryClient.getResponse();
-
-        discoveryClient.closeConnection();
-        System.out.println("Resposta:" + response);
+//
+//        TcpClient discoveryClient = new SendMessageClient(new ClientHandler(), "127.0.0.1",3254);
+//        discoveryClient.sendRequest(new SendMessage("cliente", "Olá mundo"));
+//        Integer response = (Integer) discoveryClient.getResponse();
+//
+//        discoveryClient.closeConnection();
+//        System.out.println("Resposta:" + response);
 
 
     }

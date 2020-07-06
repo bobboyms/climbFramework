@@ -11,8 +11,10 @@ import br.com.climb.framework.messagesclient.Methods;
 import br.com.climb.rpc.request.GetKeyHandler;
 import br.com.climb.rpc.request.SendKeyRpc;
 import br.com.climb.rpc.request.SendResponseRpc;
-import br.com.climb.rpc.request.SendtHandler;
+import br.com.climb.rpc.request.SendHandler;
 import org.apache.mina.core.RuntimeIoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -25,10 +27,44 @@ public class RpcReceiveCall implements RpcListener {
         this.configFile = configFile;
     }
 
+    public static final Logger logger = LoggerFactory.getLogger(RpcReceiveCall.class);
+
     private final ConfigFile configFile;
 
+    private Object getResponseList() {
+        final List<String> methodsName = Methods.RPC_CONTROLLERS.entrySet()
+                .stream().map(Map.Entry::getKey).collect(Collectors.toList());
+
+        final TcpClient discoveryClient = new SendKeyRpc(new GetKeyHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
+        discoveryClient.sendRequest(new KeyRpc("", KeyRpc.TYPE_GET_RESPONSE_LIST, methodsName));
+        Object response = discoveryClient.getResponse();
+        discoveryClient.closeConnection();
+
+        return response;
+    }
+
+    private void invokeMethod(Method method, RpcRequest rpcRequest) {
+
+        if (method != null) {
+
+            try(final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
+
+                final Object instance = context.generateInstance(method.getDeclaringClass());
+                final Object result = method.invoke(instance, rpcRequest.getArgs());
+
+                final TcpClient resp = new SendResponseRpc(new SendHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
+                resp.sendRequest(new RpcResponse(rpcRequest.getUuid(), 200 ,result));
+                resp.closeConnection();
+
+            } catch (Exception e) {
+                logger.error("invokeMethod {}", e);
+            }
+
+        }
+    }
+
     @Override
-    public void startListenerCallMethod() {
+    public void startListenerCallMethod() throws Exception {
 
         new Thread(() -> {
 
@@ -42,13 +78,7 @@ public class RpcReceiveCall implements RpcListener {
                         e.printStackTrace();
                     }
 
-                    final List<String> methodsName = Methods.RPC_CONTROLLERS.entrySet()
-                            .stream().map(Map.Entry::getKey).collect(Collectors.toList());
-
-                    final TcpClient discoveryClient = new SendKeyRpc(new GetKeyHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
-                    discoveryClient.sendRequest(new KeyRpc("", KeyRpc.TYPE_GET_RESPONSE_LIST, methodsName));
-                    Object response = discoveryClient.getResponse();
-                    discoveryClient.closeConnection();
+                    final Object response = getResponseList();
 
                     if (response.getClass() == Integer.class) {
                         continue;
@@ -59,30 +89,15 @@ public class RpcReceiveCall implements RpcListener {
                     rpcRequests.forEach(rpcRequest -> {
 
                         Method method = Methods.RPC_CONTROLLERS.get(rpcRequest.getMethodName());
-
-                        if (method != null) {
-
-                            try(final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
-
-                                final Object instance = context.generateInstance(method.getDeclaringClass());
-                                final Object result = method.invoke(instance, rpcRequest.getArgs());
-
-                                final TcpClient resp = new SendResponseRpc(new SendtHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
-                                resp.sendRequest(new RpcResponse(rpcRequest.getUuid(), 200 ,result));
-                                resp.closeConnection();
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-//                                logger.error("responseForClient {}", e);
-                            }
-
-                        }
+                        invokeMethod(method, rpcRequest);
 
                     });
 
 
                 } catch (RuntimeIoException e) {
 //                    System.out.println("Não conectado ao servidor de msg");
+                } catch (Exception e) {
+                    logger.error("startListenerCallMethod {}", e);
                 }
             }
 
