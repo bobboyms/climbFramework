@@ -3,6 +3,7 @@ package br.com.climb.rpc;
 import br.com.climb.cdi.ManagerContext;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.generictcpclient.TcpClient;
+import br.com.climb.commons.model.Message;
 import br.com.climb.commons.model.rpc.KeyRpc;
 import br.com.climb.commons.model.rpc.RpcRequest;
 import br.com.climb.commons.model.rpc.RpcResponse;
@@ -36,7 +37,7 @@ public class RpcReceiveCall implements RpcListener {
                 .stream().map(Map.Entry::getKey).collect(Collectors.toList());
 
         final TcpClient discoveryClient = new SendKeyRpc(new GetKeyHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
-        discoveryClient.sendRequest(new KeyRpc("", KeyRpc.TYPE_GET_RESPONSE_LIST, methodsName));
+        discoveryClient.sendRequest(new KeyRpc("", KeyRpc.TYPE_GET_RESPONSE_LIST, Message.TYPE_RPC, methodsName));
         Object response = discoveryClient.getResponse();
         discoveryClient.closeConnection();
 
@@ -53,7 +54,7 @@ public class RpcReceiveCall implements RpcListener {
                 final Object result = method.invoke(instance, rpcRequest.getArgs());
 
                 final TcpClient resp = new SendResponseRpc(new SendHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
-                resp.sendRequest(new RpcResponse(rpcRequest.getUuid(), 200 ,result));
+                resp.sendRequest(new RpcResponse(rpcRequest.getUuid(), 200, Message.TYPE_RPC ,result));
                 resp.closeConnection();
 
             } catch (Exception e) {
@@ -87,12 +88,9 @@ public class RpcReceiveCall implements RpcListener {
                     final List<RpcRequest> rpcRequests = (List<RpcRequest>)response;
 
                     rpcRequests.forEach(rpcRequest -> {
-
                         Method method = Methods.RPC_CONTROLLERS.get(rpcRequest.getMethodName());
                         invokeMethod(method, rpcRequest);
-
                     });
-
 
                 } catch (RuntimeIoException e) {
 //                    System.out.println("Não conectado ao servidor de msg");

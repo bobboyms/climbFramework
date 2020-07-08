@@ -4,9 +4,8 @@ import br.com.climb.cdi.ManagerContext;
 import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.generictcpclient.TcpClient;
-import br.com.climb.commons.model.DiscoveryRequest;
-import br.com.climb.commons.model.DiscoveryResponse;
-import br.com.climb.commons.model.ReceiveMessage;
+import br.com.climb.commons.model.*;
+import br.com.climb.commons.model.rpc.KeyRpc;
 import br.com.climb.framework.ClimbApplication;
 import br.com.climb.framework.clientdiscovery.ClientHandler;
 import br.com.climb.framework.clientdiscovery.DiscoveryClient;
@@ -51,7 +50,7 @@ public class Server implements TcpServer {
                     MESSAGE_CONTROLLERS.entrySet().forEach(entry -> {
 
                         final TcpClient discoveryClient = new ReceiveMessageClient(new ClientHandler(), "127.0.0.1", 3254);
-                        discoveryClient.sendRequest(entry.getKey());
+                        discoveryClient.sendRequest(new KeyMessage(entry.getKey(), Message.TYPE_MESSAGE));
                         ReceiveMessage response = (ReceiveMessage) discoveryClient.getResponse();
 
                         if (response.getMessages().size() > 0) {

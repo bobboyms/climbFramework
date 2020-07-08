@@ -2,6 +2,7 @@ package br.com.climb.rpc;
 
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.generictcpclient.TcpClient;
+import br.com.climb.commons.model.Message;
 import br.com.climb.commons.model.rpc.KeyRpc;
 import br.com.climb.commons.model.rpc.RpcRequest;
 import br.com.climb.commons.model.rpc.RpcResponse;
@@ -32,7 +33,7 @@ public class RpcSendManager implements RpcMethod {
 
         final TcpClient sendRequestRpc = new SendRequestRpc(new SendtHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
         final String finalName = controllerName+"$$"+methodName;
-        sendRequestRpc.sendRequest(new RpcRequest(uuid, finalName, args));
+        sendRequestRpc.sendRequest(new RpcRequest(uuid, finalName, Message.TYPE_RPC, args));
 
         final Integer response = (Integer) sendRequestRpc.getResponse();
         sendRequestRpc.closeConnection();
@@ -65,7 +66,7 @@ public class RpcSendManager implements RpcMethod {
             }
 
             final TcpClient getRequestRpc = new GetRequestRpc(new GetHandler(), "127.0.0.1",3254);
-            getRequestRpc.sendRequest(new KeyRpc(uuid, KeyRpc.TYPE_GET_RESPONSE_ONE, new ArrayList<>()));
+            getRequestRpc.sendRequest(new KeyRpc(uuid, KeyRpc.TYPE_GET_RESPONSE_ONE, Message.TYPE_RPC, new ArrayList<>()));
             final Object obj = getRequestRpc.getResponse();
             getRequestRpc.closeConnection();
 

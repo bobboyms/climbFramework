@@ -3,6 +3,7 @@ package br.com.climb.framework.messagesclient;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.execptions.NotConnectionException;
 import br.com.climb.commons.generictcpclient.TcpClient;
+import br.com.climb.commons.model.Message;
 import br.com.climb.commons.model.SendMessage;
 import br.com.climb.framework.messagesclient.tcpclient.send.ClientHandler;
 import br.com.climb.framework.messagesclient.tcpclient.send.SendMessageClient;
@@ -24,7 +25,7 @@ public class MessageClientManager implements MessageClient {
         try {
 
             TcpClient discoveryClient = new SendMessageClient(new ClientHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
-            discoveryClient.sendRequest(new SendMessage(topic, message));
+            discoveryClient.sendRequest(new SendMessage(topic, Message.TYPE_MESSAGE, message));
             Integer response = (Integer) discoveryClient.getResponse();
 
             if (response.longValue() != 200) {
