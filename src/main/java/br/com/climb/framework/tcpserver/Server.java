@@ -5,7 +5,7 @@ import br.com.climb.commons.annotations.RestController;
 import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.generictcpclient.TcpClient;
 import br.com.climb.commons.model.*;
-import br.com.climb.commons.model.rpc.KeyRpc;
+import br.com.climb.commons.url.NormalizedUrlManager;
 import br.com.climb.framework.ClimbApplication;
 import br.com.climb.framework.clientdiscovery.ClientHandler;
 import br.com.climb.framework.clientdiscovery.DiscoveryClient;
@@ -73,8 +73,7 @@ public class Server implements TcpServer {
 
                     });
                 } catch (RuntimeIoException e) {
-                    System.out.println("It was not possible to connect to the messaging server: " + configFile.getMessageIp() + "/" + configFile.getMessagePort());
-
+                    logger.info("It was not possible to connect to the messaging server. IP: {}, PORT {} ", configFile.getMessageIp(), configFile.getMessagePort());
                     try {
                         Thread.sleep(6000);
                     } catch (InterruptedException ex) {
@@ -109,7 +108,7 @@ public class Server implements TcpServer {
                     DiscoveryResponse discoveryResponse = (DiscoveryResponse) discoveryClient.getResponse();
                     discoveryClient.closeConnection();
                 } catch (RuntimeIoException e) {
-                    System.out.println("It was not possible to connect to the api gateway: " + configFile.getGatewayIp() + "/" + configFile.getGatewayPort());
+                    logger.info("It was not possible to connect to the api gateway. IP: {}, PORT: {} ", configFile.getGatewayIp(), configFile.getGatewayPort());
                 } catch (Exception e) {
                     logger.error("Error: {}", e);
                 }
@@ -128,7 +127,7 @@ public class Server implements TcpServer {
     @Override
     public void start() throws Exception {
 
-        final Storage storage = new LoaderClassController();
+        final Storage storage = new LoaderClassController(new NormalizedUrlManager());
 
         storage.storageRpcControllers(getAnnotedClass(RpcController.class, configFile.getPackage()));
         storage.storageMessageControllers(getAnnotedClass(MessageController.class, configFile.getPackage()));
@@ -145,7 +144,7 @@ public class Server implements TcpServer {
         acceptor.getFilterChain().addLast( "codec1", new ProtocolCodecFilter(
                 new ObjectSerializationCodecFactory()));
         acceptor.setHandler( new ServerHandler() );
-        acceptor.getSessionConfig().setReadBufferSize( 2048 );
+        acceptor.getSessionConfig().setReadBufferSize( 6048 );
         acceptor.bind(new InetSocketAddress(new Integer(configFile.getLocalPort())));
     }
 }

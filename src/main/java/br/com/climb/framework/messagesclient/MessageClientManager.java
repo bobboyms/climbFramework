@@ -8,8 +8,12 @@ import br.com.climb.commons.model.SendMessage;
 import br.com.climb.framework.messagesclient.tcpclient.send.ClientHandler;
 import br.com.climb.framework.messagesclient.tcpclient.send.SendMessageClient;
 import org.apache.mina.core.RuntimeIoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MessageClientManager implements MessageClient {
+
+    private final Logger logger = LoggerFactory.getLogger(MessageClientManager.class);
 
     private final String topic;
     private final ConfigFile configFile;
@@ -33,7 +37,7 @@ public class MessageClientManager implements MessageClient {
             }
 
         } catch (RuntimeIoException e) {
-            e.printStackTrace();
+            logger.error("{}", e);
             throw new NotConnectionException("It was not possible to connect to the messaging server: " + configFile.getMessageIp() + "/" + configFile.getMessagePort());
         }
 

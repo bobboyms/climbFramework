@@ -2,10 +2,8 @@ package br.com.climb.framework.requestresponse;
 
 import br.com.climb.commons.model.DiscoveryRequest;
 import br.com.climb.commons.model.DiscoveryRequestObject;
-import br.com.climb.commons.model.DiscoveryResponseObject;
 import br.com.climb.commons.url.Methods;
 import br.com.climb.commons.url.NormalizedUrl;
-import br.com.climb.commons.url.NormalizedUrlManager;
 import br.com.climb.commons.annotations.mapping.DeleteMapping;
 import br.com.climb.commons.annotations.mapping.GetMapping;
 import br.com.climb.commons.annotations.mapping.PutMapping;
@@ -15,6 +13,8 @@ import br.com.climb.framework.messagesclient.annotations.MessageController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 import br.com.climb.rpc.annotation.RpcController;
 import br.com.climb.rpc.annotation.RpcMethod;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static br.com.climb.commons.url.Methods.*;
 import static br.com.climb.commons.utils.ReflectionUtils.*;
@@ -29,10 +29,12 @@ import java.util.Set;
 
 public class LoaderClassController implements Storage {
 
-    private NormalizedUrl normalizedUrl;
+    private static Logger logger = LoggerFactory.getLogger(LoaderClassController.class);
 
-    public LoaderClassController() {
-        this.normalizedUrl = new NormalizedUrlManager();
+    private final NormalizedUrl normalizedUrl;
+
+    public LoaderClassController(NormalizedUrl normalizedUrl) {
+        this.normalizedUrl = normalizedUrl;
     }
 
     @Override
@@ -51,7 +53,7 @@ public class LoaderClassController implements Storage {
 
                 if (getMapping != null) {
 
-                    System.out.println("GET: " + requestMapping.value() + getMapping.value());
+                    logger.info("GET {}{}", requestMapping.value(), getMapping.value());
 
                     if (requestMapping != null) {
                         storageGetMethod(requestMapping, method);
@@ -62,7 +64,7 @@ public class LoaderClassController implements Storage {
 
                 if (postMapping != null) {
 
-                    System.out.println("POST: " + requestMapping.value() + postMapping.value());
+                    logger.info("POST {}{}", requestMapping.value(), postMapping.value());
 
                     if (requestMapping != null) {
                         storagePostMethod(requestMapping, method);
@@ -73,7 +75,7 @@ public class LoaderClassController implements Storage {
 
                 if (putMapping != null) {
 
-                    System.out.println("PUT: " + requestMapping.value() + putMapping.value());
+                    logger.info("PUT {}{}", requestMapping.value(), putMapping.value());
 
                     if (requestMapping != null) {
                         storagePutMethod(requestMapping, method);
@@ -84,7 +86,7 @@ public class LoaderClassController implements Storage {
 
                 if (deleteMapping != null) {
 
-                    System.out.println("DELETE: " + requestMapping.value() + deleteMapping.value());
+                    logger.info("DELETE {}{}", requestMapping.value(), deleteMapping.value());
 
                     if (requestMapping != null) {
                         storageDeleteMethod(requestMapping, method);
@@ -105,7 +107,6 @@ public class LoaderClassController implements Storage {
 
             MessageController messageController = aClass.getDeclaredAnnotation(MessageController.class);
             MESSAGE_CONTROLLERS.put(messageController.topicName(), aClass);
-            System.out.println("Message Controller: " + aClass);
 
         });
     }
@@ -122,7 +123,6 @@ public class LoaderClassController implements Storage {
                 if (rpcMethod != null) {
                     final RpcController rpcController = aClass.getDeclaredAnnotation(RpcController.class);
                     RPC_CONTROLLERS.put(rpcController.value() +"$$"+rpcMethod.methodName(), method);
-                    System.out.println("RPC Controller: " + aClass);
                 }
 
             });
@@ -255,19 +255,20 @@ public class LoaderClassController implements Storage {
 
     private void generateReservedWords(String value) {
 
-        String[] splitedArray = value.split("/");
+        final String[] splitedArray = value.split("/");
 
         for (long i = 1; i < splitedArray.length; i++) {
 
             final String word = splitedArray[(int) i];
 
             if (!isJavaType(word)) {
-                Set<Long> position = RESERVED_WORDS.get(word);
-                if (position == null) {
-                    position = new HashSet<>();
-                    RESERVED_WORDS.put(word, position);
-                }
-                position.add(i);
+                RESERVED_WORDS.computeIfAbsent(word, (k) -> new HashSet<>()).add(i);
+//
+//
+//                if (position == null) {
+//                    position = new HashSet<>();
+//                    RESERVED_WORDS.put(word, position);
+//                }
             }
         }
     }
