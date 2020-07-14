@@ -67,7 +67,9 @@ public class EntryPointCdi implements EntryPoint {
                 } catch (Exception e) {
                     logger.error("responseForClient {}", e);
                     response.setStatus(500);
-                    response.setBody(e.getMessage().getBytes());
+                    if (e != null && e.getMessage() != null) {
+                        response.setBody(e.getMessage().getBytes());
+                    }
                     session.write(response);
                     session.closeOnFlush();
                 }
