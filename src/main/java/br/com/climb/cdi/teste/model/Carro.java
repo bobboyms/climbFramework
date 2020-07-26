@@ -16,7 +16,7 @@ public class Carro {
 
     @Logar
     public String inteceptou() {
-        return "Novo";
+        return "Aqui é um valor horiginal";
     }
 
     public Endereco getEndereco() {

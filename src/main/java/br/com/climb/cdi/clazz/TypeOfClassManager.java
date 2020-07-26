@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class TypeOfClassManager implements TypeOfClass {
 
-    private Initializer initializer;
+    private final Initializer initializer;
 
     protected TypeOfClassManager(Initializer initializer) {
         this.initializer = initializer;

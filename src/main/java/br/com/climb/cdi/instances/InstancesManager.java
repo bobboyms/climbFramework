@@ -6,11 +6,10 @@ import br.com.climb.cdi.annotations.Message;
 import br.com.climb.cdi.annotations.ReCreate;
 import br.com.climb.cdi.clazz.TypeOfClass;
 import br.com.climb.cdi.disposes.Disposes;
-import br.com.climb.cdi.interceptor.InterceptorMethod;
+import br.com.climb.cdi.interceptor.InterceptorMethodCdi;
 import br.com.climb.cdi.model.Capsule;
 import br.com.climb.framework.messagesclient.MessageClientManager;
 import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +33,9 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
     private final Map<Class<?>, Object> singletonsObjects = new HashMap<>();
 
-    protected InstancesManager(Initializer initializer,
-                             Disposes disposes,
-                             TypeOfClass typeOfClass) {
+    public InstancesManager(Initializer initializer,
+                            Disposes disposes,
+                            TypeOfClass typeOfClass) {
         this.initializer = initializer;
         this.disposes = disposes;
         this.typeOfClass = typeOfClass;
@@ -65,8 +64,8 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
                 return singletonInstance;
             }
 
-            final Object instance = capsule.getClassFactory().getDeclaredConstructor().newInstance();
-            injectObjecstInComponentClass(capsule.getClassFactory(), instance);
+            final Object instance = generateInstanceBase(capsule.getClassFactory());//capsule.getClassFactory().getDeclaredConstructor().newInstance();
+            //injectObjecstInComponentClass(capsule.getClassFactory(), instance);
 
             final Object resultInvoke = capsule.getMethod().invoke(instance);
 
@@ -148,8 +147,8 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
             if (nonNull(singleton)) {
                 return singleton;
             } else {
-                final Object instance = capsule.getClassFactory().getDeclaredConstructor().newInstance();
-                injectObjecstInComponentClass(capsule.getClassFactory(), instance);
+                final Object instance = generateInstanceBase(capsule.getClassFactory());//capsule.getClassFactory().getDeclaredConstructor().newInstance();
+                //injectObjecstInComponentClass(capsule.getClassFactory(), instance);
                 final Object resultInvoke = capsule.getMethod().invoke(instance);
                 singletonsObjects.put(capsule.getMethod().getReturnType(), resultInvoke);
                 disposes.addDisposeList(capsule, resultInvoke);
@@ -205,12 +204,10 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
-        enhancer.setCallback(new InterceptorMethod(typeOfClass, this));
+        enhancer.setCallback(new InterceptorMethodCdi(typeOfClass, this));
 
         final Object base = enhancer.create();
         injectObjecstInComponentClass(clazz, base);
-
-        System.out.println("Gerou instancia: " + base);
 
         return base;
 

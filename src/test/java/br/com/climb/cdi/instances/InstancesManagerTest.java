@@ -120,7 +120,7 @@ class InstancesManagerTest {
         Endereco endereco =  (Endereco) getInstance().generateInstance(enderecoField);
 
         getInstance().injectObjecstInComponentClass(pessoaField.getType(), pessoa);
-        Assertions.assertSame(false, Objects.isNull(pessoa.getEndereco()));
+        Assertions.assertSame(true, Objects.nonNull(pessoa.getEndereco()));
 
     }
 
