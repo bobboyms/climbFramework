@@ -6,10 +6,10 @@ import java.lang.reflect.Method;
 
 public class InvocationContext implements Context {
 
-    private Method method;
+    private final Method method;
+    private final Object object;
+    private final MethodProxy proxy;
     private Object[] args;
-    private Object object;
-    private MethodProxy proxy;
 
     public InvocationContext(Object object, Method method, Object[] args, MethodProxy proxy) {
         this.object = object;

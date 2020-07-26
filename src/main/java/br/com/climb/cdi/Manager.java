@@ -1,25 +1,21 @@
 package br.com.climb.cdi;
 
 import br.com.climb.cdi.clazz.TypeOfClass;
-import br.com.climb.cdi.clazz.TypeOfClassManager;
 import br.com.climb.cdi.disposes.Disposes;
-import br.com.climb.cdi.disposes.DisposesManager;
-import br.com.climb.cdi.exception.ValidationException;
 import br.com.climb.cdi.instances.Instances;
-import br.com.climb.cdi.instances.InstancesManager;
 
 public class Manager implements ManagerContext {
 
-    private Initializer initializer;
-    private Disposes disposes;
-    private TypeOfClass typeOfClass;
-    private Instances instances;
+    private final Initializer initializer;
+    private final Disposes disposes;
+    private final TypeOfClass typeOfClass;
+    private final Instances instances;
 
-    public Manager(Initializer initializer) {
+    public Manager(Initializer initializer, Disposes disposes, TypeOfClass typeOfClass, Instances instances) {
         this.initializer = initializer;
-        this.disposes = DisposesManager.create(initializer);
-        this.typeOfClass = TypeOfClassManager.create(initializer);
-        this.instances = InstancesManager.create(initializer,disposes, typeOfClass);
+        this.disposes = disposes;
+        this.typeOfClass = typeOfClass;
+        this.instances = instances;
     }
 
     @Override

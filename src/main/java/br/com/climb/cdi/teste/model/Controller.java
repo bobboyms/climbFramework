@@ -32,6 +32,7 @@ public class Controller {
     @Message(topicName = "cliente")
     private MessageClient messageClient;
 
+
     public void setMessageClient(MessageClient messageClient) {
         this.messageClient = messageClient;
     }
@@ -76,11 +77,17 @@ public class Controller {
         messageClient.sendMessage("Enviado via injeção");
 
         System.out.println(pessoa.getNome());
+        System.out.println("Endereco: " + getCarro().getEndereco().getNome());
+//        System.out.println("Endereco: " + getPessoa().getEndereco().getNome());
         System.out.println(carro.getNome());
+        System.out.println("Interceptou: " + carro.inteceptou());
 //        carroRepository.salvar(carro);
         pessoaRepository.salvar(new Pessoa());
         System.out.println(pessoaRepository.processar("o valor da vida"));
         arquivoTexto.gerar();
+
+        System.out.println("climb connection: " + climbConnection);
+
     }
 
 }
