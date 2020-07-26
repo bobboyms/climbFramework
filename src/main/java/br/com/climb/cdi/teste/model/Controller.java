@@ -2,8 +2,11 @@ package br.com.climb.cdi.teste.model;
 
 import br.com.climb.cdi.annotations.Component;
 import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.annotations.Message;
 import br.com.climb.cdi.teste.model.factory.ArquivoTexto;
+import br.com.climb.commons.execptions.NotConnectionException;
 import br.com.climb.core.interfaces.ClimbConnection;
+import br.com.climb.framework.messagesclient.MessageClient;
 
 @Component
 public class Controller {
@@ -25,6 +28,14 @@ public class Controller {
 
     @Inject
     private ArquivoTexto arquivoTexto;
+
+    @Message(topicName = "cliente")
+    private MessageClient messageClient;
+
+
+    public void setMessageClient(MessageClient messageClient) {
+        this.messageClient = messageClient;
+    }
 
     public void setClimbConnection(ClimbConnection climbConnection) {
         this.climbConnection = climbConnection;
@@ -58,14 +69,25 @@ public class Controller {
         return carro;
     }
 
-    public void executar() {
+    public void executar() throws NotConnectionException {
+
         System.out.println("****** iniciou executar ********");
+
+        System.out.println("Enviando mensagem");
+        messageClient.sendMessage("Enviado via injeção");
+
         System.out.println(pessoa.getNome());
+        System.out.println("Endereco: " + getCarro().getEndereco().getNome());
+//        System.out.println("Endereco: " + getPessoa().getEndereco().getNome());
         System.out.println(carro.getNome());
+        System.out.println("Interceptou: " + carro.inteceptou());
 //        carroRepository.salvar(carro);
         pessoaRepository.salvar(new Pessoa());
         System.out.println(pessoaRepository.processar("o valor da vida"));
         arquivoTexto.gerar();
+
+        System.out.println("climb connection: " + climbConnection);
+
     }
 
 }

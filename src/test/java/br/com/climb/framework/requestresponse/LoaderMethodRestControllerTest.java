@@ -9,6 +9,7 @@ import br.com.climb.commons.configuration.ConfigFile;
 import br.com.climb.commons.configuration.FactoryConfigFile;
 import br.com.climb.commons.execptions.ConfigFileException;
 import br.com.climb.commons.execptions.NotFoundException;
+import br.com.climb.commons.url.NormalizedUrlManager;
 import br.com.climb.framework.requestresponse.model.Capsule;
 import br.com.climb.test.controller.java.*;
 import br.com.climb.test.model.Cliente;
@@ -23,6 +24,7 @@ import java.util.Objects;
 import static br.com.climb.commons.utils.ReflectionUtils.getAnnotedClass;
 
 class LoaderMethodRestControllerTest {
+    
     private ContainerInitializer containerInitializer;
 
     public ContainerInitializer getContainerInitializer() throws IOException, ConfigFileException {
@@ -56,7 +58,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_SESSION() throws IOException, NotFoundException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -124,7 +126,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_1() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -167,7 +169,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_2() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -209,7 +211,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_3() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -234,7 +236,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_GET_4() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -284,7 +286,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_POST_1() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -332,7 +334,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_POST_2() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -379,7 +381,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_PUT_1() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -427,7 +429,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_PUT_2() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -474,7 +476,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_DELETE_1() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 
@@ -523,7 +525,7 @@ class LoaderMethodRestControllerTest {
     @Test
     void getMethodForCall_DELETE_2() throws NotFoundException, IOException {
 
-        new LoaderClassRestController().storage(getAnnotedClass(RestController.class, "br.com."));
+        new LoaderClassController(new NormalizedUrlManager()).storageRestControllers(getAnnotedClass(RestController.class, "br.com."));
 
         LoaderMethodRestController loaderMethodRestController = new LoaderMethodRestController();
 

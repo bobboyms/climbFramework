@@ -2,11 +2,13 @@ package br.com.climb.cdi.instances;
 
 import br.com.climb.cdi.Initializer;
 import br.com.climb.cdi.annotations.Inject;
+import br.com.climb.cdi.annotations.Message;
 import br.com.climb.cdi.annotations.ReCreate;
 import br.com.climb.cdi.clazz.TypeOfClass;
 import br.com.climb.cdi.disposes.Disposes;
 import br.com.climb.cdi.interceptor.InterceptorMethod;
 import br.com.climb.cdi.model.Capsule;
+import br.com.climb.framework.messagesclient.MessageClientManager;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import org.slf4j.Logger;
@@ -19,15 +21,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 public class InstancesManager implements Instances, InjectInstance, Singleton {
 
-    private static Logger logger = LoggerFactory.getLogger(InstancesManager.class);
+    private final Logger logger = LoggerFactory.getLogger(InstancesManager.class);
 
-    private Initializer initializer;
-    private Disposes disposes;
-    private TypeOfClass typeOfClass;
+    private final Initializer initializer;
+    private final Disposes disposes;
+    private final TypeOfClass typeOfClass;
 
-    private Map<Class<?>, Object> singletonsObjects = new HashMap<>();
+    private final Map<Class<?>, Object> singletonsObjects = new HashMap<>();
 
     protected InstancesManager(Initializer initializer,
                              Disposes disposes,
@@ -48,7 +53,7 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
         final Capsule capsule = initializer.getFactoriesClasses().get(field.getType());
 
-        if (capsule == null) {
+        if (isNull(capsule)) {
             return null;
         }
 
@@ -56,7 +61,7 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
             final Object singletonInstance = getSingletonObject(capsule);
 
-            if (singletonInstance != null) {
+            if (nonNull(singletonInstance)) {
                 return singletonInstance;
             }
 
@@ -86,19 +91,33 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
             return localInstance;
         }
 
-        final Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(typeOfClass.getClassOfField(field));
-        enhancer.setCallback(new InterceptorMethod(typeOfClass, this));
+        return generateInstanceBase(typeOfClass.getClassOfField(field));
 
-        return enhancer.create();
+    }
 
+    /**
+     * Cria instancia para tipos especiais.
+     * Nesse caso, para o tipo menssageria
+     * @param field
+     * @return
+     */
+    @Override
+    public Object generateInstanceMessage(Field field) {
+        final Message message = field.getDeclaredAnnotation(Message.class);
+        return new MessageClientManager(message.topicName(), initializer.getConfigFile());
     }
 
     @Override
     public void injectObjecstInComponentClass(Class<?> clazz, Object instance) {
+
         Arrays.asList(clazz.getDeclaredFields()).stream()
                 .filter(field -> field.getAnnotation(Inject.class) != null)
                 .forEach(field -> injectInstanceField(instance, field, generateInstance(field)));
+
+        Arrays.asList(clazz.getDeclaredFields()).stream()
+                .filter(field -> field.getAnnotation(Message.class) != null)
+                .forEach(field -> injectInstanceField(instance, field, generateInstanceMessage(field)));
+
     }
 
     @Override
@@ -126,7 +145,7 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
             final Object singleton = singletonsObjects.get(capsule.getMethod().getReturnType());
 
-            if (singleton != null) {
+            if (nonNull(singleton)) {
                 return singleton;
             } else {
                 final Object instance = capsule.getClassFactory().getDeclaredConstructor().newInstance();
@@ -148,47 +167,50 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
     public Object generateInstanceBase(Class<?> clazz, String sessionid) {
 
         final Map<String, Map<Class<?>, Object>> sessionMap = initializer.getSessionObjects();
-        Map<Class<?>, Object> sesseionInstance = sessionMap.get(sessionid);
+        Map<Class<?>, Object> sessionInstance = sessionMap.get(sessionid);
 
-        if (sesseionInstance != null) {
+        Object base;
 
-            Object base = sesseionInstance.get(clazz);
+        if (nonNull(sessionInstance)) {
 
-            if (base != null) {
+            base = sessionInstance.get(clazz);
+
+            if (nonNull(base)) {
                 final Object finalBase = base;
                 Arrays.asList(clazz.getDeclaredFields()).stream()
                         .filter(field -> field.getAnnotation(ReCreate.class) != null)
                         .forEach(field -> injectInstanceField(finalBase, field, generateInstance(field)));
             } else {
                 base = generateInstanceBase(clazz);
-                sesseionInstance.put(clazz, base);
-                sessionMap.put(sessionid, sesseionInstance);
+                sessionInstance.put(clazz, base);
+                sessionMap.put(sessionid, sessionInstance);
             }
-
-            return base;
 
         } else {
 
-            final Object base = generateInstanceBase(clazz);
+            base = generateInstanceBase(clazz);
 
-            sesseionInstance = new HashMap<>();
-            sesseionInstance.put(clazz, base);
-            sessionMap.put(sessionid, sesseionInstance);
-
-            return base;
+            sessionInstance = new HashMap<>();
+            sessionInstance.put(clazz, base);
+            sessionMap.put(sessionid, sessionInstance);
 
         }
+
+        return base;
     }
 
     @Override
     public Object generateInstanceBase(Class<?> clazz) {
 
+
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
-        enhancer.setCallback((MethodInterceptor) (obj, method, args, proxy) -> proxy.invokeSuper(obj, args));
+        enhancer.setCallback(new InterceptorMethod(typeOfClass, this));
 
         final Object base = enhancer.create();
         injectObjecstInComponentClass(clazz, base);
+
+        System.out.println("Gerou instancia: " + base);
 
         return base;
 

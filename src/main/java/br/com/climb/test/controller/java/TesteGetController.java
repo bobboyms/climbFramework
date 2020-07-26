@@ -7,6 +7,7 @@ import br.com.climb.commons.annotations.param.PathVariable;
 import br.com.climb.commons.annotations.param.RequestBody;
 import br.com.climb.commons.annotations.param.RequestParam;
 import br.com.climb.commons.security.Security;
+import br.com.climb.rpc.annotation.RpcClient;
 import br.com.climb.test.model.Cliente;
 import br.com.climb.commons.security.Response;
 
@@ -14,6 +15,8 @@ import br.com.climb.commons.security.Response;
 @RestController
 @RequestMapping("/get")
 public class TesteGetController {
+
+    private RpcClient rpcClient;
 
 //    @GetMapping("/{id}/")
     public Response teste1(@PathVariable("id") Long id)  {

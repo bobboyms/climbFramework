@@ -18,7 +18,7 @@ public class Main {
 
         try(ManagerContext context = containerInitializer.createManager()) {
             Controller controller = (Controller) context.generateInstance(Controller.class);
-//            controller.executar();
+            controller.executar();
         } catch (Exception e) {
             e.printStackTrace();
         }
