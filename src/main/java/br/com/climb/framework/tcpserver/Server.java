@@ -49,7 +49,7 @@ public class Server implements TcpServer {
 
                     MESSAGE_CONTROLLERS.entrySet().forEach(entry -> {
 
-                        final TcpClient discoveryClient = new ReceiveMessageClient(new ClientHandler(), "127.0.0.1", 3254);
+                        final TcpClient discoveryClient = new ReceiveMessageClient(new ClientHandler(), configFile.getMessageIp(), new Integer(configFile.getMessagePort()));
                         discoveryClient.sendRequest(new KeyMessage(entry.getKey(), Message.TYPE_MESSAGE));
                         ReceiveMessage response = (ReceiveMessage) discoveryClient.getResponse();
 
