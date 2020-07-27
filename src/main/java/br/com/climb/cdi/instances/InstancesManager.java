@@ -27,11 +27,11 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
     private final Logger logger = LoggerFactory.getLogger(InstancesManager.class);
 
+    private final Map<Class<?>, Object> singletonsObjects = new HashMap<>();
+
     private final Initializer initializer;
     private final Disposes disposes;
     private final TypeOfClass typeOfClass;
-
-    private final Map<Class<?>, Object> singletonsObjects = new HashMap<>();
 
     public InstancesManager(Initializer initializer,
                             Disposes disposes,
@@ -200,7 +200,6 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
 
     @Override
     public Object generateInstanceBase(Class<?> clazz) {
-
 
         final Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);

@@ -23,9 +23,9 @@ public class ImplementRpcMethodIntercept implements MethodIntercept {
 
         try {
 
-            RpcClient rpcClient = ctx.getMethod().getDeclaredAnnotation(RpcClient.class);
-            RpcMethod rpcMethod = new RpcSendManager(rpcClient.controllerName(), rpcClient.methodName(), ClimbApplication.configFile);
-            RpcResponse object = (RpcResponse) rpcMethod.methodCall(ctx.getArgs());
+            final RpcClient rpcClient = ctx.getMethod().getDeclaredAnnotation(RpcClient.class);
+            final RpcMethod rpcMethod = new RpcSendManager(rpcClient.controllerName(), rpcClient.methodName(), ClimbApplication.configFile);
+            final RpcResponse object = (RpcResponse) rpcMethod.methodCall(ctx.getArgs());
 
             return object.getResponse();
 
