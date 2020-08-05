@@ -20,6 +20,6 @@ public class PessoaInterceptor implements MethodIntercept {
     @Override
     public Object interceptorMethod(Context ctx) throws Throwable {
         System.out.println("********** Interceptou ************** ");
-        return null;
+        return "Valor interceptado";
     }
 }

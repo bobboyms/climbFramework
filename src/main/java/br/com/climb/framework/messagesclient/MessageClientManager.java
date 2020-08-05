@@ -28,9 +28,9 @@ public class MessageClientManager implements MessageClient {
 
         try {
 
-            TcpClient discoveryClient = new SendMessageClient(new ClientHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
+            final TcpClient discoveryClient = new SendMessageClient(new ClientHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
             discoveryClient.sendRequest(new SendMessage(topic, Message.TYPE_MESSAGE, message));
-            Integer response = (Integer) discoveryClient.getResponse();
+            final Integer response = (Integer) discoveryClient.getResponse();
 
             if (response.longValue() != 200) {
                 throw new Error("Erro no servidor, mensagem não registrada");

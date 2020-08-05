@@ -65,7 +65,7 @@ public class RpcSendManager implements RpcMethod {
                 throw new MethodCallException("answer exceeded the time limit. Time miles limit = " + 30000);
             }
 
-            final TcpClient getRequestRpc = new GetRequestRpc(new GetHandler(), "127.0.0.1",3254);
+            final TcpClient getRequestRpc = new GetRequestRpc(new GetHandler(), configFile.getMessageIp(),new Integer(configFile.getMessagePort()));
             getRequestRpc.sendRequest(new KeyRpc(uuid, KeyRpc.TYPE_GET_RESPONSE_ONE, Message.TYPE_RPC, new ArrayList<>()));
             final Object obj = getRequestRpc.getResponse();
             getRequestRpc.closeConnection();

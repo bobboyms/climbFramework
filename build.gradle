@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'br.com.climb'
-version '1.0.8'
+version '1.0.9'
 
 def localVersion = version.toString()
 def climbCommons = "1.0.7"

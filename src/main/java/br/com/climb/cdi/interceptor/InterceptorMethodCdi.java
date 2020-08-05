@@ -9,12 +9,12 @@ import java.lang.reflect.Method;
 
 import static java.util.Objects.nonNull;
 
-public class InterceptorMethod implements MethodInterceptor {
+public class InterceptorMethodCdi implements MethodInterceptor {
 
     private final TypeOfClass typeOfClass;
     private final Instances instances;
 
-    public InterceptorMethod(TypeOfClass typeOfClass, Instances instances) {
+    public InterceptorMethodCdi(TypeOfClass typeOfClass, Instances instances) {
         this.typeOfClass = typeOfClass;
         this.instances = instances;
     }

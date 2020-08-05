@@ -23,7 +23,7 @@ import static br.com.climb.commons.utils.ReflectionUtils.*;
 
 public class LoaderMethodRestController implements LoaderMethod {
 
-    private NormalizedUrl normalizedUrl;
+    private final NormalizedUrl normalizedUrl;
 
     public LoaderMethodRestController() {
         this.normalizedUrl = new NormalizedUrlManager();

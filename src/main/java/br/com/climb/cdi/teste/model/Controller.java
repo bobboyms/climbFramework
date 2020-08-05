@@ -69,6 +69,10 @@ public class Controller {
         return carro;
     }
 
+    public String intercpt() {
+        return carro.inteceptou();
+    }
+
     public void executar() throws NotConnectionException {
 
         System.out.println("****** iniciou executar ********");

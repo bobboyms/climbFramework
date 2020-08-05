@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 
 public class RpcReceiveCall implements RpcListener {
 
+    private final Logger logger = LoggerFactory.getLogger(RpcReceiveCall.class);
+
+    private final ConfigFile configFile;
+
     public RpcReceiveCall(ConfigFile configFile) {
         this.configFile = configFile;
     }
-
-    public static final Logger logger = LoggerFactory.getLogger(RpcReceiveCall.class);
-
-    private final ConfigFile configFile;
 
     private Object getResponseList() {
         final List<String> methodsName = Methods.RPC_CONTROLLERS.entrySet()
