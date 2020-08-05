@@ -4,9 +4,10 @@ import br.com.climb.cdi.annotations.Component;
 import br.com.climb.cdi.annotations.Inject;
 import br.com.climb.cdi.annotations.Message;
 import br.com.climb.cdi.teste.model.factory.ArquivoTexto;
-import br.com.climb.commons.execptions.NotConnectionException;
 import br.com.climb.core.interfaces.ClimbConnection;
-import br.com.climb.framework.messagesclient.MessageClient;
+import br.com.climb.framework.messagesclient.MessageClientProducer;
+import br.com.climb.framework.messagesclient.restclient.exceptions.CreateTopicException;
+import br.com.climb.test.model.BaixarEstoque;
 
 @Component
 public class Controller {
@@ -30,10 +31,10 @@ public class Controller {
     private ArquivoTexto arquivoTexto;
 
     @Message(topicName = "cliente")
-    private MessageClient messageClient;
+    private MessageClientProducer messageClient;
 
 
-    public void setMessageClient(MessageClient messageClient) {
+    public void setMessageClient(MessageClientProducer messageClient) {
         this.messageClient = messageClient;
     }
 
@@ -73,12 +74,18 @@ public class Controller {
         return carro.inteceptou();
     }
 
-    public void executar() throws NotConnectionException {
+    public void executar() throws CreateTopicException {
 
         System.out.println("****** iniciou executar ********");
 
         System.out.println("Enviando mensagem");
-        messageClient.sendMessage("Enviado via injeção");
+
+        BaixarEstoque baixarEstoque = new BaixarEstoque();
+        baixarEstoque.setNomeProduto("arroz soltinho");
+        baixarEstoque.setPreco(12.60f);
+        baixarEstoque.setQuantidade(100l);
+
+        messageClient.sendMessage(baixarEstoque);
 
         System.out.println(pessoa.getNome());
         System.out.println("Endereco: " + getCarro().getEndereco().getNome());

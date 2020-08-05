@@ -27,6 +27,8 @@ dependencies {
     compile 'br.com.climb:climb-orm:1.0.9'
     compile 'br.com.climbcommons:climb-commons:' + climbCommons
 
+    compile 'com.konghq:unirest-java:3.7.04'
+
     compile 'ch.qos.logback:logback-classic:1.2.3'
 
     testCompile 'org.hamcrest:hamcrest-library:2.1'
@@ -41,8 +43,6 @@ dependencies {
 
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.11'
     compile 'io.jsonwebtoken:jjwt:0.7.0'
-
-    compile 'com.mashape.unirest:unirest-java:1.4.9'
 
     /**************** tomcat *****************/
 

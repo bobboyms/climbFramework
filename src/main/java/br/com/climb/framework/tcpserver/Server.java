@@ -10,11 +10,15 @@ import br.com.climb.framework.ClimbApplication;
 import br.com.climb.framework.clientdiscovery.ClientHandler;
 import br.com.climb.framework.clientdiscovery.DiscoveryClient;
 import br.com.climb.framework.messagesclient.HandlerMessage;
+import br.com.climb.framework.messagesclient.MessageClientSubscribe;
+import br.com.climb.framework.messagesclient.MessageClientSubscribeImp;
 import br.com.climb.framework.messagesclient.annotations.MessageController;
-import br.com.climb.framework.messagesclient.tcpclient.receive.ReceiveMessageClient;
+import br.com.climb.framework.messagesclient.restclient.exceptions.CreateTopicException;
+import br.com.climb.framework.messagesclient.restclient.model.TopicGetResponse;
 import br.com.climb.framework.requestresponse.LoaderClassController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 import br.com.climb.rpc.annotation.RpcController;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -45,44 +49,33 @@ public class Server implements TcpServer {
 
             while (true) {
 
-                try {
+                MESSAGE_CONTROLLERS.entrySet().forEach(entry -> {
 
-                    MESSAGE_CONTROLLERS.entrySet().forEach(entry -> {
+                    final MessageClientSubscribe clientSubscribe = new MessageClientSubscribeImp(entry.getKey(), configFile);
 
-                        final TcpClient discoveryClient = new ReceiveMessageClient(new ClientHandler(), configFile.getMessageIp(), new Integer(configFile.getMessagePort()));
-                        discoveryClient.sendRequest(new KeyMessage(entry.getKey(), Message.TYPE_MESSAGE));
-                        ReceiveMessage response = (ReceiveMessage) discoveryClient.getResponse();
+                    try {
 
-                        if (response.getMessages().size() > 0) {
+                        final TopicGetResponse topicGetResponse = clientSubscribe.getMessage();
+
+                        if (topicGetResponse.getStatusCode().intValue() == 200) {
 
                             try (final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
 
                                 final Object instance = context.generateInstance(entry.getValue());
-
-                                response.getMessages().forEach(sendMessage -> {
-                                    ((HandlerMessage) instance).messageReceived(sendMessage.getMessage());
-                                });
+                                final MessageController messageController = entry.getValue().getDeclaredAnnotation(MessageController.class);
+                                ((HandlerMessage) instance).messageReceived(new ObjectMapper().readValue(topicGetResponse.getMessage(), messageController.type()));
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
                         }
-
-                        discoveryClient.closeConnection();
-
-                    });
-                } catch (RuntimeIoException e) {
-                    logger.info("It was not possible to connect to the messaging server. IP: {}, PORT {} ", configFile.getMessageIp(), configFile.getMessagePort());
-                    try {
-                        Thread.sleep(6000);
-                    } catch (InterruptedException ex) {
-                        e.printStackTrace();
+                    } catch (CreateTopicException e) {
+                        logger.error("error {}", e);
                     }
 
-                } catch (Exception e) {
-                    logger.error("Error: {}", e);
-                }
+                });
+
 
                 try {
                     Thread.sleep(200);

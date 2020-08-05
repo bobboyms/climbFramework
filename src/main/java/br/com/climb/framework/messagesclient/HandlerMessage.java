@@ -1,5 +1,5 @@
 package br.com.climb.framework.messagesclient;
 
-public interface HandlerMessage {
-    void messageReceived(Object message);
+public interface HandlerMessage<T> {
+    void messageReceived(T message);
 }

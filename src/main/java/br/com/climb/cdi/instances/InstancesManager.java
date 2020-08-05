@@ -8,7 +8,7 @@ import br.com.climb.cdi.clazz.TypeOfClass;
 import br.com.climb.cdi.disposes.Disposes;
 import br.com.climb.cdi.interceptor.InterceptorMethodCdi;
 import br.com.climb.cdi.model.Capsule;
-import br.com.climb.framework.messagesclient.MessageClientManager;
+import br.com.climb.framework.messagesclient.MessageClientProducerImp;
 import net.sf.cglib.proxy.Enhancer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +103,7 @@ public class InstancesManager implements Instances, InjectInstance, Singleton {
     @Override
     public Object generateInstanceMessage(Field field) {
         final Message message = field.getDeclaredAnnotation(Message.class);
-        return new MessageClientManager(message.topicName(), initializer.getConfigFile());
+        return new MessageClientProducerImp(message.topicName(), initializer.getConfigFile());
     }
 
     @Override
