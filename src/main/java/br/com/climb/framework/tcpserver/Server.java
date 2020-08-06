@@ -19,6 +19,7 @@ import br.com.climb.framework.requestresponse.LoaderClassController;
 import br.com.climb.framework.requestresponse.interfaces.Storage;
 import br.com.climb.rpc.annotation.RpcController;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.mina.core.RuntimeIoException;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -49,33 +50,38 @@ public class Server implements TcpServer {
 
             while (true) {
 
-                MESSAGE_CONTROLLERS.entrySet().forEach(entry -> {
+                try {
 
-                    final MessageClientSubscribe clientSubscribe = new MessageClientSubscribeImp(entry.getKey(), configFile);
+                    MESSAGE_CONTROLLERS.entrySet().forEach(entry -> {
 
-                    try {
+                        final MessageClientSubscribe clientSubscribe = new MessageClientSubscribeImp(entry.getKey(), configFile);
 
-                        final TopicGetResponse topicGetResponse = clientSubscribe.getMessage();
+                        try {
 
-                        if (topicGetResponse.getStatusCode().intValue() == 200) {
+                            final TopicGetResponse topicGetResponse = clientSubscribe.getMessage();
 
-                            try (final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
+                            if (topicGetResponse.getStatusCode().intValue() == 200) {
 
-                                final Object instance = context.generateInstance(entry.getValue());
-                                final MessageController messageController = entry.getValue().getDeclaredAnnotation(MessageController.class);
-                                ((HandlerMessage) instance).messageReceived(new ObjectMapper().readValue(topicGetResponse.getMessage(), messageController.type()));
+                                try (final ManagerContext context = ClimbApplication.containerInitializer.createManager()) {
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                    final Object instance = context.generateInstance(entry.getValue());
+                                    final MessageController messageController = entry.getValue().getDeclaredAnnotation(MessageController.class);
+                                    ((HandlerMessage) instance).messageReceived(new ObjectMapper().readValue(topicGetResponse.getMessage(), messageController.type()));
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
+                        } catch (CreateTopicException e) {
+                            logger.error("error {}", e);
                         }
-                    } catch (CreateTopicException e) {
-                        logger.error("error {}", e);
-                    }
 
-                });
+                    });
 
+                } catch (Exception e) {
+                    logger.error("error {}", e);
+                }
 
                 try {
                     Thread.sleep(200);

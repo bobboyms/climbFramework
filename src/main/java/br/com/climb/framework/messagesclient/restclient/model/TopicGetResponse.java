@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TopicGetResponse {
 
-    @JsonProperty("Id")
+    @JsonProperty("id")
     private String id;
 
-    @JsonProperty("Message")
+    @JsonProperty("message")
     private String Message;
 
-    @JsonProperty("StatusCode")
+    @JsonProperty("statusCode")
     private Integer StatusCode;
 
     public void setId(String id) {

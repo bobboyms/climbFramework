@@ -6,6 +6,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface RpcClient {
-    String controllerName() default "";
+    String chanelName() default "";
+    String className() default "";
     String methodName() default "";
 }

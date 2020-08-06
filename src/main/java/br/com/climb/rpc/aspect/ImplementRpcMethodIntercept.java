@@ -9,6 +9,7 @@ import br.com.climb.rpc.RpcMethod;
 import br.com.climb.rpc.RpcSendManager;
 import br.com.climb.rpc.annotation.RpcClient;
 import br.com.climb.rpc.annotation.RpcController;
+import br.com.climb.rpc.model.RpcProcessedResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +25,12 @@ public class ImplementRpcMethodIntercept implements MethodIntercept {
         try {
 
             final RpcClient rpcClient = ctx.getMethod().getDeclaredAnnotation(RpcClient.class);
-            final RpcMethod rpcMethod = new RpcSendManager(rpcClient.controllerName(), rpcClient.methodName(), ClimbApplication.configFile);
-            final RpcResponse object = (RpcResponse) rpcMethod.methodCall(ctx.getArgs());
+            final RpcMethod rpcMethod = new RpcSendManager(rpcClient.chanelName(), rpcClient.className(), rpcClient.methodName(), ClimbApplication.configFile);
+            final RpcProcessedResponse object = (RpcProcessedResponse) rpcMethod.methodCall(ctx.getArgs());
 
-            return object.getResponse();
+            System.out.println("********* response ************");
+            System.out.println(object);
+            return 10;
 
         } catch (Exception e) {
             logger.error("ImplementRpcMethodIntercept ERROR: {}", e);

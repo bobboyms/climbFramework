@@ -6,12 +6,12 @@ import br.com.climb.rpc.annotation.RpcClient;
 @Component
 public class RpcClientTeste {
 
-    @RpcClient(controllerName = "rpcClientController", methodName = "somar")
+    @RpcClient(chanelName = "rpcClientController", className = "RpcClientTeste", methodName = "somar")
     public Integer somar(int a, int b) {
         return null;
     }
 
-    @RpcClient(controllerName = "rpcClientController", methodName = "subtrair")
+    @RpcClient(chanelName = "rpcClientController", className = "RpcClientTeste", methodName = "subtrair")
     public Integer subtrair(int a, int b) {
         return null;
     }

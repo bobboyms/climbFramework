@@ -6,7 +6,7 @@ import br.com.climb.rpc.annotation.RpcClient;
 @Component
 public class EstoqueRpc {
 
-    @RpcClient(controllerName = "estoqueRpc", methodName = "consultarEstoqueProduto")
+    @RpcClient(chanelName = "estoqueRpc", className = "teste" , methodName = "consultarEstoqueProduto")
     public Float consultarEstoqueProduto(Long codigoProduto) {
         return null;
     }

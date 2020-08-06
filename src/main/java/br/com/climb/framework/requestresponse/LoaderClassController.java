@@ -122,7 +122,7 @@ public class LoaderClassController implements Storage {
 
                 if (rpcMethod != null) {
                     final RpcController rpcController = aClass.getDeclaredAnnotation(RpcController.class);
-                    RPC_CONTROLLERS.put(rpcController.value() +"$$"+rpcMethod.methodName(), method);
+                    RPC_CONTROLLERS.put(rpcController.chanelName() +"$$"+rpcMethod.methodName(), method);
                 }
 
             });
